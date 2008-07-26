@@ -951,7 +951,7 @@ do_tx_meter (unsigned int thread, CXB buf, TXMETERTYPE mt)
 			uni[thread].meter.tx.val[TX_MIC] = (REAL) (-10.0 * log10 (mic_avg + 1e-16));
 
 			mic_pk = CXBpeak(tx[thread].buf.i);		// calculate peak mic                 
-			uni[thread].meter.tx.val[TX_MIC_PK] = (REAL) (-10.0 * log10 (mic_pk + 1e-16));
+			uni[thread].meter.tx.val[TX_MIC_PK] = (REAL) (-20.0 * log10 (mic_pk + 1e-16));
 			break;
 
 		case TX_PWR:
@@ -965,10 +965,10 @@ do_tx_meter (unsigned int thread, CXB buf, TXMETERTYPE mt)
 			for (i = 0; i < CXBhave (tx[thread].buf.i); i++)
 				alc_avg = (REAL) (0.9995 * alc_avg +
 				0.0005 * Csqrmag (CXBdata (tx[thread].buf.i, i)));
-			uni[thread].meter.tx.val[TX_ALC] = (REAL) (-10.0 * log10 (alc_avg + 1e-16));
+			uni[thread].meter.tx.val[TX_ALC] = (REAL) (-20.0 * log10 (alc_avg + 1e-16));
 
 			alc_pk = CXBpeak(tx[thread].buf.i);
-			uni[thread].meter.tx.val[TX_ALC_PK] = (REAL) (-10.0 * log10 (alc_pk+ 1e-16));
+			uni[thread].meter.tx.val[TX_ALC_PK] = (REAL) (-20.0 * log10 (alc_pk+ 1e-16));
 			uni[thread].meter.tx.val[TX_ALC_G] = (REAL)(20.0*log10(tx[thread].alc.gen->gain.now+1e-16));
 			break;
 
@@ -979,7 +979,7 @@ do_tx_meter (unsigned int thread, CXB buf, TXMETERTYPE mt)
 			uni[thread].meter.tx.val[TX_EQ] = (REAL) (-10.0 * log10 (eq_avg + 1e-16));
 
 			eq_pk = CXBpeak(tx[thread].buf.i);
-			uni[thread].meter.tx.val[TX_EQ_PK] = (REAL) (-10.0 * log10 (eq_pk + 1e-16));
+			uni[thread].meter.tx.val[TX_EQ_PK] = (REAL) (-20.0 * log10 (eq_pk + 1e-16));
 			break;
 
 		case TX_LVL:
@@ -989,7 +989,7 @@ do_tx_meter (unsigned int thread, CXB buf, TXMETERTYPE mt)
 			uni[thread].meter.tx.val[TX_LVL] = (REAL) (-10.0 * log10 (lev_avg + 1e-16));
 
 			lev_pk = CXBpeak(tx[thread].buf.i);
-			uni[thread].meter.tx.val[TX_LVL_PK] = (REAL) (-10.0 * log10 (lev_pk + 1e-16));
+			uni[thread].meter.tx.val[TX_LVL_PK] = (REAL) (-20.0 * log10 (lev_pk + 1e-16));
 			uni[thread].meter.tx.val[TX_LVL_G] = (REAL)(20.0*log10(tx[thread].leveler.gen->gain.now + 1e-16));
 			break;
 
@@ -1000,7 +1000,7 @@ do_tx_meter (unsigned int thread, CXB buf, TXMETERTYPE mt)
 			uni[thread].meter.tx.val[TX_COMP] = (REAL) (-10.0 * log10 (comp_avg + 1e-16));
 
 			comp_pk = CXBpeak(tx[thread].buf.i);
-			uni[thread].meter.tx.val[TX_COMP_PK] = (REAL) (-10.0 * log10 (comp_pk + 1e-16));
+			uni[thread].meter.tx.val[TX_COMP_PK] = (REAL) (-20.0 * log10 (comp_pk + 1e-16));
 			break;
 
 		case TX_CPDR:
@@ -1010,7 +1010,7 @@ do_tx_meter (unsigned int thread, CXB buf, TXMETERTYPE mt)
 			uni[thread].meter.tx.val[TX_CPDR] = (REAL) (-10.0 * log10 (cpdr_avg + 1e-16));
 
 			cpdr_pk = CXBpeak(tx[thread].buf.i);
-			uni[thread].meter.tx.val[TX_CPDR_PK] = (REAL) (-10.0 * log10 (cpdr_pk + 1e-16));
+			uni[thread].meter.tx.val[TX_CPDR_PK] = (REAL) (-20.0 * log10 (cpdr_pk + 1e-16));
 			break;
 
 		default:

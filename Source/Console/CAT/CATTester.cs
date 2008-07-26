@@ -58,7 +58,7 @@ namespace PowerSDR
 
 		private void Setup()
 		{
-			ds.ReadXml("CATStructs.xml");
+			ds.ReadXml(Application.StartupPath+"\\CATStructs.xml");
 			dataGrid1.DataSource = ds;
 			txtInput.Focus();
 		}

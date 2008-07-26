@@ -229,10 +229,10 @@ namespace PowerSDR
 					b1 = 0xA; b2 = 0xB;
 					break;
 			}
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b1);		// Drive bit high.
-//			Thread.Sleep(new TimeSpan(delay));
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b2);		// Drive bit low.
-//			Thread.Sleep(new TimeSpan(delay));
+			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b1);		// Drive bit high.
+			Thread.Sleep(new TimeSpan(delay));
+			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b2);		// Drive bit low.
+			Thread.Sleep(new TimeSpan(delay));
 		}
         
 		private void LatchAddr()
@@ -247,10 +247,10 @@ namespace PowerSDR
 					b1 = 0x9; b2 = 0xB;
 					break;
 			}
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b1);		// Drive bit high.
-//			Thread.Sleep(new TimeSpan(delay));
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b2);		// Drive bit low.
-//			Thread.Sleep(new TimeSpan(delay));
+			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b1);		// Drive bit high.
+			Thread.Sleep(new TimeSpan(delay));
+			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b2);		// Drive bit low.
+			Thread.Sleep(new TimeSpan(delay));
 		}
 
 		private void LatchCtrl()
@@ -265,10 +265,10 @@ namespace PowerSDR
 					b1 = 0x3; b2 = 0xB;
 					break;
 			}
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b1);		// Drive bit high.
-//			Thread.Sleep(new TimeSpan(delay));
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b2);		// Drive bit low.
-//			Thread.Sleep(new TimeSpan(delay));
+			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b1);		// Drive bit high.
+			Thread.Sleep(new TimeSpan(delay));
+			Parallel.outport((ushort)(lpt_addr+LPTPort.CTRL), b2);		// Drive bit low.
+			Thread.Sleep(new TimeSpan(delay));
 		}
 
 		private void WriteRegister(byte data, object user)
@@ -295,21 +295,21 @@ namespace PowerSDR
 					break;
 			}
 			// Set up data bits.
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b1);
+			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b1);
 			LatchData();
 
 			// Set up addr bits.
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b2);
+			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b2);
 			LatchAddr();
 
 			// WRBAR,RESET,UDCLK = lo
 			// RDBAR,PMODE = hi
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b3);
+			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b3);
 			LatchCtrl();
 
 			// RESET,UDCLK = lo
 			// WRBAR,RDBAR,PMODE = hi
-//			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b4);
+			Parallel.outport((ushort)(lpt_addr+LPTPort.DATA), b4);
 			LatchCtrl();
 		}
 

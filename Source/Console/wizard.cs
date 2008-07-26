@@ -811,11 +811,13 @@ namespace PowerSDR
 			// 
 			// radGenModelFLEX5000
 			// 
+			this.radGenModelFLEX5000.Checked = true;
 			this.radGenModelFLEX5000.Image = null;
 			this.radGenModelFLEX5000.Location = new System.Drawing.Point(16, 24);
 			this.radGenModelFLEX5000.Name = "radGenModelFLEX5000";
 			this.radGenModelFLEX5000.Size = new System.Drawing.Size(88, 24);
 			this.radGenModelFLEX5000.TabIndex = 6;
+			this.radGenModelFLEX5000.TabStop = true;
 			this.radGenModelFLEX5000.Text = "FLEX-5000";
 			this.radGenModelFLEX5000.CheckedChanged += new System.EventHandler(this.radGenModelFLEX5000_CheckedChanged);
 			// 
@@ -841,14 +843,12 @@ namespace PowerSDR
 			// 
 			// radGenModelSDR1000
 			// 
-			this.radGenModelSDR1000.Checked = true;
 			this.radGenModelSDR1000.Image = null;
 			this.radGenModelSDR1000.Location = new System.Drawing.Point(16, 48);
 			this.radGenModelSDR1000.Name = "radGenModelSDR1000";
 			this.radGenModelSDR1000.Size = new System.Drawing.Size(88, 24);
 			this.radGenModelSDR1000.TabIndex = 3;
-			this.radGenModelSDR1000.TabStop = true;
-			this.radGenModelSDR1000.Text = "SoftRock RxTx Si570";
+			this.radGenModelSDR1000.Text = "SDR-1000";
 			this.radGenModelSDR1000.CheckedChanged += new System.EventHandler(this.radGenModelSDR1000_CheckedChanged);
 			// 
 			// SetupWizard
@@ -1206,9 +1206,7 @@ namespace PowerSDR
 					switch(model)
 					{
 						case Model.SDR1000:
-//							CurPage = Page.RFE;
-//							btnNext.Focus();
-							CurPage = Page.SOUND_CARD;
+							CurPage = Page.RFE;
 							btnNext.Focus();
 							break;
 						case Model.FLEX5000:
@@ -1432,11 +1430,11 @@ namespace PowerSDR
 		{
 			if(model != Model.FLEX5000)
 			{
-//				console.SetupForm.RFEPresent = rfe_present;
-//				console.SetupForm.XVTRPresent = xvtr_present;
-//				console.SetupForm.PAPresent = pa_present;
+				console.SetupForm.RFEPresent = rfe_present;
+				console.SetupForm.XVTRPresent = xvtr_present;
+				console.SetupForm.PAPresent = pa_present;
 				console.SetupForm.USBPresent = usb_present;
-//				console.SetupForm.ATUPresent = atu_present;
+				console.SetupForm.ATUPresent = atu_present;
 
 				if(sound_card_index >= 0)
 				{
@@ -1480,8 +1478,8 @@ namespace PowerSDR
 					console.CurrentSoundCard = card;
 				}
 				
-//				if(xvtr_present)
-//					console.SetupForm.XVTRSelection = xvtr_index;
+				if(xvtr_present)
+					console.SetupForm.XVTRSelection = xvtr_index;
 				if(ext_clock)
 					console.SetupForm.PllMult = pll_mult;
 
@@ -1544,8 +1542,6 @@ namespace PowerSDR
 			console.SetupForm.GetTxProfiles();
 
 			console.SetupForm.GetOptions();			// load all database values
-			DB.GetIQ();
-
 			console.GetState();				
 			if(console.EQForm != null) Common.RestoreForm(console.EQForm, "EQForm", false);
 			if(console.XVTRForm != null) Common.RestoreForm(console.XVTRForm, "XVTR", false);

@@ -82,7 +82,9 @@ namespace PowerSDR
 			}
 			else if(s.Length == parser.nGet)	// if this is a read command
 			{
-				return AddLeadingZeros(console.AF);		// Get the console setting
+				int af = (int) Math.Round(console.AF/0.392,0);
+//				return AddLeadingZeros(console.AF);		// Get the console setting
+				return AddLeadingZeros(af);
 			}
 			else
 			{
@@ -753,6 +755,13 @@ namespace PowerSDR
 			return ZZRC();
 		}
 
+		//Decrements RIT
+		public string RD(string s)
+		{
+			return ZZRD(s);
+		}
+
+
 		// Sets or reads the RIT status (on/off)
 		public string RT(string s)
 		{
@@ -778,6 +787,13 @@ namespace PowerSDR
 			//			}
 			return ZZRT(s);
 		}
+
+		//Increments RIT
+		public string RU(string s)
+		{
+			return ZZRU(s);
+		}
+
 
 		// Sets or reads the transceiver receive mode status
 		// write only but spec shows an answer parameter for a read???
@@ -1917,37 +1933,113 @@ namespace PowerSDR
 				return parser.Error1;
 		}
 
-		//Sets or reads the DSP RX Buffer Size
-		/*public string ZZHR(string s)
+		//Sets or reads the DSP Phone RX Buffer Size
+		public string ZZHR(string s)
 		{
 			if(s.Length == parser.nSet)
 			{
-				console.SetupForm.DSPRXBufferSize = Index2Width(s);
+				int width = Index2Width(s);
+				console.DSPBufPhoneRX = width;
+				console.SetupForm.DSPPhoneRXBuffer = width;
 				return "";
 			}
 			else if(s.Length == parser.nGet)
 			{
-				return Width2Index(console.SetupForm.DSPRXBufferSize);
+				return Width2Index(console.DSPBufPhoneRX);
 			}
 			else
 				return parser.Error1;
 		}
 
-		//Sets or reads the DSP TX Buffer Size
+		//Sets or reads the DSP Phone TX Buffer Size
 		public string ZZHT(string s)
 		{
 			if(s.Length == parser.nSet)
 			{
-				console.SetupForm.DSPTXBufferSize = Index2Width(s);
+				int width = Index2Width(s);
+				console.DSPBufPhoneTX = width;
+				console.SetupForm.DSPPhoneTXBuffer = width;
 				return "";
 			}
 			else if(s.Length == parser.nGet)
 			{
-				return Width2Index(console.SetupForm.DSPTXBufferSize);
+				return Width2Index(console.DSPBufPhoneTX);
 			}
 			else
 				return parser.Error1;
-		}*/
+		}
+
+		//Sets or reads the DSP CW RX Buffer Size
+		public string ZZHU(string s)
+		{
+			if(s.Length == parser.nSet)
+			{
+				int width = Index2Width(s);
+				console.DSPBufCWRX = width;
+				console.SetupForm.DSPCWRXBuffer = width;
+				return "";
+			}
+			else if(s.Length == parser.nGet)
+			{
+				return Width2Index(console.DSPBufCWRX);
+			}
+			else
+				return parser.Error1;
+		}
+
+		//Sets or reads the DSP CW TX Buffer Size
+		public string ZZHV(string s)
+		{
+			if(s.Length == parser.nSet)
+			{
+				int width = Index2Width(s);
+				console.DSPBufCWTX = width;
+				console.SetupForm.DSPCWTXBuffer = width;
+				return "";
+			}
+			else if(s.Length == parser.nGet)
+			{
+				return Width2Index(console.DSPBufCWTX);
+			}
+			else
+				return parser.Error1;
+		}
+
+		//Sets or reads the DSP Digital RX Buffer Size
+		public string ZZHW(string s)
+		{
+			if(s.Length == parser.nSet)
+			{
+				int width = Index2Width(s);
+				console.DSPBufDigRX = width;
+				console.SetupForm.DSPDigRXBuffer = width;
+				return "";
+			}
+			else if(s.Length == parser.nGet)
+			{
+				return Width2Index(console.DSPBufDigRX);
+			}
+			else
+				return parser.Error1;
+		}
+
+		//Sets or reads the DSP Digital TX Buffer Size
+		public string ZZHX(string s)
+		{
+			if(s.Length == parser.nSet)
+			{
+				int width = Index2Width(s);
+				console.DSPBufDigTX = width;
+				console.SetupForm.DSPDigTXBuffer = width;
+				return "";
+			}
+			else if(s.Length == parser.nGet)
+			{
+				return Width2Index(console.DSPBufDigTX);
+			}
+			else
+				return parser.Error1;
+		}
 
 		// Sets the CAT Rig Type to SDR-1000
 		//Modified 10/12/08 BT changed "SDR-1000" to "PowerSDR"
@@ -2989,6 +3081,32 @@ namespace PowerSDR
 			return "";
 		}
 
+		//Decrements RIT
+		public string ZZRD(string s)
+		{
+			if(s.Length == parser.nSet)
+			{
+				return ZZRF(s);
+			}
+			else if(s.Length == parser.nGet && console.RITOn)
+			{
+				switch(console.RX1DSPMode)
+				{
+					case DSPMode.CWL:
+					case DSPMode.CWU:
+						console.RITValue -= 10;
+						break;
+					case DSPMode.LSB:
+					case DSPMode.USB:
+						console.RITValue -= 50;
+						break;
+				}
+				return "";
+			}
+			else
+				return parser.Error1;
+		}
+
 		// Sets or reads the RIT frequency value
 		public string ZZRF(string s)
 		{
@@ -3023,6 +3141,7 @@ namespace PowerSDR
 				return parser.Error1;
 			}
 		}
+
 
 		//Sets or reads the RTTY DIGH offset frequency ud counter
 		public string ZZRH(string s)
@@ -3166,6 +3285,31 @@ namespace PowerSDR
 				return parser.Error1;
 			}
 		}
+
+		//Increments RIT
+		public string ZZRU(string s)
+		{
+			if(s.Length == parser.nSet)
+			{
+				return ZZRF(s);
+			}
+			else if(s.Length == parser.nGet && console.RITOn)
+			{
+				switch(console.RX1DSPMode)
+				{
+					case DSPMode.CWL:
+					case DSPMode.CWU:
+						console.RITValue += 10;
+						break;
+					case DSPMode.LSB:
+					case DSPMode.USB:
+						console.RITValue += 50;
+						break;
+				}
+				return "";
+			}
+			else
+				return parser.Error1;		}
 
 		//Moves VFO A down one Tune Step
 		public string ZZSA()

@@ -51,7 +51,6 @@ namespace PowerSDR
 		private static OleDbDataAdapter memoryAdapter;
 		private static OleDbDataAdapter groupAdapter;
 		private static OleDbDataAdapter txProfileAdapter;
-		public static OleDbDataAdapter IQAdapter;
 
 		private static OleDbCommandBuilder bandTextCB;
 		private static OleDbCommandBuilder bandStackCB;
@@ -59,14 +58,12 @@ namespace PowerSDR
 		private static OleDbCommandBuilder memoryCB;
 		private static OleDbCommandBuilder groupCB;
 		private static OleDbCommandBuilder txProfileCB;
-		public static OleDbCommandBuilder IQCB;
 
 		private static DataSet dsBandText;
 		private static DataSet dsBandStack;
 		private static DataSet dsOptions;
 		public static DataSet dsMemory;
 		public static DataSet dsTxProfile;
-		public static DataSet dsIQ;
 
 		#endregion
 
@@ -94,7 +91,6 @@ namespace PowerSDR
 			AddFormTable(ref cat, "UCB");
 			AddFormTable(ref cat, "XVTR");
 			AddTxProfileTable(ref cat);
-			AddIQTable(ref cat);
 			AddFormTable(ref cat, "EQForm");
 			AddFormTable(ref cat, "ProdTest");
 			AddFormTable(ref cat, "WaveOptions");
@@ -134,9 +130,6 @@ namespace PowerSDR
 			
 			if(a.BinarySearch("Options") < 0)
 				AddFormTable(ref cat, "Options");
-
-			if(a.BinarySearch("IQ") < 0)
-				AddIQTable(ref cat);
 
 			if(a.BinarySearch("CWX") < 0)
 				AddFormTable(ref cat, "CWX");
@@ -389,29 +382,6 @@ namespace PowerSDR
 
 			c.Tables.Append(txProfileTable);
 		}
-
-
-		private static void AddIQTable(ref Catalog c)
-		{
-			Table IQTable = new Table();
-			IQTable.Name = "IQ";
-			IQTable.Columns.Append("Frequency", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Rx_Gain", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Rx_Phase", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Tx_Gain", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Tx_Phase", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Rx_Gain_1", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Rx_Phase_1", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Rx_Gain_2", DataTypeEnum.adDouble, 6);
-			IQTable.Columns.Append("Rx_Phase_2", DataTypeEnum.adDouble, 6);
-
-			IQTable.Keys.Append("PrimaryKey", KeyTypeEnum.adKeyPrimary, "Frequency", null, null);
-
-			c.Tables.Append(IQTable);
-		}
-
-
-
 
 		private static void AddFormTable(ref Catalog c, string name)
 		{
@@ -680,9 +650,11 @@ namespace PowerSDR
 								222.100001, 222.149999, "1.25M Weak Signal CW/SSB", "True",
 								222.150000, 222.249999, "1.25M Local Option",	"True",
 								222.250000, 223.380000, "1.25M FM Repeater Inputs", "True",
+								222.380001, 223.399999, "1.25M General", "True",
 								223.400000, 223.519999, "1.25M FM Simplex",		"True",
 								223.520000, 223.639999, "1.25M Digital/Packet",	"True",
 								223.640000, 223.700000, "1.25M Links/Control",	"True",
+								223.700001, 223.709999, "1.25M General",	"True",
 								223.710000, 223.849999, "1.25M Local Option",	"True",
 								223.850000, 224.980000, "1.25M Repeater Outputs", "True",
 
@@ -745,6 +717,7 @@ namespace PowerSDR
 								2300.000000, 2302.999999, "2.3GHz High Data Rate", "True",
 								2303.000000, 2303.499999, "2.3GHz Packet",		"True",
 								2303.500000, 2303.800000, "2.3GHz TTY Packet",	"True",
+								2303.800001, 2303.899999, "2.3GHz General",	"True",
 								2303.900000, 2303.900000, "2.3GHz Packet/TTY/CW/EME", "True",
 								2303.900001, 2304.099999, "2.3GHz CW/EME",		"True",
 								2304.100000, 2304.100000, "2.3GHz Calling Frequency", "True",
@@ -775,15 +748,27 @@ namespace PowerSDR
 								2433.000000, 2437.999999, "2.4GHz Sat. High-Rate Data", "True",
 								2438.000000, 2450.000000, "2.4GHz Wideband FM/FSTV/FMTV", "True",
 
+								3456.000000, 3456.099999, "3.4GHz General", "True",
 								3456.100000, 3456.100000, "3.4GHz Calling Frequency", "True",
+								3456.100001, 3456.299999, "3.4GHz General", "True",
 								3456.300000, 3456.400000, "3.4GHz Propagation Beacons", "True",
 
+								5760.000000, 5760.099999, "5.7GHz General", "True",
 								5760.100000, 5760.100000, "5.7GHz Calling Frequency", "True",
+								5760.100001, 5760.299999, "5.7GHz General", "True",
 								5760.300000, 5760.400000, "5.7GHz Propagation Beacons", "True",
 
+								10368.000000, 10368.099999, "10GHz General", "True",
 								10368.100000, 10368.100000, "10GHz Calling Frequency", "True",
+								10368.100001, 10368.400000, "10GHz General", "True",
+
+								24192.000000, 24192.099999, "24GHz General", "True",
 								24192.100000, 24192.100000, "24GHz Calling Frequency", "True",
+								24192.100001, 24192.400000, "24GHz General", "True",
+
+								47088.000000, 47088.099999, "47GHz General", "True",
 								47088.100000, 47088.100000, "47GHz Calling Frequency", "True",
+								47088.100001, 47088.400000, "47GHz General", "True",
 
 								2.500000, 2.500000, "WWV",						"False",
 								5.000000, 5.000000, "WWV",						"False",
@@ -1469,12 +1454,6 @@ namespace PowerSDR
 			dsOptions = new DataSet();
 			optionsAdapter.Fill(dsOptions, "Options");
 
-			IQAdapter = new OleDbDataAdapter();
-			IQAdapter.SelectCommand = new OleDbCommand("SELECT * FROM IQ", conn);
-			IQCB = new OleDbCommandBuilder(IQAdapter);
-			dsIQ = new DataSet();
-			IQAdapter.Fill(dsIQ, "IQ");
-
 			memoryAdapter = new OleDbDataAdapter();
 			memoryAdapter.SelectCommand = new OleDbCommand("SELECT * FROM Memory", conn);
 			memoryCB = new OleDbCommandBuilder(memoryAdapter);
@@ -1516,7 +1495,6 @@ namespace PowerSDR
 		public static void Update()
 		{
 			optionsAdapter.Update(dsOptions, "Options");
-			IQAdapter.Update(dsIQ, "IQ");
 			memoryAdapter.Update(dsMemory, "Memory");
 			txProfileAdapter.Update(dsTxProfile, "TxProfile");
 		}
@@ -1739,31 +1717,6 @@ namespace PowerSDR
 				list.Add(dr[0].ToString()+"/"+dr[1].ToString());
 
 			return list;
-		}
-
-//		public static ArrayList GetIQ()
-		public static void GetIQ()
-		{
-//			ArrayList list = new ArrayList();
-			int i=0;
-			foreach(DataRow dr in dsIQ.Tables["IQ"].Rows)
-				//				list.Add(dr[0].ToString()+"/"+dr[1].ToString());
-			{
-				Console.IQ_Image_Table[i] = new float[9];
-				i++;
-				Console.IQ_Image_Table[i][0] = (float) dr["Frequency"];
-//				Console.IQ_Image_Table[i][1] = float.Parse(dr[1].ToString());
-				Console.IQ_Image_Table[i][1] = (float) dr["Rx_Gain"];
-				Console.IQ_Image_Table[i][2] = (float) dr["Rx_Phase"];
-				Console.IQ_Image_Table[i][3] = (float) dr["Tx_Gain"];
-				Console.IQ_Image_Table[i][4] = (float) dr["Tx_Phase"];
-				Console.IQ_Image_Table[i][5] = (float) dr["Rx_Gain_1"];
-				Console.IQ_Image_Table[i][6] = (float) dr["Rx_Phase_1"];
-				Console.IQ_Image_Table[i][7] = (float) dr["Rx_Gain_2"];
-				Console.IQ_Image_Table[i][8] = (float) dr["Rx_Phase_2"];
-			}
-
-//			return list;
 		}
 
 		public static bool ImportDatabase(string filename)

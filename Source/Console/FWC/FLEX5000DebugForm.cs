@@ -2516,8 +2516,11 @@ namespace PowerSDR
 
 		private void udTRXPot0_ValueChanged(object sender, System.EventArgs e)
 		{
-			if(FWC.TRXPotSetRDAC(0, (int)udTRXPot0.Value) != 0)
-				MessageBox.Show("Error in TRXPotSetRDAC");
+			if(udTRXPot0.Focused)
+			{
+				if(FWC.TRXPotSetRDAC(0, (int)udTRXPot0.Value) != 0)
+					MessageBox.Show("Error in TRXPotSetRDAC");
+			}
 
 			tbTRXPot0.Value = (int)udTRXPot0.Value;
 		}
@@ -2529,8 +2532,11 @@ namespace PowerSDR
 
 		private void udTRXPot1_ValueChanged(object sender, System.EventArgs e)
 		{
-			if(FWC.TRXPotSetRDAC(1, (int)udTRXPot1.Value) != 0)
-				MessageBox.Show("Error in TRXPotSetRDAC");
+			if(udTRXPot1.Focused)
+			{
+				if(FWC.TRXPotSetRDAC(1, (int)udTRXPot1.Value) != 0)
+					MessageBox.Show("Error in TRXPotSetRDAC");
+			}
 
 			tbTRXPot1.Value = (int)udTRXPot1.Value;
 		}
@@ -2542,8 +2548,11 @@ namespace PowerSDR
 
 		private void udTRXPot2_ValueChanged(object sender, System.EventArgs e)
 		{
-			if(FWC.TRXPotSetRDAC(2, (int)udTRXPot2.Value) != 0)
-				MessageBox.Show("Error in TRXPotSetRDAC");
+			if(udTRXPot2.Focused)
+			{
+				if(FWC.TRXPotSetRDAC(2, (int)udTRXPot2.Value) != 0)
+					MessageBox.Show("Error in TRXPotSetRDAC");
+			}
 
 			tbTRXPot2.Value = (int)udTRXPot2.Value;
 		}
@@ -2555,8 +2564,11 @@ namespace PowerSDR
 
 		private void udTRXPot3_ValueChanged(object sender, System.EventArgs e)
 		{
-			if(FWC.TRXPotSetRDAC(3, (int)udTRXPot3.Value) != 0)
-				MessageBox.Show("Error in TRXPotSetRDAC");
+			if(udTRXPot3.Focused)
+			{
+				if(FWC.TRXPotSetRDAC(3, (int)udTRXPot3.Value) != 0)
+					MessageBox.Show("Error in TRXPotSetRDAC");
+			}
 
 			tbTRXPot3.Value = (int)udTRXPot3.Value;
 		}

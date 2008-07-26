@@ -4350,6 +4350,7 @@ namespace PowerSDR
 																	 0,
 																	 0,
 																	 0});
+			this.udRXGain15.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain14
 			// 
@@ -4379,6 +4380,7 @@ namespace PowerSDR
 																	 0,
 																	 0,
 																	 0});
+			this.udRXGain14.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain13
 			// 
@@ -4408,6 +4410,7 @@ namespace PowerSDR
 																	 0,
 																	 0,
 																	 0});
+			this.udRXGain13.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain12
 			// 
@@ -4437,6 +4440,7 @@ namespace PowerSDR
 																	 0,
 																	 0,
 																	 0});
+			this.udRXGain12.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain11
 			// 
@@ -4466,6 +4470,7 @@ namespace PowerSDR
 																	 0,
 																	 0,
 																	 0});
+			this.udRXGain11.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain10
 			// 
@@ -4495,6 +4500,7 @@ namespace PowerSDR
 																	 0,
 																	 0,
 																	 0});
+			this.udRXGain10.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain9
 			// 
@@ -4524,6 +4530,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain9.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain8
 			// 
@@ -4553,6 +4560,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain8.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain7
 			// 
@@ -4582,6 +4590,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain7.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain6
 			// 
@@ -4611,6 +4620,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain6.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain5
 			// 
@@ -4640,6 +4650,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain5.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain4
 			// 
@@ -4669,6 +4680,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain4.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain3
 			// 
@@ -4698,6 +4710,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain3.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain2
 			// 
@@ -4727,6 +4740,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain2.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain1
 			// 
@@ -4756,6 +4770,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain1.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// udRXGain0
 			// 
@@ -4785,6 +4800,7 @@ namespace PowerSDR
 																	0,
 																	0,
 																	0});
+			this.udRXGain0.ValueChanged += new System.EventHandler(this.udRXGain_ValueChanged);
 			// 
 			// lblRXGain
 			// 
@@ -5731,10 +5747,43 @@ namespace PowerSDR
 		private void chkXVTRRF_CheckedChanged(object sender, System.EventArgs e)
 		{
 			int index = int.Parse(((Control)sender).Name.Substring(9));
-			if(console.CurrentXVTRIndex == index)
+			if(console.RX1XVTRIndex == index)
 			{
-				console.CurrentXVTRIndex = -1; // force reset
+				console.RX1XVTRIndex = -1; // force reset
 				console.VFOAFreq = console.VFOAFreq;
+			}
+
+			if(console.RX2XVTRIndex == index)
+			{
+				console.RX2XVTRIndex = -1; // force reset
+				console.VFOBFreq = console.VFOBFreq;
+			}
+
+			if(console.TXXVTRIndex == index)
+			{
+				console.TXXVTRIndex = -1; // force reset
+				if(console.RX2Enabled && console.VFOSplit)
+					console.VFOASubFreq = console.VFOASubFreq;
+				else if(console.VFOSplit)
+					console.VFOBFreq = console.VFOBFreq;
+				else
+					console.VFOAFreq = console.VFOAFreq;
+			}
+		}
+
+		private void udRXGain_ValueChanged(object sender, System.EventArgs e)
+		{
+			int index = int.Parse(((Control)sender).Name.Substring(8));
+			if(console.RX1XVTRIndex == index)
+			{
+				console.RX1XVTRIndex = -1; // force reset
+				console.VFOAFreq = console.VFOAFreq;
+			}
+
+			if(console.RX2XVTRIndex == index)
+			{
+				console.RX2XVTRIndex = -1; // force reset
+				console.VFOBFreq = console.VFOBFreq;
 			}
 		}
 	}

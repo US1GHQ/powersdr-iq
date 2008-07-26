@@ -54,11 +54,15 @@ namespace PowerSDR
 			Thread.Sleep(40);
 			FWC.GetRFIOSN(out rfio_serial);
 			Thread.Sleep(40);
+			FWC.GetRFIORev(out rfio_rev);
+			Thread.Sleep(40);
 			FWC.GetATUOK(out atu_ok);
 			Thread.Sleep(40);
 			FWC.GetRX2OK(out rx2_ok);
 			Thread.Sleep(40);
 			FWC.GetRX2SN(out rx2_serial);
+			Thread.Sleep(40);
+			FWC.GetRX2Rev(out rx2_rev);
 			Thread.Sleep(40);
 
 			uint data; // get last cal date/time
@@ -189,6 +193,12 @@ namespace PowerSDR
 			get { return rfio_serial; }
 		}
 
+		private static uint rfio_rev;
+		public static uint RFIORev
+		{
+			get { return rfio_rev; }
+		}
+
 		private static bool atu_ok;
 		public static bool ATUOK
 		{
@@ -205,6 +215,12 @@ namespace PowerSDR
 		public static uint RX2Serial
 		{
 			get { return rx2_serial; }
+		}
+
+		private static uint rx2_rev;
+		public static uint RX2Rev
+		{
+			get { return rx2_rev; }
 		}
 
 		#endregion

@@ -322,9 +322,6 @@ namespace PowerSDR
 			SetRXAGCAttackdll(thread, subrx, attack);
 		}*/
 
-		[DllImport("DttSP.dll", EntryPoint="SetRingBufferOffset")]
-		public static extern void SetRingBufferOffset(uint thread, int offset);
-
 		[DllImport("DttSP.dll", EntryPoint="SetRXAGCDecay")]///
 		public static extern void SetRXAGCDecay(uint thread, uint subrx, int decay);
 		/*public static void SetRXAGCDecay(uint thread, uint subrx, int decay)

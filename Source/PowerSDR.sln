@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HPSDR_USB_LIB_V1.1", "HPSDR
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Deployment", "Setup\PowerSDR Setup.vdproj", "{414604F7-8872-482B-A9F8-1AAAE679690B}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Deployment", "Setup\PowerSDR Setup.vdproj", "{518C2539-684A-43E6-9C54-D0BC5309730E}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -48,6 +48,8 @@ Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{831AEB2F-CA78-4057-85D7-32B4816ED6AE}.Debug.ActiveCfg = Debug|.NET
@@ -82,10 +84,10 @@ Global
 		{CAAC4594-93AC-40DD-9109-AC4D18397D1E}.Debug.Build.0 = Debug|.NET
 		{CAAC4594-93AC-40DD-9109-AC4D18397D1E}.Release.ActiveCfg = Release|.NET
 		{CAAC4594-93AC-40DD-9109-AC4D18397D1E}.Release.Build.0 = Release|.NET
-		{414604F7-8872-482B-A9F8-1AAAE679690B}.Debug.ActiveCfg = Debug
-		{414604F7-8872-482B-A9F8-1AAAE679690B}.Debug.Build.0 = Debug
-		{414604F7-8872-482B-A9F8-1AAAE679690B}.Release.ActiveCfg = Release
-		{414604F7-8872-482B-A9F8-1AAAE679690B}.Release.Build.0 = Release
+		{518C2539-684A-43E6-9C54-D0BC5309730E}.Debug.ActiveCfg = Debug
+		{518C2539-684A-43E6-9C54-D0BC5309730E}.Debug.Build.0 = Debug
+		{518C2539-684A-43E6-9C54-D0BC5309730E}.Release.ActiveCfg = Release
+		{518C2539-684A-43E6-9C54-D0BC5309730E}.Release.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

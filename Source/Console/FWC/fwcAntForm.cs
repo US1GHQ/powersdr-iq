@@ -85,6 +85,20 @@ namespace PowerSDR
 				if((temp&0xFF) < 34)
 					comboRX2Ant.Items.Remove("ANT 1");
 			}
+
+			// Set mode first
+			ArrayList a = DB.GetVars("FWCAnt");
+			a.Sort();
+
+			foreach(string s in a)
+			{
+				if(s.StartsWith("radModeExpert") && s.IndexOf("True") >= 0)
+				{
+					radModeExpert.Checked = true;
+					break;
+				}
+			}
+
 			Common.RestoreForm(this, "FWCAnt", false);
 
 			if(radModeSimple.Checked)
@@ -832,7 +846,7 @@ namespace PowerSDR
 				lblBand.Visible = true;
 				comboBand.Visible = true;
 				grpSwitchRelay.Visible = true;
-				if(comboBand.Text != "6m")
+				if(comboBand.Text != "6m" || (byte)FWCEEPROM.RFIORev >= 34)
 					comboTXAnt.Enabled = true;
 
 				comboBand.Text = BandToString(console.RX1Band);
@@ -849,32 +863,43 @@ namespace PowerSDR
 			Band band = StringToBand(comboBand.Text);
 			if(!radModeSimple.Checked)
 			{				
-				switch(band)
+				if((byte)(FWCEEPROM.RFIORev) < 34)
 				{
-					case Band.B6M:
-						if(comboTXAnt.Items.Contains("ANT 1"))
-							comboTXAnt.Items.Remove("ANT 1");
-						if(comboTXAnt.Items.Contains("ANT 2"))
-							comboTXAnt.Items.Remove("ANT 2");
-						break;
-					default:
-						if(!comboTXAnt.Items.Contains("ANT 2"))
-							comboTXAnt.Items.Insert(0, "ANT 2");
-						if(!comboTXAnt.Items.Contains("ANT 1"))
-							comboTXAnt.Items.Insert(0, "ANT 1");
-						break;
+					switch(band)
+					{
+						case Band.B6M:
+							if(comboTXAnt.Items.Contains("ANT 1"))
+								comboTXAnt.Items.Remove("ANT 1");
+							if(comboTXAnt.Items.Contains("ANT 2"))
+								comboTXAnt.Items.Remove("ANT 2");
+							break;
+						default:
+							if(!comboTXAnt.Items.Contains("ANT 2"))
+								comboTXAnt.Items.Insert(0, "ANT 2");
+							if(!comboTXAnt.Items.Contains("ANT 1"))
+								comboTXAnt.Items.Insert(0, "ANT 1");
+							break;
+					}
 				}
 				comboRX1Ant.Text = AntToString(console.GetRX1Ant(band));
 				comboRX2Ant.Text = AntToString(console.GetRX2Ant(band));
-				if(band == Band.B6M)
+
+				if((byte)(FWCEEPROM.RFIORev) < 34)
 				{
-					comboTXAnt.Text = "ANT 3";
-					comboTXAnt.Enabled = false;
+					if(band == Band.B6M)
+					{
+						comboTXAnt.Text = "ANT 3";
+						comboTXAnt.Enabled = false;
+					}
+					else
+					{
+						comboTXAnt.Text = AntToString(console.GetTXAnt(band));
+						comboTXAnt.Enabled = true;
+					}
 				}
 				else
 				{
 					comboTXAnt.Text = AntToString(console.GetTXAnt(band));
-					comboTXAnt.Enabled = true;
 				}
 				chkRX1Loop.Checked = console.GetRX1Loop(band);
 				chkRCATX1.Checked = console.GetTX1(band);
@@ -883,16 +908,23 @@ namespace PowerSDR
 			}
 			else
 			{
-				switch(band)
+				if((byte)(FWCEEPROM.RFIORev) < 34)
 				{
-					case Band.B6M:
-						comboTXAnt.Text = "ANT 3";
-						comboTXAnt.Enabled = false;
-						break;
-					default:
-						comboTXAnt.Text = AntToString(console.TXAnt);
-						comboTXAnt.Enabled = true;
-						break;
+					switch(band)
+					{
+						case Band.B6M:
+							comboTXAnt.Text = "ANT 3";
+							comboTXAnt.Enabled = false;
+							break;
+						default:
+							comboTXAnt.Text = AntToString(console.TXAnt);
+							comboTXAnt.Enabled = true;
+							break;
+					}
+				}
+				else
+				{
+					comboTXAnt.Text = AntToString(console.TXAnt);
 				}
 			}
 		}
@@ -964,13 +996,20 @@ namespace PowerSDR
 
 		private void comboTXAnt_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			switch(StringToBand(comboBand.Text))
+			if((byte)(FWCEEPROM.RFIORev) < 34)
 			{
-				case Band.B6M: // do nothing
-					break;
-				default:
-					console.SetTXAnt(StringToBand(comboBand.Text), StringToAnt(comboTXAnt.Text));
-					break;
+				switch(StringToBand(comboBand.Text))
+				{
+					case Band.B6M: // do nothing
+						break;
+					default:
+						console.SetTXAnt(StringToBand(comboBand.Text), StringToAnt(comboTXAnt.Text));
+						break;
+				}
+			}
+			else
+			{
+				console.SetTXAnt(StringToBand(comboBand.Text), StringToAnt(comboTXAnt.Text));
 			}
 
 			if(chkLock.Checked)

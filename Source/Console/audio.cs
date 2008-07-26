@@ -1402,7 +1402,9 @@ namespace PowerSDR
 						rx1_dsp_mode == DSPMode.DSB ||
 						rx1_dsp_mode == DSPMode.AM  ||
 						rx1_dsp_mode == DSPMode.SAM ||
-						rx1_dsp_mode == DSPMode.FMN)) ||
+						rx1_dsp_mode == DSPMode.FMN ||
+						rx1_dsp_mode == DSPMode.DIGL ||
+						rx1_dsp_mode == DSPMode.DIGU)) ||
 						(vac_enabled && vac_bypass &&
 						(rx1_dsp_mode == DSPMode.DIGL ||
 						rx1_dsp_mode == DSPMode.DIGU ||
@@ -1422,8 +1424,16 @@ namespace PowerSDR
 						{
 							if(localmox)
 							{
-								ScaleBuffer(in_l, in_l, frameCount, (float)mic_preamp);
-								ScaleBuffer(in_r, in_r, frameCount, (float)mic_preamp);
+								if(!vac_enabled && (rx1_dsp_mode == DSPMode.DIGL || rx1_dsp_mode == DSPMode.DIGU))
+								{
+									ScaleBuffer(in_l, in_l, frameCount, (float)vac_preamp);
+									ScaleBuffer(in_r, in_r, frameCount, (float)vac_preamp);
+								}
+								else
+								{
+									ScaleBuffer(in_l, in_l, frameCount, (float)mic_preamp);
+									ScaleBuffer(in_r, in_r, frameCount, (float)mic_preamp);
+								}
 							}
 						}
 					}
@@ -2368,7 +2378,9 @@ namespace PowerSDR
 						rx1_dsp_mode == DSPMode.DSB ||
 						rx1_dsp_mode == DSPMode.AM  ||
 						rx1_dsp_mode == DSPMode.SAM ||
-						rx1_dsp_mode == DSPMode.FMN)) ||
+						rx1_dsp_mode == DSPMode.FMN ||
+						rx1_dsp_mode == DSPMode.DIGL ||
+						rx1_dsp_mode == DSPMode.DIGU)) ||
 						(vac_enabled && vac_bypass &&
 						(rx1_dsp_mode == DSPMode.DIGL ||
 						rx1_dsp_mode == DSPMode.DIGU ||
@@ -2386,8 +2398,16 @@ namespace PowerSDR
 						}
 						else
 						{
-							ScaleBuffer(tx_in_l, tx_in_l, frameCount, (float)mic_preamp);
-							ScaleBuffer(tx_in_r, tx_in_r, frameCount, (float)mic_preamp);
+							if(!vac_enabled && (rx1_dsp_mode == DSPMode.DIGL || rx1_dsp_mode == DSPMode.DIGU))
+							{
+								ScaleBuffer(tx_in_l, tx_in_l, frameCount, (float)vac_preamp);
+								ScaleBuffer(tx_in_r, tx_in_r, frameCount, (float)vac_preamp);
+							}
+							else
+							{
+								ScaleBuffer(tx_in_l, tx_in_l, frameCount, (float)mic_preamp);
+								ScaleBuffer(tx_in_r, tx_in_r, frameCount, (float)mic_preamp);
+							}
 						}
 					}
 

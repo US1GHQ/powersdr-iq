@@ -217,7 +217,7 @@ namespace PowerSDR
 						{
 							sp.Open();
 							sp.DtrEnable=true;
-#if false 
+#if true 
 							sp.RtsEnable=true;
 #else
 							// wjtFIXME! - sr xmit support 
@@ -416,13 +416,13 @@ namespace PowerSDR
 						}
 					}
 					
-					switch(secondary_conn_port)
+					if (!extkey_dash && !extkey_dot) // don't override primary
 					{
-						case "None":
-							break;
-						case "CAT":
-							if (!extkey_dash && !extkey_dot) // don't override primary
-							{
+						switch(secondary_conn_port)
+						{
+							case "None":
+								break;
+							case "CAT":							
 								switch(secondary_ptt_line)
 								{
 									case KeyerLine.NONE:
@@ -454,14 +454,11 @@ namespace PowerSDR
 										break;
 								}
 								
-								if (!extkey_dash || !extkey_dot)
+								if (extkey_dash || extkey_dot)
 									keyprog = true;
 								else keyprog = false;
-								//								Debug.WriteLine("keyprog: "+keyprog);
-							} 
-							//else keyprog = false;
-
-							break;
+								//Debug.WriteLine("keyprog: "+keyprog);
+								break;
 
 #if false
 						// wjtFIXME!! - merged from KD5TFD's HPSDR 1.6.3 tree - sr xmit 
@@ -511,10 +508,7 @@ namespace PowerSDR
 							break;
 #endif 
 
-
-						default: // comm port
-							if (!extkey_dash && !extkey_dot) // don't override primary
-							{
+							default: // comm port
 								switch(secondary_ptt_line)
 								{
 									case KeyerLine.NONE:
@@ -537,7 +531,7 @@ namespace PowerSDR
 										break;
 									case KeyerLine.DTR: // look at DSR since we are on the other side of the null modem cable
 										extkey_dot = sp2.DsrHolding;
-//										Debug.WriteLine("extkey_dot: "+extkey_dot);
+										//										Debug.WriteLine("extkey_dot: "+extkey_dot);
 										break;
 									case KeyerLine.RTS: // look at CTS since we are on the other side of the null modem cable
 										extkey_dash = sp2.CtsHolding;
@@ -547,10 +541,9 @@ namespace PowerSDR
 								if (extkey_dash || extkey_dot)
 									keyprog = true;
 								else keyprog = false;
-								Debug.WriteLine("keyprog: "+keyprog);
-							} //else keyprog = false;
-
-							break;
+								//Debug.WriteLine("keyprog: "+keyprog);
+								break;
+						}
 					}
 					timer.Stop();
 					msdel = (float)timer.DurationMsec;

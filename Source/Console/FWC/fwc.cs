@@ -259,6 +259,7 @@ namespace PowerSDR
 			RDAL_OP_RESET_RX2_DDS = 1328,
 			RDAL_OP_SET_RX2_PREAMP = 1329,
 			RDAL_OP_SET_RX2_DSP_MODE = 1330,
+			RDAL_OP_SET_TRX_POT = 1331,			
 		}
 
 		#endregion
@@ -2105,6 +2106,12 @@ namespace PowerSDR
 		public static int WriteRX2EEPROMFloat(uint offset, float val)
 		{
 			FWCMidi.SendSetMessage(Opcode.RDAL_OP_WRITE_RX2_EEPROM_UINT32, offset, val);
+			return 0;
+		}
+
+		public static int SetTRXPot(uint val)
+		{
+			FWCMidi.SendSetMessage(Opcode.RDAL_OP_SET_TRX_POT, val, 0);
 			return 0;
 		}
 

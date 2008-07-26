@@ -66,7 +66,7 @@ namespace PowerSDR
 		{
 			com_port = new SerialPort();
 			com_port.Encoding = System.Text.Encoding.ASCII;
-			com_port.RtsEnable = false; // kd5tfd hack for soft rock ptt 
+			com_port.RtsEnable = true; // kd5tfd hack for soft rock ptt 
 			com_port.DtrEnable = false; // set dtr off 
 			com_port.ErrorEvent += new SerialPorts.SerialEventHandler(this.SerialPort_Error);
 			com_port.ReceivedEvent += new SerialPorts.SerialEventHandler(this.SerialPort_ReceivedData);

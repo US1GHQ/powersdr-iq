@@ -192,46 +192,46 @@ namespace PowerSDR
 
 		private static void LatchData()
 		{
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0xA);		// Drive bit high.
-//			Thread.Sleep(new TimeSpan(delay_value));
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0xB);		// Drive bit low.
-//			Thread.Sleep(new TimeSpan(delay_value));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0xA);		// Drive bit high.
+			Thread.Sleep(new TimeSpan(delay_value));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0xB);		// Drive bit low.
+			Thread.Sleep(new TimeSpan(delay_value));
 		}
         
 		private static void LatchAddr()
 		{
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0x9);		// Drive bit high.
-//			Thread.Sleep(new TimeSpan(delay_value));
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0xB);		// Drive bit low.
-//			Thread.Sleep(new TimeSpan(delay_value));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0x9);		// Drive bit high.
+			Thread.Sleep(new TimeSpan(delay_value));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 0xB);		// Drive bit low.
+			Thread.Sleep(new TimeSpan(delay_value));
 		}
 
 		private static void LatchCtrl()
 		{
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 3);		// Drive bit high.
-//			Thread.Sleep(new TimeSpan(delay_value));
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 11);		// Drive bit low.
-//			Thread.Sleep(new TimeSpan(delay_value));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 3);		// Drive bit high.
+			Thread.Sleep(new TimeSpan(delay_value));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 11);		// Drive bit low.
+			Thread.Sleep(new TimeSpan(delay_value));
 		}
 
 		private static void PWrite(byte data, byte addr)
 		{
 			// Set up data bits.
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), (byte)(~data));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), (byte)(~data));
 			LatchData();
 
 			// Set up addr bits.
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), (byte)(~addr));
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), (byte)(~addr));
 			LatchAddr();
 
 			// WRBAR,RESET,UDCLK = lo
 			// RDBAR,PMODE = hi
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 237);
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 237);
 			LatchCtrl();
 
 			// RESET,UDCLK = lo
 			// WRBAR,RDBAR,PMODE = hi
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 236);
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 236);
 			LatchCtrl();
 		}
 
@@ -241,18 +241,18 @@ namespace PowerSDR
 
 		public static void ResetDDS()
 		{
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 11);
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.CTRL), 11);
 			
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 255);	
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 255);	
 			LatchData();
 
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 255);
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 255);
 			LatchAddr();
 
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 232);
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 232);
 			LatchCtrl();
 
-//			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 236);
+			Parallel.outport((ushort)(lpt_addr+LPTRegisters.DATA), 236);
 			LatchCtrl();
 
 			// Setup Options

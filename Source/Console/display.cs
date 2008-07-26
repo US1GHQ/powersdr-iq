@@ -2752,20 +2752,13 @@ namespace PowerSDR
 			}
 			else if(bottom && data_ready_bottom)
 			{
-				if(mox && (rx1_dsp_mode == DSPMode.CWL || rx1_dsp_mode == DSPMode.CWU))
-				{
-					for(int i=0; i<current_display_data_bottom.Length; i++)
-						current_display_data_bottom[i] = -200.0f;
-				}
-				else
-				{
-					fixed(void *rptr = &new_display_data_bottom[0])
-						fixed(void *wptr = &current_display_data_bottom[0])
-							Win32.memcpy(wptr, rptr, BUFFER_SIZE*sizeof(float));
+				fixed(void *rptr = &new_display_data_bottom[0])
+					fixed(void *wptr = &current_display_data_bottom[0])
+						Win32.memcpy(wptr, rptr, BUFFER_SIZE*sizeof(float));
 
-					if ( current_model == Model.SOFTROCK40 ) 
-						console.AdjustDisplayDataForBandEdge(ref current_display_data_bottom);
-				}
+				if ( current_model == Model.SOFTROCK40 ) 
+					console.AdjustDisplayDataForBandEdge(ref current_display_data_bottom);
+
 				data_ready_bottom = false;
 			}
 
@@ -2922,20 +2915,13 @@ namespace PowerSDR
 			}
 			else if(bottom && data_ready_bottom)
 			{
-				if(mox && (rx1_dsp_mode == DSPMode.CWL || rx1_dsp_mode == DSPMode.CWU))
-				{
-					for(int i=0; i<current_display_data_bottom.Length; i++)
-						current_display_data_bottom[i] = -200.0f;
-				}
-				else
-				{
-					fixed(void *rptr = &new_display_data_bottom[0])
-						fixed(void *wptr = &current_display_data_bottom[0])
-							Win32.memcpy(wptr, rptr, BUFFER_SIZE*sizeof(float));
+				fixed(void *rptr = &new_display_data_bottom[0])
+					fixed(void *wptr = &current_display_data_bottom[0])
+						Win32.memcpy(wptr, rptr, BUFFER_SIZE*sizeof(float));
 
-					if ( current_model == Model.SOFTROCK40 ) 
-						console.AdjustDisplayDataForBandEdge(ref current_display_data_bottom);
-				}
+				if ( current_model == Model.SOFTROCK40 ) 
+					console.AdjustDisplayDataForBandEdge(ref current_display_data_bottom);
+
 				data_ready_bottom = false;
 			}
 

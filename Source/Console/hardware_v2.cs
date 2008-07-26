@@ -64,8 +64,8 @@ namespace PowerSDR
 		// PIO IC1 pins
 		private const int BPF0		= 0;
 		private const int BPF1		= 1;
-		private const int BPF2		= 2;
-		private const int BPF3		= 3;
+		private const int BPF3		= 2;
+		private const int BPF2		= 3;
 		private const int BPF4		= 4;
 		private const int BPF5		= 5;
 		private const int TR		= 6;
@@ -210,7 +210,7 @@ namespace PowerSDR
 			set { lpt_addr = value; }
 		}
 
-		private bool rfe_present = false;
+		private bool rfe_present = true;
 		public bool RFEPresent
 		{
 			//get { return rfe_present; }
@@ -392,25 +392,25 @@ namespace PowerSDR
 					switch(value)
 					{
 						case BPFBand.NONE:
-//							rfe_ic10.SetData((byte)(rfe_ic10.GetData() & 0x03));
+							rfe_ic10.SetData((byte)(rfe_ic10.GetData() & 0x03));
 							break;
 						case BPFBand.B160:
-//							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF0_PT)));
+							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF0_PT)));
 							break;
 						case BPFBand.B60:
-//							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF1_PT)));
+							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF1_PT)));
 							break;
 						case BPFBand.B20:
-//							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF3_PT)));
+							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF3_PT)));
 							break;
 						case BPFBand.B40:
-//							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF2_PT)));
+							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF2_PT)));
 							break;
 						case BPFBand.B10:
-//							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF4_PT)));
+							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF4_PT)));
 							break;
 						case BPFBand.B6:
-//							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF5_PT)));
+							rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0x03) | (1 << BPF5_PT)));
 							break;
 						default:
 #if(DEBUG_VERBOSE)
@@ -479,14 +479,14 @@ namespace PowerSDR
 			set	
 			{
 				//System.Console.WriteLine("X2: "+value.ToString("X"));
-//				bool update = pio_ic3.UpdateHardware;
-//				if(update) pio_ic3.UpdateHardware = false;
+				bool update = pio_ic3.UpdateHardware;
+				if(update) pio_ic3.UpdateHardware = false;
 				for(int i=0; i<7; i++)
 				{
-//					if((value>>i & 0x1) == 1) pio_ic3.SetBit(i);
-//					else pio_ic3.ClearBit(i);
+					if((value>>i & 0x1) == 1) pio_ic3.SetBit(i);
+					else pio_ic3.ClearBit(i);
 				}
-//				if(update) pio_ic3.UpdateHardware = true;
+				if(update) pio_ic3.UpdateHardware = true;
 				//pio_ic3.SetData((byte)((pio_ic3.GetData() & 0x80) | (value & 0x7f)));
 			}
 		}
@@ -497,10 +497,10 @@ namespace PowerSDR
 //			get { return !pio_ic3.GetBit(GAIN); }
 			set
 			{
-//				if(!value)
-//					pio_ic3.SetBit(GAIN);
-//				else
-//					pio_ic3.ClearBit(GAIN);
+				if(!value)
+					pio_ic3.SetBit(GAIN);
+				else
+					pio_ic3.ClearBit(GAIN);
 			}
 		}
 
@@ -577,8 +577,8 @@ namespace PowerSDR
 				switch(value)
 				{
 					case RFELPFBand.NONE:
-//						rfe_ic9.SetData(0);
-//						rfe_ic10.SetData((byte)(rfe_ic10.GetData() & 0xfc));
+						rfe_ic9.SetData(0);
+						rfe_ic10.SetData((byte)(rfe_ic10.GetData() & 0xfc));
 						break;
 					case RFELPFBand.AUX:
 					case RFELPFBand.B6:
@@ -588,13 +588,13 @@ namespace PowerSDR
 					case RFELPFBand.B40:
 					case RFELPFBand.B1210:
 					case RFELPFBand.B80:
-//						rfe_ic10.SetData((byte)(rfe_ic10.GetData() & 0xfc));
-//						rfe_ic9.SetData((byte)(1 << (byte)value));
+						rfe_ic10.SetData((byte)(rfe_ic10.GetData() & 0xfc));
+						rfe_ic9.SetData((byte)(1 << (byte)value));
 						break;
 					case RFELPFBand.B1715:
 					case RFELPFBand.B160:
-//						rfe_ic9.SetData(0);
-//						rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0xfc) | (1 << ((byte)value-8))));
+						rfe_ic9.SetData(0);
+						rfe_ic10.SetData((byte)((rfe_ic10.GetData() & 0xfc) | (1 << ((byte)value-8))));
 						break;
 					default:
 #if(DEBUG_VERBOSE)
@@ -627,10 +627,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic7.SetData((byte)(rfe_ic7.GetData() | 0x03));
-//				else
-//					rfe_ic7.SetData((byte)(rfe_ic7.GetData() & 0xfc));
+				if(value)
+					rfe_ic7.SetData((byte)(rfe_ic7.GetData() | 0x03));
+				else
+					rfe_ic7.SetData((byte)(rfe_ic7.GetData() & 0xfc));
 			}
 		}
 
@@ -648,10 +648,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic7.SetBit(XVEN);
-//				else
-//					rfe_ic7.ClearBit(XVEN);
+				if(value)
+					rfe_ic7.SetBit(XVEN);
+				else
+					rfe_ic7.ClearBit(XVEN);
 			}
 		}
 
@@ -669,10 +669,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic7.SetBit(XVTX);
-//				else
-//					rfe_ic7.ClearBit(XVTX);
+				if(value)
+					rfe_ic7.SetBit(XVTX);
+				else
+					rfe_ic7.ClearBit(XVTX);
 			}
 		}
 
@@ -690,10 +690,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic7.SetBit(ATTN);
-//				else
-//					rfe_ic7.ClearBit(ATTN);
+				if(value)
+					rfe_ic7.SetBit(ATTN);
+				else
+					rfe_ic7.ClearBit(ATTN);
 			}
 		}
 
@@ -711,10 +711,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic7.SetBit(IMPR_EN);
-//				else
-//					rfe_ic7.ClearBit(IMPR_EN);
+				if(value)
+					rfe_ic7.SetBit(IMPR_EN);
+				else
+					rfe_ic7.ClearBit(IMPR_EN);
 			}
 		}
 
@@ -732,10 +732,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(!value)
-//					rfe_ic7.SetBit(PA_BIAS);
-//				else
-//					rfe_ic7.ClearBit(PA_BIAS);
+				if(!value)
+					rfe_ic7.SetBit(PA_BIAS);
+				else
+					rfe_ic7.ClearBit(PA_BIAS);
 			}
 		}
 
@@ -753,10 +753,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value < 0)
-//					rfe_ic11.SetData((byte)(rfe_ic11.GetData() & 0xf8));
-//				else
-//					rfe_ic11.SetData((byte)((rfe_ic11.GetData() & 0xf8) | ((byte)value & 0x07)));
+				if(value < 0)
+					rfe_ic11.SetData((byte)(rfe_ic11.GetData() & 0xf8));
+				else
+					rfe_ic11.SetData((byte)((rfe_ic11.GetData() & 0xf8) | ((byte)value & 0x07)));
 			}
 		}
 
@@ -774,10 +774,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic11.SetBit(ADC_CLK);
-//				else
-//					rfe_ic11.ClearBit(ADC_CLK);
+				if(value)
+					rfe_ic11.SetBit(ADC_CLK);
+				else
+					rfe_ic11.ClearBit(ADC_CLK);
 			}
 		}
 
@@ -795,10 +795,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic11.SetBit(ADC_DI);
-//				else
-//					rfe_ic11.ClearBit(ADC_DI);
+				if(value)
+					rfe_ic11.SetBit(ADC_DI);
+				else
+					rfe_ic11.ClearBit(ADC_DI);
 			}
 		}
 
@@ -816,10 +816,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic11.SetBit(ADC_CS_NOT);
-//				else
-//					rfe_ic11.ClearBit(ADC_CS_NOT);
+				if(value)
+					rfe_ic11.SetBit(ADC_CS_NOT);
+				else
+					rfe_ic11.ClearBit(ADC_CS_NOT);
 			}
 		}
 
@@ -837,10 +837,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic11.SetBit(PA_TR);
-//				else
-//					rfe_ic11.ClearBit(PA_TR);
+				if(value)
+					rfe_ic11.SetBit(PA_TR);
+				else
+					rfe_ic11.ClearBit(PA_TR);
 			}
 		}
 
@@ -858,10 +858,10 @@ namespace PowerSDR
 				if(!rfe_present)
 					return;
 
-//				if(value)
-//					rfe_ic11.SetBit(ATU_CTL);
-//				else
-//					rfe_ic11.ClearBit(ATU_CTL);
+				if(value)
+					rfe_ic11.SetBit(ATU_CTL);
+				else
+					rfe_ic11.ClearBit(ATU_CTL);
 			}
 		}
 
@@ -895,7 +895,7 @@ namespace PowerSDR
 					for(int i=0; i<6; i++)
 					{
 						byte b = (byte)(dds_tuning_word >> (40-i*8));
-//						DDSWrite(b, (byte)(4+i));
+						DDSWrite(b, (byte)(4+i));
 					}
 				}
 			}
@@ -910,14 +910,14 @@ namespace PowerSDR
 				update_hardware = value;
 				
 				pio_ic1.UpdateHardware = value;
-//				pio_ic3.UpdateHardware = value;
+				pio_ic3.UpdateHardware = value;
 
 				if(rfe_present)
 				{
-//					rfe_ic7.UpdateHardware = value;
-//					rfe_ic9.UpdateHardware = value;
-//					rfe_ic10.UpdateHardware = value;
-//					rfe_ic11.UpdateHardware = value;
+					rfe_ic7.UpdateHardware = value;
+					rfe_ic9.UpdateHardware = value;
+					rfe_ic10.UpdateHardware = value;
+					rfe_ic11.UpdateHardware = value;
 				}
 			}
 		}
@@ -931,8 +931,8 @@ namespace PowerSDR
 		private void LatchRegister(ushort lpt, byte addr, byte data)
 		{
 			Parallel.outport(lpt, data);
-//			Parallel.outport((ushort)(lpt+2), addr);
-//			Parallel.outport((ushort)(lpt+2), PIO_NONE);
+			Parallel.outport((ushort)(lpt+2), addr);
+			Parallel.outport((ushort)(lpt+2), PIO_NONE);
 		}
 
 		private void UpdateRegister8(byte data, object user_data)
@@ -1041,16 +1041,16 @@ namespace PowerSDR
 			}
 			else
 			{
-//				LatchRegister(lpt_addr, PIO_IC8, DDSRESET | DDSWRB);	// Reset the DDS chip
-//				LatchRegister(lpt_addr, PIO_IC8, DDSWRB);					// Leave WRB high
+				LatchRegister(lpt_addr, PIO_IC8, DDSRESET | DDSWRB);	// Reset the DDS chip
+				LatchRegister(lpt_addr, PIO_IC8, DDSWRB);					// Leave WRB high
 			}
 
-//			DDSWrite(COMP_PD, 0x1D);		//Power down comparator
-//			if(pll_mult == 1)
-//				DDSWrite(BYPASS_PLL, 0x1E);
-//			else
-//				DDSWrite((byte)pll_mult, 0x1E);
-//			DDSWrite(BYPASS_SINC, 0x20);
+			DDSWrite(COMP_PD, 0x1D);		//Power down comparator
+			if(pll_mult == 1)
+				DDSWrite(BYPASS_PLL, 0x1E);
+			else
+				DDSWrite((byte)pll_mult, 0x1E);
+			DDSWrite(BYPASS_SINC, 0x20);
 		}
 
 #if false
@@ -1079,16 +1079,16 @@ namespace PowerSDR
 			else
 			{
 				//Set up data bits
-//				LatchRegister(lpt_addr, PIO_IC11, data);
+				LatchRegister(lpt_addr, PIO_IC11, data);
 			
 				//Set up address bits with WRB high
-//				LatchRegister(lpt_addr, PIO_IC8, (byte)(addr | DDSWRB));
+				LatchRegister(lpt_addr, PIO_IC8, (byte)(addr | DDSWRB));
     
 				//Send write command with WRB low
-//				LatchRegister(lpt_addr, PIO_IC8, addr);
+				LatchRegister(lpt_addr, PIO_IC8, addr);
     
 				//Return WRB high
-//				LatchRegister(lpt_addr, PIO_IC8, (byte)(addr | DDSWRB));
+				LatchRegister(lpt_addr, PIO_IC8, (byte)(addr | DDSWRB));
 			}
 		}
 
@@ -1100,18 +1100,18 @@ namespace PowerSDR
 		{
 			UpdateHardware = false;
 			DDSTuningWord = 0;
-//			ResetDDS();
+			ResetDDS();
 
 			UpdateRegister8(1<<MUTE, new Config(PIO, PIO_IC1));
-//			UpdateRegister8(0, new Config(PIO, PIO_IC3));
+			UpdateRegister8(0, new Config(PIO, PIO_IC3));
 
-//			if(rfe_present)
-//			{
-//				UpdateRegister8(1<<PA_BIAS, new Config(RFE, RFE_IC7));
-//				UpdateRegister8(0, new Config(RFE, RFE_IC9));
-//				UpdateRegister8(0, new Config(RFE, RFE_IC10));
-//				UpdateRegister8(1<<ADC_CS_NOT, new Config(RFE, RFE_IC11));
-//			}
+			if(rfe_present)
+			{
+				UpdateRegister8(1<<PA_BIAS, new Config(RFE, RFE_IC7));
+				UpdateRegister8(0, new Config(RFE, RFE_IC9));
+				UpdateRegister8(0, new Config(RFE, RFE_IC10));
+				UpdateRegister8(1<<ADC_CS_NOT, new Config(RFE, RFE_IC11));
+			}
 		}
 
 		private bool ignore_ptt = false; 
@@ -1126,66 +1126,66 @@ namespace PowerSDR
 		{
 			UpdateHardware = false;
 			DDSTuningWord = 0;
-//			ResetDDS();			
+			ResetDDS();			
 
 			byte pio_ic1_temp = pio_ic1.GetData();
 			pio_ic1.SetData(0);
 			pio_ic1.SetBit(MUTE);
 
 			byte pio_ic3_temp = pio_ic3.GetData();
-//			pio_ic3.SetData(0);
+			pio_ic3.SetData(0);
 
 			byte rfe_ic7_temp = 0;
 			byte rfe_ic9_temp = 0;
 			byte rfe_ic10_temp = 0;
 			byte rfe_ic11_temp = 0;
 
-//			if(rfe_present)
-//			{
-//				rfe_ic7_temp = rfe_ic7.GetData();
-//				rfe_ic7.SetData(0);
-//				rfe_ic7.SetBit(PA_BIAS);
-//
-//				rfe_ic9_temp = rfe_ic9.GetData();
-//				rfe_ic9.SetData(0);
-//				
-//				rfe_ic10_temp = rfe_ic10.GetData();
-//				rfe_ic10.SetData(0);
-//
-//				rfe_ic11_temp = rfe_ic11.GetData();
-//				rfe_ic11.SetData(0);
-//				rfe_ic11.SetBit(ADC_CS_NOT);
-//			}
+			if(rfe_present)
+			{
+				rfe_ic7_temp = rfe_ic7.GetData();
+				rfe_ic7.SetData(0);
+				rfe_ic7.SetBit(PA_BIAS);
+
+				rfe_ic9_temp = rfe_ic9.GetData();
+				rfe_ic9.SetData(0);
+				
+				rfe_ic10_temp = rfe_ic10.GetData();
+				rfe_ic10.SetData(0);
+
+				rfe_ic11_temp = rfe_ic11.GetData();
+				rfe_ic11.SetData(0);
+				rfe_ic11.SetBit(ADC_CS_NOT);
+			}
 
 			UpdateHardware = true;
 			UpdateHardware = false;
 			
 			pio_ic1.SetData(pio_ic1_temp);
-//			pio_ic3.SetData(pio_ic3_temp);
-//			if(rfe_present)
-//			{
-//				rfe_ic7.SetData(rfe_ic7_temp);
-//				rfe_ic9.SetData(rfe_ic9_temp);
-//				rfe_ic10.SetData(rfe_ic10_temp);
-//				rfe_ic11.SetData(rfe_ic11_temp);
-//			}
+			pio_ic3.SetData(pio_ic3_temp);
+			if(rfe_present)
+			{
+				rfe_ic7.SetData(rfe_ic7_temp);
+				rfe_ic9.SetData(rfe_ic9_temp);
+				rfe_ic10.SetData(rfe_ic10_temp);
+				rfe_ic11.SetData(rfe_ic11_temp);
+			}
 		}
 
 		public void PowerOn()
 		{
-//			ResetDDS();
+			ResetDDS();
 			DDSTuningWord = dds_tuning_word;
 
 			pio_ic1.ForceUpdate();
-//			pio_ic3.ForceUpdate();
+			pio_ic3.ForceUpdate();
 
-//			if(rfe_present)
-//			{
-//				rfe_ic7.ForceUpdate();
-//				rfe_ic9.ForceUpdate();
-//				rfe_ic10.ForceUpdate();
-//				rfe_ic11.ForceUpdate();
-//			}
+			if(rfe_present)
+			{
+				rfe_ic7.ForceUpdate();
+				rfe_ic9.ForceUpdate();
+				rfe_ic10.ForceUpdate();
+				rfe_ic11.ForceUpdate();
+			}
 
 			UpdateHardware = true;
 		}
@@ -1215,8 +1215,8 @@ namespace PowerSDR
 
 		public void Impulse()
 		{
-//			rfe_ic7.SetBit(IMPR);
-//			rfe_ic7.ClearBit(IMPR);
+			rfe_ic7.SetBit(IMPR);
+			rfe_ic7.ClearBit(IMPR);
 		}
 	
 		public byte PA_GetADC(int chan)
@@ -1299,54 +1299,54 @@ namespace PowerSDR
 
 		public bool PA_ATUTune(ATUTuneMode mode)
 		{
-//			rfe_ic11.ClearBit(ATU_CTL);
-//
-//			int delay = 0;
-//			switch(mode)
-//			{
-//				case ATUTuneMode.BYPASS:
-//					delay = 250;
-//					break;
-//				case ATUTuneMode.MEMORY:
-//					delay = 2000;
-//					break;
-//				case ATUTuneMode.FULL:
-//					delay = 3250;
-//					break;
-//			}
-//
-//			Thread.Sleep(delay);
-//			rfe_ic11.SetBit(ATU_CTL);
-//
-//			int count = 0;
-//			if(mode == ATUTuneMode.MEMORY ||
-//				mode == ATUTuneMode.FULL)
-//			{
-//				while((StatusPort() & (byte)StatusPin.PA_DATA) != 0)	// wait for low output from ATU
-//				{
-//					Thread.Sleep(50);
-//					if(count++ > 240)	// 12 seconds
-//						return false;
-//				}
-//				count = 0;
-//				while((StatusPort() & (byte)StatusPin.PA_DATA) == 0)	// wait for high output from ATU
-//				{
-//					Thread.Sleep(50);
-//					if(count++ > 240)	// 12 seconds
-//						return false;
-//				}
-//				Thread.Sleep(250);
-//			}
+			rfe_ic11.ClearBit(ATU_CTL);
+
+			int delay = 0;
+			switch(mode)
+			{
+				case ATUTuneMode.BYPASS:
+					delay = 250;
+					break;
+				case ATUTuneMode.MEMORY:
+					delay = 2000;
+					break;
+				case ATUTuneMode.FULL:
+					delay = 3250;
+					break;
+			}
+
+			Thread.Sleep(delay);
+			rfe_ic11.SetBit(ATU_CTL);
+
+			int count = 0;
+			if(mode == ATUTuneMode.MEMORY ||
+				mode == ATUTuneMode.FULL)
+			{
+				while((StatusPort() & (byte)StatusPin.PA_DATA) != 0)	// wait for low output from ATU
+				{
+					Thread.Sleep(50);
+					if(count++ > 240)	// 12 seconds
+						return false;
+				}
+				count = 0;
+				while((StatusPort() & (byte)StatusPin.PA_DATA) == 0)	// wait for high output from ATU
+				{
+					Thread.Sleep(50);
+					if(count++ > 240)	// 12 seconds
+						return false;
+				}
+				Thread.Sleep(250);
+			}
 			return true;
 		}
 
 		public void SetDDSDAC(int level)
 		{
-//			DDSWrite(96, 32);
-//			DDSWrite((byte)(level >> 8), 33);
-//			DDSWrite((byte)level, 34);
-//			DDSWrite((byte)(level >> 8), 35);
-//			DDSWrite((byte)level, 36);
+			DDSWrite(96, 32);
+			DDSWrite((byte)(level >> 8), 33);
+			DDSWrite((byte)level, 34);
+			DDSWrite((byte)(level >> 8), 35);
+			DDSWrite((byte)level, 36);
 		}
 
 		#endregion
@@ -1355,64 +1355,64 @@ namespace PowerSDR
 
 		public void TestPIO1()
 		{
-//			for(int i=0; i<8; i++)
-//			{
-//				LatchRegister(lpt_addr, PIO_IC1, (byte)(1<<i));
-//				LatchRegister(lpt_addr, PIO_IC3, (byte)(1<<i));
-//				LatchRegister(lpt_addr, PIO_IC8, (byte)(1<<i));
-//				LatchRegister(lpt_addr, PIO_IC11, (byte)(1<<i));
-//				Thread.Sleep(2);
-//			}
+			for(int i=0; i<8; i++)
+			{
+				LatchRegister(lpt_addr, PIO_IC1, (byte)(1<<i));
+				LatchRegister(lpt_addr, PIO_IC3, (byte)(1<<i));
+				LatchRegister(lpt_addr, PIO_IC8, (byte)(1<<i));
+				LatchRegister(lpt_addr, PIO_IC11, (byte)(1<<i));
+				Thread.Sleep(2);
+			}
 		}
 
 		public void TestPIO2(bool evens)
 		{
-//			byte data = 0;
-//
-//			for(int i=0; i<8; i++)
-//			{
-//				if(evens)
-//				{
-//					data <<= 1;
-//					if(i%2 == 0) data += 1;
-//				}
-//				else
-//				{
-//					data <<= 1;
-//					if(i%2 == 1) data += 1;
-//				}
-//			}
-//
-//			LatchRegister(lpt_addr, PIO_IC1, data);
-//			LatchRegister(lpt_addr, PIO_IC3, data);
-//			LatchRegister(lpt_addr, PIO_IC8, data);
-//			LatchRegister(lpt_addr, PIO_IC11, data);
+			byte data = 0;
+
+			for(int i=0; i<8; i++)
+			{
+				if(evens)
+				{
+					data <<= 1;
+					if(i%2 == 0) data += 1;
+				}
+				else
+				{
+					data <<= 1;
+					if(i%2 == 1) data += 1;
+				}
+			}
+
+			LatchRegister(lpt_addr, PIO_IC1, data);
+			LatchRegister(lpt_addr, PIO_IC3, data);
+			LatchRegister(lpt_addr, PIO_IC8, data);
+			LatchRegister(lpt_addr, PIO_IC11, data);
 		}
 
 		public void TestPIO3()
 		{
-//			byte data = 0xFF;
-//			LatchRegister(lpt_addr, PIO_IC1, data);
-//			LatchRegister(lpt_addr, PIO_IC3, data);
-//			LatchRegister(lpt_addr, PIO_IC8, data);
-//			LatchRegister(lpt_addr, PIO_IC11, data);
-//			Thread.Sleep(2);
-//
-//			data = 0;
-//			LatchRegister(lpt_addr, PIO_IC1, data);
-//			LatchRegister(lpt_addr, PIO_IC3, data);
-//			LatchRegister(lpt_addr, PIO_IC8, data);
-//			LatchRegister(lpt_addr, PIO_IC11, data);
-//			Thread.Sleep(2);
+			byte data = 0xFF;
+			LatchRegister(lpt_addr, PIO_IC1, data);
+			LatchRegister(lpt_addr, PIO_IC3, data);
+			LatchRegister(lpt_addr, PIO_IC8, data);
+			LatchRegister(lpt_addr, PIO_IC11, data);
+			Thread.Sleep(2);
+
+			data = 0;
+			LatchRegister(lpt_addr, PIO_IC1, data);
+			LatchRegister(lpt_addr, PIO_IC3, data);
+			LatchRegister(lpt_addr, PIO_IC8, data);
+			LatchRegister(lpt_addr, PIO_IC11, data);
+			Thread.Sleep(2);
 		}
 
 		public void TestRFEIC11()
 		{
-//			for(int i=0; i<8; i++)
-//			{
-//				UpdateRegister8((byte)(1<<i), new Config(RFE, RFE_IC11));
-//				Thread.Sleep(10);
-//			}
+			for(int i=0; i<8; i++)
+			{
+				UpdateRegister8((byte)(1<<i), new Config(RFE, RFE_IC11));
+				Thread.Sleep(10);
+			}
 		}
 
 		#endregion

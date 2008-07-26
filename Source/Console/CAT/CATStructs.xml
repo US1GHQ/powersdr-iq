@@ -499,10 +499,10 @@
 	</catstruct>
 	<catstruct code="RD">
 		<desc>move rit offset down</desc>
-		<active>false</active>
+		<active>true</active>
 		<nsetparms>5</nsetparms>
 		<ngetparms>0</ngetparms>
-		<nansparms>1</nansparms>
+		<nansparms>0</nansparms>
 	</catstruct>
 	<catstruct code="RG">
 		<desc>rf gain status</desc>
@@ -534,10 +534,10 @@
 	</catstruct>
 	<catstruct code="RU">
 		<desc>move rit offset up</desc>
-		<active>false</active>
+		<active>true</active>
 		<nsetparms>5</nsetparms>
 		<ngetparms>0</ngetparms>
-		<nansparms>1</nansparms>
+		<nansparms>0</nansparms>
 	</catstruct>
 	<catstruct code="RX">
 		<desc>rx function status</desc>
@@ -1422,14 +1422,14 @@
 		<nansparms>1</nansparms>
 	</catstruct>
 	<catstruct code="ZZHR">
-		<desc>DSP RX Buffer Size</desc>
+		<desc>Phone RX Buffer</desc>
 		<active>true</active>
 		<nsetparms>1</nsetparms>
 		<ngetparms>0</ngetparms>
 		<nansparms>1</nansparms>
 	</catstruct>
 	<catstruct code="ZZHT">
-		<desc>DSP TX Buffer Size</desc>
+		<desc>Phone TX Buffer</desc>
 		<active>true</active>
 		<nsetparms>1</nsetparms>
 		<ngetparms>0 </ngetparms>
@@ -1728,5 +1728,47 @@
 		<nsetparms>1</nsetparms>
 		<ngetparms>-1</ngetparms>
 		<nansparms>-1</nansparms>
+	</catstruct>
+	<catstruct code="ZZHU">
+		<desc>CW RX Buffer</desc>
+		<active>true</active>
+		<nsetparms>1</nsetparms>
+		<ngetparms>0</ngetparms>
+		<nansparms>1</nansparms>
+	</catstruct>
+	<catstruct code="ZZHV">
+		<desc>CW TX Buffer</desc>
+		<active>true</active>
+		<nsetparms>1</nsetparms>
+		<ngetparms>0</ngetparms>
+		<nansparms>1</nansparms>
+	</catstruct>
+	<catstruct code="ZZHW">
+		<desc>Digital RX Buffer</desc>
+		<active>true </active>
+		<nsetparms>1</nsetparms>
+		<ngetparms>0</ngetparms>
+		<nansparms>1</nansparms>
+	</catstruct>
+	<catstruct code="ZZHX">
+		<desc>Digital TX Buffer</desc>
+		<active>true</active>
+		<nsetparms>1</nsetparms>
+		<ngetparms>0</ngetparms>
+		<nansparms>1</nansparms>
+	</catstruct>
+	<catstruct code="ZZRD">
+		<desc>RIT Down</desc>
+		<active>true</active>
+		<nsetparms>5</nsetparms>
+		<ngetparms>0</ngetparms>
+		<nansparms>0</nansparms>
+	</catstruct>
+	<catstruct code="ZZRU">
+		<desc>RIT Up</desc>
+		<active>true</active>
+		<nsetparms>5</nsetparms>
+		<ngetparms>0</ngetparms>
+		<nansparms>0</nansparms>
 	</catstruct>
 </catstructs>

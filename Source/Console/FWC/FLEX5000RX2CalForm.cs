@@ -88,6 +88,7 @@ namespace PowerSDR
 		private System.Windows.Forms.ButtonTS btnCalLevel;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.CheckBoxTS ckRunFilters;
+		private System.Windows.Forms.CheckBoxTS checkBox1;
 		private System.ComponentModel.IContainer components;
 
 		#endregion
@@ -198,6 +199,7 @@ namespace PowerSDR
 			this.grpTests = new System.Windows.Forms.GroupBoxTS();
 			this.grpCal = new System.Windows.Forms.GroupBoxTS();
 			this.label1 = new System.Windows.Forms.Label();
+			this.checkBox1 = new System.Windows.Forms.CheckBoxTS();
 			this.grpTestGeneral.SuspendLayout();
 			this.grpTestReceiver.SuspendLayout();
 			this.grpBands.SuspendLayout();
@@ -672,10 +674,22 @@ namespace PowerSDR
 			this.label1.TabIndex = 46;
 			this.label1.Text = "RX2";
 			// 
+			// checkBox1
+			// 
+			this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
+			this.checkBox1.Image = null;
+			this.checkBox1.Location = new System.Drawing.Point(368, 344);
+			this.checkBox1.Name = "checkBox1";
+			this.checkBox1.Size = new System.Drawing.Size(24, 24);
+			this.checkBox1.TabIndex = 47;
+			this.checkBox1.Visible = false;
+			this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+			// 
 			// FLEX5000RX2CalForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(392, 486);
+			this.Controls.Add(this.checkBox1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.grpTestReceiver);
 			this.Controls.Add(this.txtTech);
@@ -1004,7 +1018,7 @@ namespace PowerSDR
 			btnRunSel.Enabled = true;
 
 			t1.Stop();
-			MessageBox.Show("Run Selected Time: "+((int)(t1.Duration/60)).ToString()+":"+(((int)t1.Duration)%60).ToString("00"));
+			Debug.WriteLine("Run Selected Time: "+((int)(t1.Duration/60)).ToString()+":"+(((int)t1.Duration)%60).ToString("00"));
 		}
 
 		#endregion		
@@ -1058,15 +1072,20 @@ namespace PowerSDR
 
 			DSPMode dsp = console.RX2DSPMode;
 			console.RX2DSPMode = DSPMode.DSB;
+			Thread.Sleep(50);
 
 			console.VFOAFreq = 14.2;
+			Thread.Sleep(100);
 			console.VFOBFreq = 14.2;
+			Thread.Sleep(100);
 
 			PreampMode preamp = console.RX1PreampMode;
 			console.RX1PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
 
 			PreampMode rx2_preamp = console.RX2PreampMode;
 			console.RX2PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
 
 			Filter filter = console.RX2Filter;
 			int var_low = console.RX2FilterLow;
@@ -1171,15 +1190,23 @@ namespace PowerSDR
 			toolTip1.SetToolTip(btnTestGenBal, test_genbal);
 
 			console.SpurReduction = rx1_sr;
+			Thread.Sleep(50);
 			console.RX2SpurReduction = rx2_sr;
+			Thread.Sleep(50);
 			console.FullDuplex = full_duplex;
 			console.RX2Enabled = rx2_enabled;
 			console.RX2Ant = rx2_ant;
+			Thread.Sleep(50);
 			console.RX2DSPMode = dsp;
+			Thread.Sleep(50);
 			console.VFOAFreq = vfoa_freq;
+			Thread.Sleep(100);
 			console.VFOBFreq = vfob_freq;
+			Thread.Sleep(100);
 			console.RX1PreampMode = preamp;
+			Thread.Sleep(50);
 			console.RX2PreampMode = rx2_preamp;
+			Thread.Sleep(50);
 			console.RX2Filter = filter;
 			if(filter == Filter.VAR1 || filter == Filter.VAR2)
 			{
@@ -1232,9 +1259,11 @@ namespace PowerSDR
 
 			bool rx1_sr = console.SpurReduction;
 			console.SpurReduction = true;
+			Thread.Sleep(50);
 
 			bool rx2_sr = console.RX2SpurReduction;
 			console.RX2SpurReduction = true;
+			Thread.Sleep(50);
 
 			bool full_duplex = console.FullDuplex;
 			console.FullDuplex = false;
@@ -1244,6 +1273,7 @@ namespace PowerSDR
 
 			DSPMode dsp = console.RX1DSPMode;
 			console.RX1DSPMode = DSPMode.DSB;
+			Thread.Sleep(50);
 
 			DSPMode dsp2 = console.RX2DSPMode;
 			console.RX2DSPMode = DSPMode.DSB;
@@ -1253,12 +1283,16 @@ namespace PowerSDR
 
 			FWCAnt rx2_ant = console.RX2Ant;
 			console.RX2Ant = FWCAnt.RX2IN;
+			Thread.Sleep(50);
 
 			console.VFOAFreq = 1.0;
+			Thread.Sleep(100);
 			console.VFOBFreq = 14.1;
+			Thread.Sleep(100);
 
 			PreampMode preamp = console.RX1PreampMode;
 			console.RX1PreampMode = PreampMode.HIGH;
+			Thread.Sleep(50);
 
 			MeterTXMode tx_meter = console.CurrentMeterTXMode;
 			console.CurrentMeterTXMode = MeterTXMode.OFF;
@@ -1299,16 +1333,23 @@ namespace PowerSDR
 			lstDebug.Items.Insert(0, test_noise);
 
 			console.SpurReduction = rx1_sr;
+			Thread.Sleep(50);
 			console.RX2SpurReduction = rx2_sr;
+			Thread.Sleep(50);
 			console.CurrentMeterTXMode = tx_meter;
 			console.FullDuplex = full_duplex;
 			console.RX1DSPMode = dsp;
+			Thread.Sleep(50);
 			console.RX2DSPMode = dsp2;
 			console.VFOBFreq = vfob_freq;
+			Thread.Sleep(100);
 			console.VFOAFreq = vfoa_freq;
+			Thread.Sleep(100);
 			console.RX2Enabled = rx2_enabled;
 			console.RX2Ant = rx2_ant;
+			Thread.Sleep(50);
 			console.RX1PreampMode = preamp;
+			Thread.Sleep(50);
 			console.RX2Filter = filter;
 			if(filter == Filter.VAR1 || filter == Filter.VAR2)
 			{
@@ -1362,9 +1403,11 @@ namespace PowerSDR
 
 			bool rx1_sr = console.SpurReduction;
 			console.SpurReduction = true;
+			Thread.Sleep(50);
 
 			bool rx2_sr = console.RX2SpurReduction;
 			console.RX2SpurReduction = true;
+			Thread.Sleep(50);
 
 			bool full_duplex = console.FullDuplex;
 			console.FullDuplex = false;
@@ -1373,16 +1416,22 @@ namespace PowerSDR
 			double vfob_freq = console.VFOBFreq;
 
 			console.VFOAFreq = 14.2;
+			Thread.Sleep(100);
 			console.VFOBFreq = 14.2;
+			Thread.Sleep(100);
 
 			DSPMode dsp = console.RX1DSPMode;
 			console.RX1DSPMode = DSPMode.DSB;
+			Thread.Sleep(50);
 
 			DSPMode dsp2 = console.RX2DSPMode;
 			console.RX2DSPMode = DSPMode.DSB;
+			Thread.Sleep(50);
 
 			console.VFOAFreq = 14.2;
-			console.VFOBFreq = 14.2;			
+			Thread.Sleep(100);
+			console.VFOBFreq = 14.2;
+			Thread.Sleep(100);
 
 			Filter filter = console.RX2Filter;
 			int var_low = console.RX2FilterLow;
@@ -1394,6 +1443,7 @@ namespace PowerSDR
 
 			FWCAnt rx2_ant = console.RX2Ant;
 			console.RX2Ant = FWCAnt.RX1TAP;
+			Thread.Sleep(50);
 
 			FWC.SetTest(true);
 			Thread.Sleep(50);
@@ -1459,14 +1509,20 @@ namespace PowerSDR
 			Thread.Sleep(50);
 			
 			console.SpurReduction = rx1_sr;
+			Thread.Sleep(50);
 			console.RX2SpurReduction = rx2_sr;
+			Thread.Sleep(50);
 			console.FullDuplex = full_duplex;
 			console.RX1DSPMode = dsp;
+			Thread.Sleep(50);
 			console.RX2DSPMode = dsp2;
 			console.VFOAFreq = vfoa_freq;
+			Thread.Sleep(100);
 			console.VFOBFreq = vfob_freq;
+			Thread.Sleep(100);
 			console.RX2Enabled = rx2_enabled;
 			console.RX2Ant = rx2_ant;
+			Thread.Sleep(50);
 			console.RX2Filter = filter;
 			if(filter == Filter.VAR1 || filter == Filter.VAR2)
 			{
@@ -1496,7 +1552,7 @@ namespace PowerSDR
 
 		private void btnTestFilters_Click(object sender, System.EventArgs e)
 		{
-			p = new Progress("Test RX2 Filter2");
+			p = new Progress("Test RX2 Filter");
 			grpTests.Enabled = false;
 			grpCal.Enabled = false;
 			btnTestFilters.BackColor = Color.Green;
@@ -1534,9 +1590,11 @@ namespace PowerSDR
 
 			bool rx1_sr = console.SpurReduction;
 			console.SpurReduction = false;
+			Thread.Sleep(50);
 
 			bool rx2_sr = console.RX2SpurReduction;
 			console.RX2SpurReduction = false;
+			Thread.Sleep(50);
 
 			DSPMode dsp_mode = console.RX2DSPMode;
 			console.RX2DSPMode = DSPMode.DSB;
@@ -1549,6 +1607,11 @@ namespace PowerSDR
 
 			PreampMode preamp = console.RX1PreampMode;
 			console.RX1PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
+
+			PreampMode preamp2 = console.RX2PreampMode;
+			console.RX2PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
 
 			FWC.SetTest(true);
 			Thread.Sleep(50);
@@ -1558,16 +1621,21 @@ namespace PowerSDR
 			Thread.Sleep(200);
 
 			console.VFOAFreq = 14.2;
+			Thread.Sleep(100);
 			console.VFOBFreq = 14.2;
+			Thread.Sleep(100);
 
 			DSPMode dsp = console.RX1DSPMode;
 			DSPMode dsp2 = console.RX2DSPMode;
 
 			console.RX1DSPMode = DSPMode.DSB;
+			Thread.Sleep(50);
 			console.RX2DSPMode = DSPMode.DSB;
 
 			console.VFOAFreq = 14.2;
+			Thread.Sleep(100);
 			console.VFOBFreq = 14.2;
+			Thread.Sleep(100);
 
 			Filter filter = console.RX2Filter;
 			int var_low = console.RX2FilterLow;
@@ -1600,6 +1668,7 @@ namespace PowerSDR
 			rx2_adc /= 5;
 
 			console.RX1DSPMode = dsp;
+			Thread.Sleep(50);
 			console.RX2DSPMode = dsp2;
 
 			bool resistor = ((rx1_adc-rx2_adc)>4.0);
@@ -1655,16 +1724,21 @@ namespace PowerSDR
 				if(do_band)
 				{
 					console.VFOAFreq = band_freqs[i];
+					Thread.Sleep(100);
 					console.VFOBFreq = band_freqs[i];
+					Thread.Sleep(100);
 
 					dsp = console.RX1DSPMode;
 					dsp2 = console.RX2DSPMode;
 
 					console.RX1DSPMode = DSPMode.DSB;
+					Thread.Sleep(50);
 					console.RX2DSPMode = DSPMode.DSB;
 
 					console.VFOAFreq = band_freqs[i];
+					Thread.Sleep(100);
 					console.VFOBFreq = band_freqs[i];
+					Thread.Sleep(100);
 
 					filter = console.RX2Filter;
 					var_low = console.RX2FilterLow;
@@ -1712,6 +1786,7 @@ namespace PowerSDR
 					off /= 5;
 
 					FWC.SetRX2Filter(band_freqs[i]);
+					Thread.Sleep(50);
 
 					on_table[i] = on;
 					off_table[i] = off;
@@ -1742,6 +1817,7 @@ namespace PowerSDR
 					}
 
 					console.RX1DSPMode = dsp;
+					Thread.Sleep(50);
 					console.RX2DSPMode = dsp2;
 				}
 			}
@@ -1850,9 +1926,11 @@ namespace PowerSDR
 
 			bool rx1_sr = console.SpurReduction;
 			console.SpurReduction = false;
+			Thread.Sleep(50);
 
 			bool rx2_sr = console.RX2SpurReduction;
 			console.RX2SpurReduction = false;
+			Thread.Sleep(50);
 
 			DSPMode dsp_mode = console.RX2DSPMode;
 			console.RX2DSPMode = DSPMode.DSB;
@@ -1865,9 +1943,11 @@ namespace PowerSDR
 
 			PreampMode preamp = console.RX1PreampMode;
 			console.RX1PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
 
 			PreampMode preamp2 = console.RX2PreampMode;
 			console.RX2PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
 
 			FWC.SetTest(true);
 			Thread.Sleep(50);
@@ -1877,19 +1957,26 @@ namespace PowerSDR
 			Thread.Sleep(200);
 
 			console.VFOAFreq = 14.2;
+			Thread.Sleep(100);
 			console.VFOBFreq = 14.2;
+			Thread.Sleep(100);
 
 			console.RX1PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
 			console.RX2PreampMode = PreampMode.OFF;
+			Thread.Sleep(50);
 
 			DSPMode dsp = console.RX1DSPMode;
 			DSPMode dsp2 = console.RX2DSPMode;
 
 			console.RX1DSPMode = DSPMode.DSB;
+			Thread.Sleep(50);
 			console.RX2DSPMode = DSPMode.DSB;
 
 			console.VFOAFreq = 14.2;
+			Thread.Sleep(100);
 			console.VFOBFreq = 14.2;
+			Thread.Sleep(100);
 
 			Filter filter = console.RX2Filter;
 			int var_low = console.RX2FilterLow;
@@ -1921,6 +2008,7 @@ namespace PowerSDR
 			rx2_adc /= 5;
 
 			console.RX1DSPMode = dsp;
+			Thread.Sleep(50);
 			console.RX2DSPMode = dsp2;
 
 			float res_offset = rx1_adc-rx2_adc;
@@ -1999,7 +2087,9 @@ namespace PowerSDR
 			toolTip1.SetToolTip(btnCalLevel, test_rx2_level);
 
 			console.VFOAFreq = vfoa;
+			Thread.Sleep(100);
 			console.VFOBFreq = vfob;
+			Thread.Sleep(100);
 
 			t1.Stop();
 			Debug.WriteLine("RX Level Timer: "+t1.Duration);
@@ -2111,7 +2201,9 @@ namespace PowerSDR
 					Invoke(new MethodInvoker(p.Show));
 					Application.DoEvents();
 					console.VFOBFreq = band_freqs[i]+2*console.IFFreq;
+					Thread.Sleep(100);
 					console.VFOAFreq = band_freqs[i];
+					Thread.Sleep(100);
 					console.CalibrateRX2Image(band_freqs[i], p, true);
 					if(p.Text == "") break;
 
@@ -2137,7 +2229,9 @@ namespace PowerSDR
 				}
 			}
 			console.VFOAFreq = vfoa;
+			Thread.Sleep(100);
 			console.VFOBFreq = vfob;
+			Thread.Sleep(100);
 			if(test_rx2_image.StartsWith("RX2 Image Cal: Failed ("))
 				test_rx2_image = test_rx2_image.Substring(0, test_rx2_image.Length-2)+")";
 			toolTip1.SetToolTip(btnCalImage, test_rx2_image);
@@ -2198,6 +2292,39 @@ namespace PowerSDR
 		}
 
 		#endregion
+
+		private void checkBox1_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if(checkBox1.Checked)
+			{
+				checkBox1.BackColor = console.ButtonSelectedColor;
+				Thread t = new Thread(new ThreadStart(TestCal));
+				t.Name = "Test Cal Thread";
+				t.IsBackground = true;
+				t.Priority = ThreadPriority.Normal;
+				t.Start();
+			}
+			else
+			{
+				checkBox1.BackColor = SystemColors.Control;
+			}
+		}
+
+		private void TestCal()
+		{
+			int count = 0;
+			while(checkBox1.Checked)
+			{
+				count++;
+				while(!btnRunSel.Enabled && checkBox1.Checked)
+					Thread.Sleep(1000);
+				if(!checkBox1.Checked) break;
+				Invoke(new MethodInvoker(btnRunSel.PerformClick));
+				Thread.Sleep(1000);
+			}
+
+			MessageBox.Show("Total Runs: "+count);
+		}
 
 		#endregion
 	}
