@@ -433,6 +433,7 @@ namespace PowerSDR
 		byte si570_i2c_address = 0x55;
 		public double si570_fxtal = 114.285e6; //114.2886e6; //114.285e6;	// nominal internal xtal frequency si570 (114.285MHz)
 		public double si570_fxtal_init = 114285000;
+		public double si570_multiplier = 4;
 		private bool tuning_VAC;
 
 		private Thread[] audio_process_thread;				// threads to run DttSP functions
@@ -39875,7 +39876,7 @@ public double si570_freq
 	{
 		si570_fxtal = si570_fxtal_init + (dds_clock_correction * 1e6);
 	};
-	double fo = ((value *1e6) * 4);
+	double fo = ((value *1e6) * si570_multiplier);
 	rfreq = 0;
 	hs_div = 11;
 	n1 = 0;
