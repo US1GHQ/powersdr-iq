@@ -18758,6 +18758,8 @@ namespace PowerSDR
 			try
 			{
 				console.radio.GetDSPRX(0, 0).RXCorrectIQPhase = (double)udDSPImagePhaseRX.Value;
+				console.rx1_image_phase_table[(int)console.RX1Band] = (float)udDSPImagePhaseRX.Value;
+
 			}
 			catch(Exception)
 			{
@@ -18778,6 +18780,8 @@ namespace PowerSDR
 			try
 			{
 				console.radio.GetDSPRX(0, 0).RXCorrectIQGain = (double)udDSPImageGainRX.Value;
+				console.rx1_image_gain_table[(int)console.RX1Band] = (float)udDSPImageGainRX.Value;
+
 			}
 			catch(Exception)
 			{
@@ -18793,6 +18797,8 @@ namespace PowerSDR
 			try
 			{
 				console.radio.GetDSPTX(0).TXCorrectIQPhase = (double)udDSPImagePhaseTX.Value;
+				console.tx_image_phase_table[(int)console.TXBand] = (float)udDSPImagePhaseTX.Value;
+
 			}
 			catch(Exception)
 			{
@@ -18814,6 +18820,8 @@ namespace PowerSDR
 			try
 			{
 				console.radio.GetDSPTX(0).TXCorrectIQGain = (double)udDSPImageGainTX.Value;
+				console.tx_image_gain_table[(int)console.TXBand] = (float)udDSPImageGainTX.Value;
+
 			}
 			catch(Exception)
 			{

@@ -24713,6 +24713,10 @@ namespace PowerSDR
 						if(fwcAntForm != null && !fwcAntForm.IsDisposed) 
 							fwcAntForm.SetBand(value);
 					}
+
+					SetupForm.ImageGainRX = rx1_image_gain_table[(int)rx1_band];
+					SetupForm.ImagePhaseRX = rx1_image_phase_table[(int)rx1_band];
+
 				}
 			}
 		}
@@ -24871,6 +24875,10 @@ namespace PowerSDR
 							FWCATUBypass();
 						}
 					}
+
+					SetupForm.ImageGainTX = tx_image_gain_table[(int)tx_band];
+					SetupForm.ImagePhaseTX = tx_image_phase_table[(int)tx_band];
+
 				}		
 		
 				if(fwc_init && current_model == Model.FLEX5000)
