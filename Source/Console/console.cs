@@ -23606,6 +23606,8 @@ namespace PowerSDR
 			}
 		}
 
+
+
 		/*private double rx2_dds_step_size = 500.0 / 0xFFFFFFFF;
 		private double rx2_corrected_dds_clock = 500.0;
 		private double rx2_dds_clock_correction = 0.0;
@@ -23797,12 +23799,14 @@ namespace PowerSDR
 		}
 
 		private double dds_freq = 7.0;
+		private double si570_frequency = 7.0;
 		public double DDSFreq
 		{
 			get { return dds_freq; }
 			set
 			{
 				dds_freq = value;
+				si570_frequency = value;
 				//Debug.WriteLine("dds_freq: "+dds_freq.ToString("f6"));
 
 				double vfoFreq = value, f = value;
@@ -23815,29 +23819,37 @@ namespace PowerSDR
 				if(if_shift) 
 				{
 					f -= if_freq;								// adjust for IF shift
+					si570_frequency = f;
 					dsp_osc_freq = -if_freq*1e6;
 				}
 
 				f += vfo_offset;								// adjust for vfo offset
+				si570_frequency = f;
 				/*if(mox && current_dsp_mode == DSPMode.DRM)
 					f -= 0.008;*/
 				long tuning_word = (long)(f / corrected_dds_clock * Math.Pow(2, 48));
-
+				double software_offset = 0;
 				if(spur_reduction)
 				{
 					long sr_tuning_word = tuning_word &		// start with current tuning word
 						~(0x8000ffffffff);	// clear first bit, low 32 bits
 
-					double software_offset = (sr_tuning_word - tuning_word) * dds_step_size;
+					software_offset = (sr_tuning_word - tuning_word) * dds_step_size;
 					dsp_osc_freq += 1000000.0*software_offset;
 
 					tuning_word = sr_tuning_word;
 				}
 
-
 				Hdw.DDSTuningWord = tuning_word;		
 				SetHWFilters(dds_freq);
 				if(!mox) radio.GetDSPRX(0, 0).RXOsc = dsp_osc_freq;
+
+				if(spur_reduction && !mox)
+				{
+					si570_frequency = si570_frequency + software_offset;
+				}
+				si570_freq = si570_frequency;
+
 			}
 		}
 
@@ -39915,5 +39927,253 @@ namespace PowerSDR
 				UpdateDSPBufTX();
 			}
 		}
+
+
+		#region Si570
+
+		private double si570_offset = 0;
+		public double Si570Offset
+		{
+			get	{ return si570_offset; }
+			set
+			{
+				si570_offset = value;
+				si570_freq = si570_frequency;
+			}
+		}
+
+		private double si570_multiplier = 1;
+		public double Si570Multiplier
+		{
+			get	{ return si570_multiplier; }
+			set
+			{
+				si570_multiplier = value;
+				si570_freq = si570_frequency;
+			}
+		}
+
+		private double si570_xtal = 114285000;
+		public double Si570Xtal
+		{
+			get	{ return si570_xtal; }
+			set
+			{
+				si570_xtal = value;
+				si570_freq = si570_frequency;
+			}
+		}
+
+		private double new_frequency = 0;
+		private double old_frequency = 0;
+		private double si570_xtal_internal = 0;
+		private ulong old_HS_DIV = 0;
+		private ulong old_N1 = 0;
+		private ulong hs_div = 0;
+		private ulong n1 = 0;
+		private double rfreq = 0;
+		private byte si570_i2c_address = 0x55;
+
+		void si570_program(double rfreq, ulong hs_div, ulong n1)
+		{
+			ulong rfreq_int = (ulong) rfreq;
+			ulong rfreq_frac = (ulong) ((rfreq-(double)rfreq_int) * (double)268435456);
+			ulong rfreq_word = (rfreq_int<<28)|rfreq_frac;
+			hs_div = hs_div - 4;
+			n1 = n1 - 1;
+			i2c_open();
+			double ppm;
+			bool retune = false;
+			if (hs_div == old_HS_DIV && n1 == old_N1)
+			{
+				ppm = ( Math.Abs( new_frequency - old_frequency) *1e6 )/new_frequency;
+
+				if (ppm>3500)
+				{
+					retune = true;
+				}
+			}
+			else
+			{
+				retune = true;
+			}
+			if (retune)
+			{
+				byte[] msg_freeze_dco = {
+											(byte)((si570_i2c_address<<1)&0xfe),
+											137,
+											0x10
+										};
+				i2c_bytes = msg_freeze_dco;
+			}
+			byte[] msg_hs_div_n1_rfreq = {
+											 (byte)((si570_i2c_address<<1)&0xfe),
+											 7,
+											 (byte) ((byte)((hs_div<<5) & 0xe0) | (byte)((n1>>2) & 0x1f)),
+											 (byte) ((byte)((rfreq_word>>(4*8)) & 0x3f) | (byte)((n1<<6) & 0xc0)),
+											 (byte) ((rfreq_word>>(3*8)) & 0xff),
+											 (byte) ((rfreq_word>>(2*8)) & 0xff),
+											 (byte) ((rfreq_word>>(1*8)) & 0xff),
+											 (byte) ((rfreq_word>>(0*8)) & 0xff)
+										 };
+			i2c_bytes = msg_hs_div_n1_rfreq;
+			if (retune)
+			{
+				byte[] msg_unfreeze_dco = {
+											  (byte)((si570_i2c_address<<1)&0xfe),
+											  137,
+											  0x00
+										  };
+				i2c_bytes = msg_unfreeze_dco;
+
+				byte[] msg_newfreq = {
+										 (byte)((si570_i2c_address<<1)&0xfe),
+										 135,
+										 0x40
+									 };
+				i2c_bytes = msg_newfreq;
+				old_frequency = new_frequency;
+			}
+			old_HS_DIV = hs_div;
+			old_N1 = n1;
+			i2c_close();
+		}
+
+
+		double si570_match(double fo) //, double rfreq, ulong hs_div, ulong n1)
+		{
+			for(ulong _hs_div = hs_div; _hs_div >= 4; _hs_div--)
+			{
+				if(!(_hs_div == 4 || _hs_div == 5 || _hs_div == 6 || _hs_div == 7 || _hs_div == 9 || _hs_div == 11)) continue;
+
+				for(ulong _n1 = n1; _n1 <= 128; _n1++)
+				{
+					if(!(_n1 >= 1 && _n1 <= 128)) continue;
+					if(!(_n1 == 1 || (_n1 % 2) == 0)) continue;
+					if(!((_hs_div * _n1) >= 6)) continue;
+					double _fdco = (double)_n1 * (double)_hs_div * fo;
+					if(!(_fdco >= 4850e6 && _fdco <= 5670e6)) continue;
+					double _rfreq = _fdco / si570_xtal_internal;
+					if(!(_rfreq >= (double)0 && _rfreq < (double)1025)) continue;				
+					ulong _rfreq_int = (ulong) _rfreq;
+					ulong _rfreq_frac = (ulong) ((_rfreq-(double)_rfreq_int) * (double)268435456);
+					double _fo = ((double)_rfreq_int + (double)_rfreq_frac/(double)268435456) * si570_xtal_internal / ((double)_n1 * (double)_hs_div);
+					if(!(Math.Abs(_fo - fo) < 1 )) continue;
+					n1 = _n1; hs_div = _hs_div; rfreq = _rfreq; fo = _fo; goto found;
+				}
+			}
+			return 0;
+			found:
+				return fo;
+		}
+
+
+		public double si570_freq
+		{
+			set
+			{
+				si570_xtal_internal = si570_xtal;
+				if (si570_offset != 0.0)
+				{
+					si570_xtal_internal = si570_xtal + si570_offset;
+				};
+				double fo = ((value *1e6) * si570_multiplier);
+				rfreq = 0;
+				hs_div = 11;
+				n1 = 0;
+				new_frequency = fo;
+				double fres = si570_match(fo); //, rfreq, hs_div, n1);
+				si570_program(rfreq, hs_div, n1);
+			}
+		}
+
+		private void i2c_wait()
+		{
+			//Thread.Sleep(1);
+		}
+
+		private void i2c_open()
+		{
+		}
+
+		private void i2c_close()
+		{
+		}
+
+		private void i2c_write(bool sda, bool scl)
+		{
+			if(Hdw.LPTAddr == 0)
+				return;
+
+			byte ioval = ((sda) ? (byte)0x04 : (byte)0x01);
+			ioval |= ((scl) ? (byte)0x08 : (byte)0x02);
+			ushort lptaddr = (ushort) Hdw.LPTAddr;
+			PortTalk.Parallel.outport(lptaddr, ioval);
+
+		}
+
+		private void i2c_start()
+		{
+			// SCL=1, SDAq=1, SDAq+1=0
+			i2c_write(true, true);
+			i2c_write(false, true);
+			i2c_wait();
+		}
+
+		private void i2c_stop()
+		{
+			// SCL=1, SDAq=0, SDAq+1=1
+			i2c_write(false, false);
+			i2c_write(false, true);
+			i2c_write(true, true);
+			i2c_wait();
+		}
+
+		private static bool i2c_bit_value;
+		private bool i2c_bit
+		{
+			set
+			{
+				i2c_write(i2c_bit_value, false);	//SAFE
+				i2c_bit_value = value;
+				i2c_write(i2c_bit_value, false);
+				i2c_write(i2c_bit_value, true);
+			}
+		}
+
+		private void i2c_awaitack()
+		{
+			i2c_bit = false;
+		}
+
+		private byte i2c_byte
+		{
+			set
+			{
+				// MSB to LSB
+				for(byte i=0x80; i!=0x00; i=(byte)(i>>1))
+				{
+					i2c_bit = (value & i) != 0;
+				}
+				i2c_awaitack();
+			}
+		}
+
+		private byte[] i2c_bytes
+		{
+			set
+			{
+				i2c_start();
+				for(int i=0; i!=value.Length; i++)
+				{
+					i2c_byte = value[i];
+				}
+				i2c_stop();
+
+			}
+		}
+
+		#endregion
+
 	}
 }

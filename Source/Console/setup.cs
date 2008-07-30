@@ -922,6 +922,13 @@ namespace PowerSDR
 		private System.Windows.Forms.GroupBoxTS grpDirectIQOutput;
 		private System.Windows.Forms.CheckBoxTS chkAudioCorrectIQ;
 		private System.Windows.Forms.CheckBoxTS chkAudioIQtoVAC;
+		private System.Windows.Forms.LabelTS lblSi570Xtal;
+		private System.Windows.Forms.LabelTS lblSi570Mult;
+		private System.Windows.Forms.LabelTS lblSi570Offset;
+		private System.Windows.Forms.NumericUpDownTS udSi570Mult;
+		private System.Windows.Forms.NumericUpDownTS udSi570Xtal;
+		private System.Windows.Forms.NumericUpDownTS udSi570Offset;
+		private System.Windows.Forms.Label lblSi570Connections;
 		private System.ComponentModel.IContainer components;
 
 		#endregion
@@ -1093,6 +1100,13 @@ namespace PowerSDR
 			this.lblGenSoftRockCenterFreq = new System.Windows.Forms.LabelTS();
 			this.udSoftRockCenterFreq = new System.Windows.Forms.NumericUpDownTS();
 			this.grpGeneralDDS = new System.Windows.Forms.GroupBoxTS();
+			this.lblSi570Connections = new System.Windows.Forms.Label();
+			this.udSi570Offset = new System.Windows.Forms.NumericUpDownTS();
+			this.udSi570Xtal = new System.Windows.Forms.NumericUpDownTS();
+			this.udSi570Mult = new System.Windows.Forms.NumericUpDownTS();
+			this.lblSi570Offset = new System.Windows.Forms.LabelTS();
+			this.lblSi570Mult = new System.Windows.Forms.LabelTS();
+			this.lblSi570Xtal = new System.Windows.Forms.LabelTS();
 			this.chkGenDDSExpert = new System.Windows.Forms.CheckBox();
 			this.udDDSCorrection = new System.Windows.Forms.NumericUpDownTS();
 			this.lblClockCorrection = new System.Windows.Forms.LabelTS();
@@ -1966,6 +1980,9 @@ namespace PowerSDR
 			this.grpHWSoftRock.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.udSoftRockCenterFreq)).BeginInit();
 			this.grpGeneralDDS.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.udSi570Offset)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.udSi570Xtal)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.udSi570Mult)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.udDDSCorrection)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.udDDSIFFreq)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.udDDSPLLMult)).BeginInit();
@@ -2321,6 +2338,13 @@ namespace PowerSDR
 			// 
 			// grpGeneralDDS
 			// 
+			this.grpGeneralDDS.Controls.Add(this.lblSi570Connections);
+			this.grpGeneralDDS.Controls.Add(this.udSi570Offset);
+			this.grpGeneralDDS.Controls.Add(this.udSi570Xtal);
+			this.grpGeneralDDS.Controls.Add(this.udSi570Mult);
+			this.grpGeneralDDS.Controls.Add(this.lblSi570Offset);
+			this.grpGeneralDDS.Controls.Add(this.lblSi570Mult);
+			this.grpGeneralDDS.Controls.Add(this.lblSi570Xtal);
 			this.grpGeneralDDS.Controls.Add(this.chkGenDDSExpert);
 			this.grpGeneralDDS.Controls.Add(this.udDDSCorrection);
 			this.grpGeneralDDS.Controls.Add(this.lblClockCorrection);
@@ -2330,14 +2354,143 @@ namespace PowerSDR
 			this.grpGeneralDDS.Controls.Add(this.lblPLLMult);
 			this.grpGeneralDDS.Location = new System.Drawing.Point(328, 8);
 			this.grpGeneralDDS.Name = "grpGeneralDDS";
-			this.grpGeneralDDS.Size = new System.Drawing.Size(176, 136);
+			this.grpGeneralDDS.Size = new System.Drawing.Size(248, 216);
 			this.grpGeneralDDS.TabIndex = 4;
 			this.grpGeneralDDS.TabStop = false;
 			this.grpGeneralDDS.Text = "DDS";
 			// 
+			// lblSi570Connections
+			// 
+			this.lblSi570Connections.Location = new System.Drawing.Point(176, 112);
+			this.lblSi570Connections.Name = "lblSi570Connections";
+			this.lblSi570Connections.Size = new System.Drawing.Size(64, 96);
+			this.lblSi570Connections.TabIndex = 15;
+			this.lblSi570Connections.Text = "Si570 LPT Connection pin#2 /SDA  pin#3 /SCL  pin#4 SDA  pin#5 SCL";
+			this.lblSi570Connections.Visible = false;
+			// 
+			// udSi570Offset
+			// 
+			this.udSi570Offset.Increment = new System.Decimal(new int[] {
+																			1,
+																			0,
+																			0,
+																			0});
+			this.udSi570Offset.Location = new System.Drawing.Point(120, 160);
+			this.udSi570Offset.Maximum = new System.Decimal(new int[] {
+																		  200000,
+																		  0,
+																		  0,
+																		  0});
+			this.udSi570Offset.Minimum = new System.Decimal(new int[] {
+																		  0,
+																		  0,
+																		  0,
+																		  0});
+			this.udSi570Offset.Name = "udSi570Offset";
+			this.udSi570Offset.Size = new System.Drawing.Size(56, 20);
+			this.udSi570Offset.TabIndex = 14;
+			this.toolTip1.SetToolTip(this.udSi570Offset, "Intermediate Frequency");
+			this.udSi570Offset.Value = new System.Decimal(new int[] {
+																		0,
+																		0,
+																		0,
+																		0});
+			this.udSi570Offset.Visible = false;
+			this.udSi570Offset.ValueChanged += new System.EventHandler(this.udSi570Offset_ValueChanged);
+			// 
+			// udSi570Xtal
+			// 
+			this.udSi570Xtal.Increment = new System.Decimal(new int[] {
+																		  10,
+																		  0,
+																		  0,
+																		  0});
+			this.udSi570Xtal.Location = new System.Drawing.Point(96, 112);
+			this.udSi570Xtal.Maximum = new System.Decimal(new int[] {
+																		200000000,
+																		0,
+																		0,
+																		0});
+			this.udSi570Xtal.Minimum = new System.Decimal(new int[] {
+																		0,
+																		0,
+																		0,
+																		0});
+			this.udSi570Xtal.Name = "udSi570Xtal";
+			this.udSi570Xtal.Size = new System.Drawing.Size(80, 20);
+			this.udSi570Xtal.TabIndex = 13;
+			this.toolTip1.SetToolTip(this.udSi570Xtal, "Correction for DDS frequency");
+			this.udSi570Xtal.Value = new System.Decimal(new int[] {
+																	  114285000,
+																	  0,
+																	  0,
+																	  0});
+			this.udSi570Xtal.Visible = false;
+			this.udSi570Xtal.ValueChanged += new System.EventHandler(this.udSi570Xtal_ValueChanged);
+			// 
+			// udSi570Mult
+			// 
+			this.udSi570Mult.Increment = new System.Decimal(new int[] {
+																		  1,
+																		  0,
+																		  0,
+																		  0});
+			this.udSi570Mult.Location = new System.Drawing.Point(128, 136);
+			this.udSi570Mult.Maximum = new System.Decimal(new int[] {
+																		20,
+																		0,
+																		0,
+																		0});
+			this.udSi570Mult.Minimum = new System.Decimal(new int[] {
+																		0,
+																		0,
+																		0,
+																		0});
+			this.udSi570Mult.Name = "udSi570Mult";
+			this.udSi570Mult.Size = new System.Drawing.Size(48, 20);
+			this.udSi570Mult.TabIndex = 12;
+			this.toolTip1.SetToolTip(this.udSi570Mult, "Multiplier for external clock (1 if using internal clock)");
+			this.udSi570Mult.Value = new System.Decimal(new int[] {
+																	  1,
+																	  0,
+																	  0,
+																	  0});
+			this.udSi570Mult.Visible = false;
+			this.udSi570Mult.ValueChanged += new System.EventHandler(this.udSi570Mult_ValueChanged);
+			// 
+			// lblSi570Offset
+			// 
+			this.lblSi570Offset.Image = null;
+			this.lblSi570Offset.Location = new System.Drawing.Point(16, 160);
+			this.lblSi570Offset.Name = "lblSi570Offset";
+			this.lblSi570Offset.Size = new System.Drawing.Size(88, 23);
+			this.lblSi570Offset.TabIndex = 11;
+			this.lblSi570Offset.Text = "Si570 Offset:";
+			this.lblSi570Offset.Visible = false;
+			// 
+			// lblSi570Mult
+			// 
+			this.lblSi570Mult.Image = null;
+			this.lblSi570Mult.Location = new System.Drawing.Point(16, 136);
+			this.lblSi570Mult.Name = "lblSi570Mult";
+			this.lblSi570Mult.Size = new System.Drawing.Size(88, 23);
+			this.lblSi570Mult.TabIndex = 10;
+			this.lblSi570Mult.Text = "Si570 Multiplier:";
+			this.lblSi570Mult.Visible = false;
+			// 
+			// lblSi570Xtal
+			// 
+			this.lblSi570Xtal.Image = null;
+			this.lblSi570Xtal.Location = new System.Drawing.Point(16, 112);
+			this.lblSi570Xtal.Name = "lblSi570Xtal";
+			this.lblSi570Xtal.Size = new System.Drawing.Size(80, 23);
+			this.lblSi570Xtal.TabIndex = 9;
+			this.lblSi570Xtal.Text = "Si570 Xtal Hz:";
+			this.lblSi570Xtal.Visible = false;
+			// 
 			// chkGenDDSExpert
 			// 
-			this.chkGenDDSExpert.Location = new System.Drawing.Point(56, 104);
+			this.chkGenDDSExpert.Location = new System.Drawing.Point(56, 184);
 			this.chkGenDDSExpert.Name = "chkGenDDSExpert";
 			this.chkGenDDSExpert.Size = new System.Drawing.Size(56, 24);
 			this.chkGenDDSExpert.TabIndex = 8;
@@ -2351,7 +2504,7 @@ namespace PowerSDR
 																			  0,
 																			  0,
 																			  0});
-			this.udDDSCorrection.Location = new System.Drawing.Point(104, 24);
+			this.udDDSCorrection.Location = new System.Drawing.Point(112, 24);
 			this.udDDSCorrection.Maximum = new System.Decimal(new int[] {
 																			1000000,
 																			0,
@@ -2392,7 +2545,7 @@ namespace PowerSDR
 																		  0,
 																		  0,
 																		  0});
-			this.udDDSIFFreq.Location = new System.Drawing.Point(112, 72);
+			this.udDDSIFFreq.Location = new System.Drawing.Point(120, 80);
 			this.udDDSIFFreq.Maximum = new System.Decimal(new int[] {
 																		20000,
 																		0,
@@ -2419,7 +2572,7 @@ namespace PowerSDR
 			// lblIFFrequency
 			// 
 			this.lblIFFrequency.Image = null;
-			this.lblIFFrequency.Location = new System.Drawing.Point(16, 72);
+			this.lblIFFrequency.Location = new System.Drawing.Point(16, 80);
 			this.lblIFFrequency.Name = "lblIFFrequency";
 			this.lblIFFrequency.Size = new System.Drawing.Size(48, 23);
 			this.lblIFFrequency.TabIndex = 4;
@@ -2433,7 +2586,7 @@ namespace PowerSDR
 																		   0,
 																		   0,
 																		   0});
-			this.udDDSPLLMult.Location = new System.Drawing.Point(120, 48);
+			this.udDDSPLLMult.Location = new System.Drawing.Point(128, 48);
 			this.udDDSPLLMult.Maximum = new System.Decimal(new int[] {
 																		 20,
 																		 0,
@@ -2539,7 +2692,7 @@ namespace PowerSDR
 			// chkGeneralRXOnly
 			// 
 			this.chkGeneralRXOnly.Image = null;
-			this.chkGeneralRXOnly.Location = new System.Drawing.Point(336, 160);
+			this.chkGeneralRXOnly.Location = new System.Drawing.Point(328, 240);
 			this.chkGeneralRXOnly.Name = "chkGeneralRXOnly";
 			this.chkGeneralRXOnly.Size = new System.Drawing.Size(96, 16);
 			this.chkGeneralRXOnly.TabIndex = 11;
@@ -6476,7 +6629,7 @@ namespace PowerSDR
 			this.tbDSPImagePhaseRX.Maximum = 400;
 			this.tbDSPImagePhaseRX.Minimum = -400;
 			this.tbDSPImagePhaseRX.Name = "tbDSPImagePhaseRX";
-			this.tbDSPImagePhaseRX.Size = new System.Drawing.Size(160, 45);
+			this.tbDSPImagePhaseRX.Size = new System.Drawing.Size(160, 50);
 			this.tbDSPImagePhaseRX.TabIndex = 3;
 			this.tbDSPImagePhaseRX.TickFrequency = 50;
 			this.toolTip1.SetToolTip(this.tbDSPImagePhaseRX, "Sets the phase offset between the I and Q channels.  ");
@@ -6498,7 +6651,7 @@ namespace PowerSDR
 			this.tbDSPImageGainRX.Maximum = 500;
 			this.tbDSPImageGainRX.Minimum = -500;
 			this.tbDSPImageGainRX.Name = "tbDSPImageGainRX";
-			this.tbDSPImageGainRX.Size = new System.Drawing.Size(160, 45);
+			this.tbDSPImageGainRX.Size = new System.Drawing.Size(160, 50);
 			this.tbDSPImageGainRX.TabIndex = 4;
 			this.tbDSPImageGainRX.TickFrequency = 50;
 			this.toolTip1.SetToolTip(this.tbDSPImageGainRX, "Sets the amplitude/gain offset between the I and Q channels.  ");
@@ -6631,7 +6784,7 @@ namespace PowerSDR
 			this.tbDSPImagePhaseTX.Maximum = 400;
 			this.tbDSPImagePhaseTX.Minimum = -400;
 			this.tbDSPImagePhaseTX.Name = "tbDSPImagePhaseTX";
-			this.tbDSPImagePhaseTX.Size = new System.Drawing.Size(160, 45);
+			this.tbDSPImagePhaseTX.Size = new System.Drawing.Size(160, 50);
 			this.tbDSPImagePhaseTX.TabIndex = 3;
 			this.tbDSPImagePhaseTX.TickFrequency = 50;
 			this.toolTip1.SetToolTip(this.tbDSPImagePhaseTX, "Sets the phase offset between the I and Q channels.  ");
@@ -6653,7 +6806,7 @@ namespace PowerSDR
 			this.tbDSPImageGainTX.Maximum = 500;
 			this.tbDSPImageGainTX.Minimum = -500;
 			this.tbDSPImageGainTX.Name = "tbDSPImageGainTX";
-			this.tbDSPImageGainTX.Size = new System.Drawing.Size(160, 45);
+			this.tbDSPImageGainTX.Size = new System.Drawing.Size(160, 50);
 			this.tbDSPImageGainTX.TabIndex = 4;
 			this.tbDSPImageGainTX.TickFrequency = 50;
 			this.toolTip1.SetToolTip(this.tbDSPImageGainTX, "Sets the amplitude/gain offset between the I and Q channels.  ");
@@ -13693,7 +13846,7 @@ namespace PowerSDR
 			this.tkbarTestGenFreq.Location = new System.Drawing.Point(16, 104);
 			this.tkbarTestGenFreq.Maximum = 20000;
 			this.tkbarTestGenFreq.Name = "tkbarTestGenFreq";
-			this.tkbarTestGenFreq.Size = new System.Drawing.Size(344, 45);
+			this.tkbarTestGenFreq.Size = new System.Drawing.Size(344, 50);
 			this.tkbarTestGenFreq.TabIndex = 1;
 			this.tkbarTestGenFreq.TickFrequency = 1000;
 			this.toolTip1.SetToolTip(this.tkbarTestGenFreq, "Sets the frequency of the signal.");
@@ -14212,6 +14365,9 @@ namespace PowerSDR
 			this.grpHWSoftRock.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.udSoftRockCenterFreq)).EndInit();
 			this.grpGeneralDDS.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.udSi570Offset)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.udSi570Xtal)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.udSi570Mult)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.udDDSCorrection)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.udDDSIFFreq)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.udDDSPLLMult)).EndInit();
@@ -21692,6 +21848,13 @@ namespace PowerSDR
 					udDDSPLLMult.Visible = b;
 					lblIFFrequency.Visible = b;
 					udDDSIFFreq.Visible = b;
+					lblSi570Connections.Visible = b;
+					lblSi570Xtal.Visible = b;
+					lblSi570Mult.Visible = b;
+					lblSi570Offset.Visible = b;
+					udSi570Xtal.Visible = b;
+					udSi570Mult.Visible = b;
+					udSi570Offset.Visible = b;
 					break;
 			}
 		}
@@ -22035,6 +22198,21 @@ namespace PowerSDR
 		private void chkAudioCorrectIQ_CheckChanged(object sender, System.EventArgs e)
 		{
 			Audio.VACCorrectIQ = chkAudioCorrectIQ.Checked;
+		}
+
+		private void udSi570Xtal_ValueChanged(object sender, System.EventArgs e)
+		{
+			console.Si570Xtal = (double)udSi570Xtal.Value;
+		}
+
+		private void udSi570Mult_ValueChanged(object sender, System.EventArgs e)
+		{
+			console.Si570Multiplier = (double)udSi570Mult.Value;
+		}
+
+		private void udSi570Offset_ValueChanged(object sender, System.EventArgs e)
+		{
+			console.Si570Offset = (double)udSi570Offset.Value;
 		}
 	}
 
