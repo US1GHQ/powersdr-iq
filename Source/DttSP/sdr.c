@@ -32,6 +32,9 @@ Bridgewater, NJ 08807
 */
 
 #include <common.h>
+#include "loop.h"
+static double databuf[4096];
+
 
 //========================================================================
 /* initialization and termination */
@@ -76,6 +79,9 @@ PRIVATE void
 setup_all (REAL rate, int buflen, SDRMODE mode, char *wisdom,
 	int specsize, int numrecv, int cpdsize, unsigned int thread)
 {
+
+	if (!loopinitialized) loopinit();
+
 	uni[thread].samplerate = rate;
 	uni[thread].buflen = buflen;
 	uni[thread].mode.sdr = mode;
@@ -121,6 +127,7 @@ setup_all (REAL rate, int buflen, SDRMODE mode, char *wisdom,
 	uni[thread].cpdlen = cpdsize;
 
 	uni[thread].tick = uni[thread].oldtick = 0;
+
 }
 
 /* purely rx */
@@ -128,6 +135,9 @@ setup_all (REAL rate, int buflen, SDRMODE mode, char *wisdom,
 PRIVATE void
 setup_rx (int k, unsigned int thread)
 {
+
+	if (loopenabled) setlooprx((int)uni[thread].samplerate,uni[thread].buflen);
+
 	/* conditioning */
 	rx[thread][k].iqfix = newCorrectIQ (0.0, 1.0);
 	rx[thread][k].filt.coef = newFIR_Bandpass_COMPLEX (150.0,
@@ -272,6 +282,9 @@ setup_rx (int k, unsigned int thread)
 PRIVATE void
 setup_tx (unsigned int thread)
 {
+
+	if (loopenabled) setlooptx((int)uni[thread].samplerate,uni[thread].buflen);
+
 	/* conditioning */
 	tx[thread].iqfix = newCorrectIQ (0.0, 1.0);
 	tx[thread].filt.coef = newFIR_Bandpass_COMPLEX (300.0, 3000.0, 
@@ -752,6 +765,8 @@ do_rx_pre (int k, unsigned int thread)
 			OSCCdata (rx[thread][k].osc.gen, i));
 	}
 
+//	correctIQ (rx[thread][k].buf.i, rx[thread][k].iqfix);				// check AIR
+
 	/* filtering, metering, spectrum, squelch, & AGC */
 
 	//do_rx_meter (k, rx[thread][k].buf.i, RXMETER_PRE_FILT);
@@ -839,7 +854,16 @@ do_rx_post (int k, unsigned int thread)
 		PolyPhaseFIRF(rx[thread][k].resample.gen2i);
 	}
 
+	if (loopenabled) 
+	{
+		if ((thread == 0) && (k == 0))
+		{
+			for (i = 0; i < n; i++) databuf[i] = 10000.0 * CXBreal(rx[thread][k].buf.o, i);
+			WriteRX(databuf);
+		}
+	}
 }
+
 
 /* demod processing */
 
@@ -1022,8 +1046,18 @@ PRIVATE void
 do_tx_pre (unsigned int thread)
 {
 	int i, n = CXBhave (tx[thread].buf.i);
-	for (i = 0; i < n; i++)
-		CXBdata (tx[thread].buf.i, i) = Cmplx (CXBimag (tx[thread].buf.i, i), 0.0);
+
+	if (loopenabled && GetPTT())
+	{
+		ReadTX(databuf);
+		for (i = 0; i < n; i++)
+			CXBdata (tx[thread].buf.i, i) = Cmplx ((REAL)databuf[i], 0.0);
+	}
+	else
+	{
+		for (i = 0; i < n; i++)
+			CXBdata (tx[thread].buf.i, i) = Cmplx (CXBimag (tx[thread].buf.i, i), 0.0);
+	}
 	//hilsim_transform(tx[thread].hlb.gen);
 //	fprintf(stderr,"Peak value = %f\n",CXBpeakpwr(tx[thread].buf.i));
 	if (tx[thread].dcb.flag)

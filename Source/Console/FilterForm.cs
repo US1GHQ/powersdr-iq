@@ -144,9 +144,9 @@ namespace PowerSDR
 			this.label1 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.picDisplay = new System.Windows.Forms.PictureBox();
-			this.lblWidth = new System.Windows.Forms.Label();
 			this.udWidth = new System.Windows.Forms.NumericUpDown();
+			this.lblWidth = new System.Windows.Forms.Label();
+			this.picDisplay = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.udLow)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.udHigh)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -360,12 +360,12 @@ namespace PowerSDR
 			// 
 			this.udLow.Location = new System.Drawing.Point(72, 64);
 			this.udLow.Maximum = new System.Decimal(new int[] {
-																  9999,
+																  19999,
 																  0,
 																  0,
 																  0});
 			this.udLow.Minimum = new System.Decimal(new int[] {
-																  9999,
+																  19999,
 																  0,
 																  0,
 																  -2147483648});
@@ -379,12 +379,12 @@ namespace PowerSDR
 			// 
 			this.udHigh.Location = new System.Drawing.Point(72, 40);
 			this.udHigh.Maximum = new System.Decimal(new int[] {
-																   9999,
+																   19999,
 																   0,
 																   0,
 																   0});
 			this.udHigh.Minimum = new System.Decimal(new int[] {
-																   9999,
+																   19999,
 																   0,
 																   0,
 																   -2147483648});
@@ -448,32 +448,11 @@ namespace PowerSDR
 			this.groupBox2.TabIndex = 57;
 			this.groupBox2.TabStop = false;
 			// 
-			// picDisplay
-			// 
-			this.picDisplay.BackColor = System.Drawing.SystemColors.ControlText;
-			this.picDisplay.Location = new System.Drawing.Point(8, 144);
-			this.picDisplay.Name = "picDisplay";
-			this.picDisplay.Size = new System.Drawing.Size(328, 50);
-			this.picDisplay.TabIndex = 58;
-			this.picDisplay.TabStop = false;
-			this.picDisplay.Paint += new System.Windows.Forms.PaintEventHandler(this.picDisplay_Paint);
-			this.picDisplay.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picDisplay_MouseUp);
-			this.picDisplay.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picDisplay_MouseMove);
-			this.picDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picDisplay_MouseDown);
-			// 
-			// lblWidth
-			// 
-			this.lblWidth.Location = new System.Drawing.Point(8, 88);
-			this.lblWidth.Name = "lblWidth";
-			this.lblWidth.Size = new System.Drawing.Size(64, 23);
-			this.lblWidth.TabIndex = 57;
-			this.lblWidth.Text = "Width:";
-			// 
 			// udWidth
 			// 
 			this.udWidth.Location = new System.Drawing.Point(72, 88);
 			this.udWidth.Maximum = new System.Decimal(new int[] {
-																	19998,
+																	39998,
 																	0,
 																	0,
 																	0});
@@ -491,6 +470,27 @@ namespace PowerSDR
 																  0,
 																  0});
 			this.udWidth.ValueChanged += new System.EventHandler(this.udWidth_ValueChanged);
+			// 
+			// lblWidth
+			// 
+			this.lblWidth.Location = new System.Drawing.Point(8, 88);
+			this.lblWidth.Name = "lblWidth";
+			this.lblWidth.Size = new System.Drawing.Size(64, 23);
+			this.lblWidth.TabIndex = 57;
+			this.lblWidth.Text = "Width:";
+			// 
+			// picDisplay
+			// 
+			this.picDisplay.BackColor = System.Drawing.SystemColors.ControlText;
+			this.picDisplay.Location = new System.Drawing.Point(8, 144);
+			this.picDisplay.Name = "picDisplay";
+			this.picDisplay.Size = new System.Drawing.Size(328, 50);
+			this.picDisplay.TabIndex = 58;
+			this.picDisplay.TabStop = false;
+			this.picDisplay.Paint += new System.Windows.Forms.PaintEventHandler(this.picDisplay_Paint);
+			this.picDisplay.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picDisplay_MouseUp);
+			this.picDisplay.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picDisplay_MouseMove);
+			this.picDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picDisplay_MouseDown);
 			// 
 			// FilterForm
 			// 

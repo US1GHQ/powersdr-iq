@@ -176,6 +176,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "ControlPoint.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "cwedit.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -231,6 +236,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "ExtIO.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "filter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -244,6 +254,11 @@
                     RelPath = "FilterForm.resx"
                     DependentUpon = "FilterForm.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "FX2LP.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "hardware_v2.cs"
@@ -271,12 +286,22 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Interpolation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "invoke.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "JanusAudio.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "libusb.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -292,7 +317,7 @@
                 />
                 <File
                     RelPath = "memory.cs"
-                    SubType = "Component"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
@@ -711,6 +736,11 @@
                 />
                 <File
                     RelPath = "FWC\powermaster.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FWC\USB.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -302,6 +302,28 @@ namespace PowerSDR
 		[DllImport("DttSP.dll", EntryPoint="SetCorrectTXIQPhase")]///
 		public static extern void SetTXIQPhase(uint thread, double setit);
 
+// SV1EIA AIR ADDITIONAL FUNCTIONS
+
+		[DllImport("DttSP.dll", EntryPoint="SetCorrectIQBin")]///
+		public static extern void SetCorrectIQBin(uint thread, uint subrx, double setphase, double setgain, int bin);
+
+		[DllImport("DttSP.dll", EntryPoint="SetCorrectIQBinEnable")]///
+		public static extern void SetCorrectIQBinEnable(uint thread, uint subrx);
+/*
+		[DllImport("DttSP.dll", EntryPoint="SetCorrectIQGainBin")]///
+		public static extern void SetCorrectIQGainBin(uint thread, uint subrx, double setit, int bin);
+
+		[DllImport("DttSP.dll", EntryPoint="SetCorrectIQPhaseBin")]///
+		public static extern void SetCorrectIQPhaseBin(uint thread, uint subrx, double setit, int bin);
+
+		[DllImport("DttSP.dll", EntryPoint="SetCorrectTXIQGainBin")]///
+		public static extern void SetTXIQGainBin(uint thread, double setit, int bin);
+
+		[DllImport("DttSP.dll", EntryPoint="SetCorrectTXIQPhaseBin")]///
+		public static extern void SetTXIQPhaseBin(uint thread, double setit, int bin);
+*/
+// SV1EIA AIR ADDITIONAL FUNCTIONS
+		
 		[DllImport("DttSP.dll", EntryPoint="SetSDROM")]///
 		public static extern void SetSDROM(uint thread, uint subrx, bool setit);
 
@@ -500,6 +522,15 @@ namespace PowerSDR
 			SetEerXmit_DLL(i_setit); 
 			return;
 		}
+
+		[DllImport("DttSP.dll", EntryPoint = "GetLoopPTT")]
+		public static extern byte GetLoopPTT(); 
+
+		[DllImport("DttSP.dll", EntryPoint = "GetLoopPresent")]
+		public static extern byte GetLoopPresent(); 
+
+		[DllImport("DttSP.dll", EntryPoint = "SetLoopEnabled")]
+		public static extern byte SetLoopEnabled(int Enabled); 
 
 		#endregion
 	}

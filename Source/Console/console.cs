@@ -144,9 +144,14 @@ namespace PowerSDR
 	{
 		NONE = -1,
 		B160,
+		B80,
 		B60,
-		B20,
 		B40,		
+		B30,
+		B20,
+		B17,
+		B15,
+		B12,
 		B10,
 		B6,
 	}
@@ -297,7 +302,8 @@ namespace PowerSDR
 //		Dot		= 0x20,		//S5
 		Dot		= 0x80,		//S5
 		PA_DATA	= 0x40,		//S6
-		PIN_11	= 0x80,		//S7\
+//		PIN_11	= 0x80,		//S7\
+		PIN_11	= 0x20,		//S7\
 	}
 
 	public enum ATUTuneMode
@@ -430,10 +436,10 @@ namespace PowerSDR
 		static double rfreq = 0;
 		static double old_frequency = 0;
 		static double new_frequency = 0;
-		byte si570_i2c_address = 0x55;
+		public byte si570_i2c_address = 0x55;
 		public double si570_fxtal = 114.285e6; //114.2886e6; //114.285e6;	// nominal internal xtal frequency si570 (114.285MHz)
-		public double si570_fxtal_init = 114285000;
 		public double si570_multiplier = 4;
+		public byte[] i2c_data_bytes;
 		private bool tuning_VAC;
 
 		private Thread[] audio_process_thread;				// threads to run DttSP functions
@@ -472,6 +478,19 @@ namespace PowerSDR
 		public FLEX5000ProdTestForm flex5000ProdTestForm;
 		public FLEX5000FinalTestForm flex5000FinalTestForm;
 		public FLEX5000RX2CalForm flex5000RX2CalForm;
+
+		public byte Band160m = 1;
+		public byte Band80m = 4;
+		public byte Band60m = 4;
+		public byte Band40m = 4;
+		public byte Band30m = 8;
+		public byte Band20m = 8;
+		public byte Band17m = 8;
+		public byte Band15m = 16;
+		public byte Band12m = 16;
+		public byte Band10m = 16;
+		public byte Band6m = 32;
+
 
 		public bool fwc_init = false;
 		public int fwc_index = -1;
@@ -617,8 +636,8 @@ namespace PowerSDR
 		private int vfo_decimal_space;						// Used to calibrate mousewheel tuning		
 		private int vfo_sub_char_width;						// Used to calibrate mousewheel tuning
 		private int vfo_sub_char_space;						// Used to calibrate mousewheel tuning
-		private int vfo_sub_small_char_width;				// Used to calibrate mousewheel tuning
-		private int vfo_sub_small_char_space;				// Used to calibrate mousewheel tuning
+//		private int vfo_sub_small_char_width;				// Used to calibrate mousewheel tuning
+//		private int vfo_sub_small_char_space;				// Used to calibrate mousewheel tuning
 		private int vfo_sub_decimal_width;					// Used to calibrate mousewheel tuning
 		private int vfo_sub_decimal_space;					// Used to calibrate mousewheel tuning	
 		private int vfo_pixel_offset;						// Used to calibrate mousewheel tuning
@@ -735,6 +754,9 @@ namespace PowerSDR
 		private Point chk_rx2_preamp_basis = new Point(100, 100);
 		private Point lbl_rx2_band_basis = new Point(100, 100);
 		private Point combo_rx2_band_basis = new Point(100, 100);
+
+		public SerialPorts.SerialPort USB995xport = new SerialPorts.SerialPort();
+
 
 		#endregion
 
@@ -1081,6 +1103,9 @@ namespace PowerSDR
 		private System.Windows.Forms.ComboBoxTS comboRX2AGC;
 		private System.Windows.Forms.LabelTS lblRX2AGC;
 		private System.Windows.Forms.CheckBoxTS chkVFOSync;
+		private System.Windows.Forms.CheckBoxTS chkLoopAudio;
+		private System.Windows.Forms.CheckBoxTS chkCWLoopAudio;
+		private System.Windows.Forms.CheckBoxTS chkDIGLoopAudio;
 		private System.Windows.Forms.CheckBoxTS chkFullDuplex;
 
 		#endregion
@@ -1113,7 +1138,7 @@ namespace PowerSDR
 			DB.GetIQ();
 
 			list.Sort();
-			foreach(string s in list)
+/*			foreach(string s in list)
 			{
 				if(s.StartsWith("radGenModelFLEX5000") && s.IndexOf("True") >= 0)
 					fwc_init = true;
@@ -1182,7 +1207,7 @@ namespace PowerSDR
 					if(chkRX2.Checked) chkRX2.Checked = false;
 				}
 			}
-
+*/
 			Splash.SetStatus("Initializing Radio");				// Set progress point
 			radio = new Radio();								// Initialize the Radio processor
 
@@ -1378,8 +1403,8 @@ namespace PowerSDR
 					chkPower.Checked = true;
 			}
 
-			if((current_model == Model.FLEX5000) && !fwc_init)
-				MessageBox.Show("Error opening FLEX-5000 driver.", "Driver Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+//			if((current_model == Model.FLEX5000) && !fwc_init)
+//				MessageBox.Show("Error opening FLEX-5000 driver.", "Driver Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 			if(!fwc_init || current_model != Model.FLEX5000)
 			{
@@ -1395,7 +1420,59 @@ namespace PowerSDR
 #if (SWEEPGEN && !DEBUG)
 			button1.Visible = true;
 #endif
+/*
+			byte HSUSB_Data;
 
+			HSUSB.InitI2C();
+
+			HSUSB_Data = 0x55;
+			HSUSB.SetI2CAddr(&HSUSB_Data);
+			HSUSB_Data = 0x00;
+			HSUSB.GetI2CAddr(&HSUSB_Data);
+
+			HSUSB_Data = 0x01;
+			HSUSB.WriteI2C(&HSUSB_Data);
+//			HSUSB_Data = 0x00;
+//			HSUSB.ReadI2C(&HSUSB_Data);
+
+			HSUSB_Data = 0x00;
+			HSUSB.GetRDY(&HSUSB_Data);
+
+			HSUSB_Data = 0x00;
+			HSUSB.SetCtrlLine(&HSUSB_Data);
+			HSUSB_Data = 0xFF;
+			HSUSB.GetCtrlLine(&HSUSB_Data);
+
+			HSUSB_Data = 0x01;
+			HSUSB.SetCtrlLine(&HSUSB_Data);
+			HSUSB_Data = 0x00;
+			HSUSB.GetCtrlLine(&HSUSB_Data);
+
+			HSUSB_Data = 0x02;
+			HSUSB.SetCtrlLine(&HSUSB_Data);
+			HSUSB_Data = 0x00;
+			HSUSB.GetCtrlLine(&HSUSB_Data);
+
+			HSUSB_Data = 0x04;
+			HSUSB.SetCtrlLine(&HSUSB_Data);
+			HSUSB_Data = 0x00;
+			HSUSB.GetCtrlLine(&HSUSB_Data);
+
+			HSUSB_Data = 0xB0;
+			HSUSB.SetPortA(&HSUSB_Data);
+			HSUSB_Data = 0x00;
+			HSUSB.GetPortA(&HSUSB_Data);
+
+			HSUSB_Data = 0xC0;
+			HSUSB.SetPortB(&HSUSB_Data);
+			HSUSB_Data = 0x00;
+			HSUSB.GetPortB(&HSUSB_Data);
+
+			HSUSB_Data = 0xD0;
+			HSUSB.SetPortD(&HSUSB_Data);
+			HSUSB_Data = 0x00;
+			HSUSB.GetPortD(&HSUSB_Data);
+*/
 			initializing = false;
 		}
 
@@ -1640,6 +1717,7 @@ namespace PowerSDR
 			this.btnTuneStepChangeSmaller = new System.Windows.Forms.ButtonTS();
 			this.tbMIC = new System.Windows.Forms.TrackBarTS();
 			this.grpModeSpecificPhone = new System.Windows.Forms.GroupBoxTS();
+			this.chkLoopAudio = new System.Windows.Forms.CheckBoxTS();
 			this.udDX = new System.Windows.Forms.NumericUpDownTS();
 			this.tbDX = new System.Windows.Forms.TrackBarTS();
 			this.chkDX = new System.Windows.Forms.CheckBoxTS();
@@ -1660,6 +1738,7 @@ namespace PowerSDR
 			this.lblTransmitProfile = new System.Windows.Forms.LabelTS();
 			this.chkShowTXFilter = new System.Windows.Forms.CheckBoxTS();
 			this.grpModeSpecificCW = new System.Windows.Forms.GroupBoxTS();
+			this.chkCWLoopAudio = new System.Windows.Forms.CheckBoxTS();
 			this.udCWPitch = new System.Windows.Forms.NumericUpDownTS();
 			this.grpSemiBreakIn = new System.Windows.Forms.GroupBoxTS();
 			this.udCWBreakInDelay = new System.Windows.Forms.NumericUpDownTS();
@@ -1672,6 +1751,7 @@ namespace PowerSDR
 			this.tbCWSpeed = new System.Windows.Forms.TrackBarTS();
 			this.lblCWPitchFreq = new System.Windows.Forms.LabelTS();
 			this.grpModeSpecificDigital = new System.Windows.Forms.GroupBoxTS();
+			this.chkDIGLoopAudio = new System.Windows.Forms.CheckBoxTS();
 			this.comboDigTXProfile = new System.Windows.Forms.ComboBoxTS();
 			this.lblDigTXProfile = new System.Windows.Forms.LabelTS();
 			this.grpVACStereo = new System.Windows.Forms.GroupBoxTS();
@@ -4291,12 +4371,12 @@ namespace PowerSDR
 																		   0});
 			this.udFilterHigh.Location = ((System.Drawing.Point)(resources.GetObject("udFilterHigh.Location")));
 			this.udFilterHigh.Maximum = new System.Decimal(new int[] {
-																		 9999,
+																		 19999,
 																		 0,
 																		 0,
 																		 0});
 			this.udFilterHigh.Minimum = new System.Decimal(new int[] {
-																		 9999,
+																		 19999,
 																		 0,
 																		 0,
 																		 -2147483648});
@@ -4336,12 +4416,12 @@ namespace PowerSDR
 																		  0});
 			this.udFilterLow.Location = ((System.Drawing.Point)(resources.GetObject("udFilterLow.Location")));
 			this.udFilterLow.Maximum = new System.Decimal(new int[] {
-																		9999,
+																		19999,
 																		0,
 																		0,
 																		0});
 			this.udFilterLow.Minimum = new System.Decimal(new int[] {
-																		9999,
+																		19999,
 																		0,
 																		0,
 																		-2147483648});
@@ -4375,7 +4455,7 @@ namespace PowerSDR
 			this.tbFilterWidth.Font = ((System.Drawing.Font)(resources.GetObject("tbFilterWidth.Font")));
 			this.tbFilterWidth.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tbFilterWidth.ImeMode")));
 			this.tbFilterWidth.Location = ((System.Drawing.Point)(resources.GetObject("tbFilterWidth.Location")));
-			this.tbFilterWidth.Maximum = 10000;
+			this.tbFilterWidth.Maximum = 40000;
 			this.tbFilterWidth.Minimum = 1;
 			this.tbFilterWidth.Name = "tbFilterWidth";
 			this.tbFilterWidth.Orientation = ((System.Windows.Forms.Orientation)(resources.GetObject("tbFilterWidth.Orientation")));
@@ -7133,6 +7213,7 @@ namespace PowerSDR
 			this.grpModeSpecificPhone.AccessibleName = resources.GetString("grpModeSpecificPhone.AccessibleName");
 			this.grpModeSpecificPhone.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("grpModeSpecificPhone.Anchor")));
 			this.grpModeSpecificPhone.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("grpModeSpecificPhone.BackgroundImage")));
+			this.grpModeSpecificPhone.Controls.Add(this.chkLoopAudio);
 			this.grpModeSpecificPhone.Controls.Add(this.udDX);
 			this.grpModeSpecificPhone.Controls.Add(this.tbDX);
 			this.grpModeSpecificPhone.Controls.Add(this.chkDX);
@@ -7169,6 +7250,33 @@ namespace PowerSDR
 			this.grpModeSpecificPhone.Text = resources.GetString("grpModeSpecificPhone.Text");
 			this.toolTip1.SetToolTip(this.grpModeSpecificPhone, resources.GetString("grpModeSpecificPhone.ToolTip"));
 			this.grpModeSpecificPhone.Visible = ((bool)(resources.GetObject("grpModeSpecificPhone.Visible")));
+			// 
+			// chkLoopAudio
+			// 
+			this.chkLoopAudio.AccessibleDescription = resources.GetString("chkLoopAudio.AccessibleDescription");
+			this.chkLoopAudio.AccessibleName = resources.GetString("chkLoopAudio.AccessibleName");
+			this.chkLoopAudio.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("chkLoopAudio.Anchor")));
+			this.chkLoopAudio.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("chkLoopAudio.Appearance")));
+			this.chkLoopAudio.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("chkLoopAudio.BackgroundImage")));
+			this.chkLoopAudio.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkLoopAudio.CheckAlign")));
+			this.chkLoopAudio.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("chkLoopAudio.Dock")));
+			this.chkLoopAudio.Enabled = ((bool)(resources.GetObject("chkLoopAudio.Enabled")));
+			this.chkLoopAudio.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("chkLoopAudio.FlatStyle")));
+			this.chkLoopAudio.Font = ((System.Drawing.Font)(resources.GetObject("chkLoopAudio.Font")));
+			this.chkLoopAudio.Image = ((System.Drawing.Image)(resources.GetObject("chkLoopAudio.Image")));
+			this.chkLoopAudio.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkLoopAudio.ImageAlign")));
+			this.chkLoopAudio.ImageIndex = ((int)(resources.GetObject("chkLoopAudio.ImageIndex")));
+			this.chkLoopAudio.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("chkLoopAudio.ImeMode")));
+			this.chkLoopAudio.Location = ((System.Drawing.Point)(resources.GetObject("chkLoopAudio.Location")));
+			this.chkLoopAudio.Name = "chkLoopAudio";
+			this.chkLoopAudio.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("chkLoopAudio.RightToLeft")));
+			this.chkLoopAudio.Size = ((System.Drawing.Size)(resources.GetObject("chkLoopAudio.Size")));
+			this.chkLoopAudio.TabIndex = ((int)(resources.GetObject("chkLoopAudio.TabIndex")));
+			this.chkLoopAudio.Text = resources.GetString("chkLoopAudio.Text");
+			this.chkLoopAudio.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkLoopAudio.TextAlign")));
+			this.toolTip1.SetToolTip(this.chkLoopAudio, resources.GetString("chkLoopAudio.ToolTip"));
+			this.chkLoopAudio.Visible = ((bool)(resources.GetObject("chkLoopAudio.Visible")));
+			this.chkLoopAudio.CheckedChanged += new System.EventHandler(this.chkLoopAudio_CheckedChanged);
 			// 
 			// udDX
 			// 
@@ -7735,6 +7843,7 @@ namespace PowerSDR
 			this.grpModeSpecificCW.AccessibleName = resources.GetString("grpModeSpecificCW.AccessibleName");
 			this.grpModeSpecificCW.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("grpModeSpecificCW.Anchor")));
 			this.grpModeSpecificCW.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("grpModeSpecificCW.BackgroundImage")));
+			this.grpModeSpecificCW.Controls.Add(this.chkCWLoopAudio);
 			this.grpModeSpecificCW.Controls.Add(this.udCWPitch);
 			this.grpModeSpecificCW.Controls.Add(this.grpSemiBreakIn);
 			this.grpModeSpecificCW.Controls.Add(this.chkShowTXCWFreq);
@@ -7758,6 +7867,33 @@ namespace PowerSDR
 			this.grpModeSpecificCW.Text = resources.GetString("grpModeSpecificCW.Text");
 			this.toolTip1.SetToolTip(this.grpModeSpecificCW, resources.GetString("grpModeSpecificCW.ToolTip"));
 			this.grpModeSpecificCW.Visible = ((bool)(resources.GetObject("grpModeSpecificCW.Visible")));
+			// 
+			// chkCWLoopAudio
+			// 
+			this.chkCWLoopAudio.AccessibleDescription = resources.GetString("chkCWLoopAudio.AccessibleDescription");
+			this.chkCWLoopAudio.AccessibleName = resources.GetString("chkCWLoopAudio.AccessibleName");
+			this.chkCWLoopAudio.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("chkCWLoopAudio.Anchor")));
+			this.chkCWLoopAudio.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("chkCWLoopAudio.Appearance")));
+			this.chkCWLoopAudio.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("chkCWLoopAudio.BackgroundImage")));
+			this.chkCWLoopAudio.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkCWLoopAudio.CheckAlign")));
+			this.chkCWLoopAudio.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("chkCWLoopAudio.Dock")));
+			this.chkCWLoopAudio.Enabled = ((bool)(resources.GetObject("chkCWLoopAudio.Enabled")));
+			this.chkCWLoopAudio.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("chkCWLoopAudio.FlatStyle")));
+			this.chkCWLoopAudio.Font = ((System.Drawing.Font)(resources.GetObject("chkCWLoopAudio.Font")));
+			this.chkCWLoopAudio.Image = ((System.Drawing.Image)(resources.GetObject("chkCWLoopAudio.Image")));
+			this.chkCWLoopAudio.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkCWLoopAudio.ImageAlign")));
+			this.chkCWLoopAudio.ImageIndex = ((int)(resources.GetObject("chkCWLoopAudio.ImageIndex")));
+			this.chkCWLoopAudio.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("chkCWLoopAudio.ImeMode")));
+			this.chkCWLoopAudio.Location = ((System.Drawing.Point)(resources.GetObject("chkCWLoopAudio.Location")));
+			this.chkCWLoopAudio.Name = "chkCWLoopAudio";
+			this.chkCWLoopAudio.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("chkCWLoopAudio.RightToLeft")));
+			this.chkCWLoopAudio.Size = ((System.Drawing.Size)(resources.GetObject("chkCWLoopAudio.Size")));
+			this.chkCWLoopAudio.TabIndex = ((int)(resources.GetObject("chkCWLoopAudio.TabIndex")));
+			this.chkCWLoopAudio.Text = resources.GetString("chkCWLoopAudio.Text");
+			this.chkCWLoopAudio.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkCWLoopAudio.TextAlign")));
+			this.toolTip1.SetToolTip(this.chkCWLoopAudio, resources.GetString("chkCWLoopAudio.ToolTip"));
+			this.chkCWLoopAudio.Visible = ((bool)(resources.GetObject("chkCWLoopAudio.Visible")));
+			this.chkCWLoopAudio.CheckedChanged += new System.EventHandler(this.chkCWLoopAudio_CheckedChanged);
 			// 
 			// udCWPitch
 			// 
@@ -8082,6 +8218,7 @@ namespace PowerSDR
 			this.grpModeSpecificDigital.AccessibleName = resources.GetString("grpModeSpecificDigital.AccessibleName");
 			this.grpModeSpecificDigital.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("grpModeSpecificDigital.Anchor")));
 			this.grpModeSpecificDigital.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("grpModeSpecificDigital.BackgroundImage")));
+			this.grpModeSpecificDigital.Controls.Add(this.chkDIGLoopAudio);
 			this.grpModeSpecificDigital.Controls.Add(this.comboDigTXProfile);
 			this.grpModeSpecificDigital.Controls.Add(this.lblDigTXProfile);
 			this.grpModeSpecificDigital.Controls.Add(this.grpVACStereo);
@@ -8106,6 +8243,33 @@ namespace PowerSDR
 			this.grpModeSpecificDigital.Text = resources.GetString("grpModeSpecificDigital.Text");
 			this.toolTip1.SetToolTip(this.grpModeSpecificDigital, resources.GetString("grpModeSpecificDigital.ToolTip"));
 			this.grpModeSpecificDigital.Visible = ((bool)(resources.GetObject("grpModeSpecificDigital.Visible")));
+			// 
+			// chkDIGLoopAudio
+			// 
+			this.chkDIGLoopAudio.AccessibleDescription = resources.GetString("chkDIGLoopAudio.AccessibleDescription");
+			this.chkDIGLoopAudio.AccessibleName = resources.GetString("chkDIGLoopAudio.AccessibleName");
+			this.chkDIGLoopAudio.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("chkDIGLoopAudio.Anchor")));
+			this.chkDIGLoopAudio.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("chkDIGLoopAudio.Appearance")));
+			this.chkDIGLoopAudio.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("chkDIGLoopAudio.BackgroundImage")));
+			this.chkDIGLoopAudio.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkDIGLoopAudio.CheckAlign")));
+			this.chkDIGLoopAudio.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("chkDIGLoopAudio.Dock")));
+			this.chkDIGLoopAudio.Enabled = ((bool)(resources.GetObject("chkDIGLoopAudio.Enabled")));
+			this.chkDIGLoopAudio.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("chkDIGLoopAudio.FlatStyle")));
+			this.chkDIGLoopAudio.Font = ((System.Drawing.Font)(resources.GetObject("chkDIGLoopAudio.Font")));
+			this.chkDIGLoopAudio.Image = ((System.Drawing.Image)(resources.GetObject("chkDIGLoopAudio.Image")));
+			this.chkDIGLoopAudio.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkDIGLoopAudio.ImageAlign")));
+			this.chkDIGLoopAudio.ImageIndex = ((int)(resources.GetObject("chkDIGLoopAudio.ImageIndex")));
+			this.chkDIGLoopAudio.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("chkDIGLoopAudio.ImeMode")));
+			this.chkDIGLoopAudio.Location = ((System.Drawing.Point)(resources.GetObject("chkDIGLoopAudio.Location")));
+			this.chkDIGLoopAudio.Name = "chkDIGLoopAudio";
+			this.chkDIGLoopAudio.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("chkDIGLoopAudio.RightToLeft")));
+			this.chkDIGLoopAudio.Size = ((System.Drawing.Size)(resources.GetObject("chkDIGLoopAudio.Size")));
+			this.chkDIGLoopAudio.TabIndex = ((int)(resources.GetObject("chkDIGLoopAudio.TabIndex")));
+			this.chkDIGLoopAudio.Text = resources.GetString("chkDIGLoopAudio.Text");
+			this.chkDIGLoopAudio.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("chkDIGLoopAudio.TextAlign")));
+			this.toolTip1.SetToolTip(this.chkDIGLoopAudio, resources.GetString("chkDIGLoopAudio.ToolTip"));
+			this.chkDIGLoopAudio.Visible = ((bool)(resources.GetObject("chkDIGLoopAudio.Visible")));
+			this.chkDIGLoopAudio.CheckedChanged += new System.EventHandler(this.chkDIGLoopAudio_CheckedChanged);
 			// 
 			// comboDigTXProfile
 			// 
@@ -10912,13 +11076,13 @@ namespace PowerSDR
 			this.Controls.Add(this.chkPower);
 			this.Controls.Add(this.chkSquelch);
 			this.Controls.Add(this.udSquelch);
-			this.Controls.Add(this.grpModeSpecificPhone);
-			this.Controls.Add(this.grpModeSpecificCW);
-			this.Controls.Add(this.grpModeSpecificDigital);
 			this.Controls.Add(this.grpBandVHF);
 			this.Controls.Add(this.grpRX2Filter);
 			this.Controls.Add(this.chkRX2);
 			this.Controls.Add(this.grpRX2Display);
+			this.Controls.Add(this.grpModeSpecificDigital);
+			this.Controls.Add(this.grpModeSpecificPhone);
+			this.Controls.Add(this.grpModeSpecificCW);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -11299,6 +11463,7 @@ namespace PowerSDR
 			siolisten = new SIOListenerII(this);
 
 			Keyer = new CWKeyer2(this);			// create new Keyer
+//			Keyer.sp.BaudRate = 4800;	//[patch_15]
 			EQForm = new EQForm(this);
 
 			InitFilterPresets();					// Initialize filter values
@@ -11381,7 +11546,7 @@ namespace PowerSDR
 
 			txtVFOAFreq_LostFocus(this, EventArgs.Empty);
 
-			if(fwc_init && current_model == Model.FLEX5000 && !run_setup_wizard)
+/*			if(fwc_init && current_model == Model.FLEX5000 && !run_setup_wizard)
 			{
 				CheckFLEX5000CalData();
 				if(fwcAntForm != null && !fwcAntForm.IsDisposed)
@@ -11398,7 +11563,8 @@ namespace PowerSDR
 				if(FWCEEPROM.RX2OK) RX2Ant = rx2_ant;
 			}
 			else PAPresent = pa_present;
-
+*/
+			PAPresent = pa_present;
 			if(comboAGC.SelectedIndex < 0)
 				RX1AGCMode = AGCMode.MED;
 			if(comboRX2AGC.SelectedIndex < 0)
@@ -11517,6 +11683,18 @@ namespace PowerSDR
 			DB.Exit();					// close and save database
 			//Mixer.RestoreState();		// restore initial mixer state
 			DttSP.Exit();				// deallocate DSP variables
+
+			// [patch_16
+			if (DG8SAQ_usbVFO != IntPtr.Zero)	// shut down interface to DG8SAQ USB VFO
+			{
+				libusb.usb_release_interface(DG8SAQ_usbVFO, 0);
+				libusb.usb_close(DG8SAQ_usbVFO);
+				DG8SAQ_usbVFO = IntPtr.Zero;
+			} // patch_16]
+
+			if (Keyer.sp_Si570.IsOpen ) Keyer.sp_Si570.Close();
+			if (USB995xport.IsOpen ) USB995xport.Close();
+
 		}
 
 		public void SaveState()
@@ -14969,19 +15147,171 @@ namespace PowerSDR
 			else									// RFE is not present
 			{
 				//Select the BPF relays using the high frequency cutoff
-				if(freq < 2.5)					//DC to 2.5MHz
+				if(freq < SetupForm.BPF160mLPFEnd)					//DC to 2.5MHz
+				{
 					Hdw.BPFRelay = BPFBand.B160;
-//				else if(freq < 6)				//2.5MHz to 6MHz
-//					Hdw.BPFRelay = BPFBand.B60;
-//				else if(freq < 20)				//6MHz to 12MHz
-				else if(freq < 9)				//6MHz to 12MHz
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x03, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x00, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF80mLPFEnd)				//2.5MHz to 6MHz
+				{
+					Hdw.BPFRelay = BPFBand.B80;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x01, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x00, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF60mLPFEnd)				//6MHz to 12MHz
+				{
+					Hdw.BPFRelay = BPFBand.B60;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x02, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x10, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF40mLPFEnd)				//6MHz to 12MHz
+				{
 					Hdw.BPFRelay = BPFBand.B40;
-				else if(freq < 20)				//12MHz to 24MHz
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x05, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x10, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF30mLPFEnd)				//12MHz to 24MHz
+				{
+					Hdw.BPFRelay = BPFBand.B30;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x05, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x20, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF20mLPFEnd)				//12MHz to 24MHz
+				{
 					Hdw.BPFRelay = BPFBand.B20;
-				else if(freq < 36)				//24MHz to 36MHz
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x06, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x20, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF17mLPFEnd)				//12MHz to 24MHz
+				{
+					Hdw.BPFRelay = BPFBand.B17;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x07, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x30, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF15mLPFEnd)				//12MHz to 24MHz
+				{
+					Hdw.BPFRelay = BPFBand.B15;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x07, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x30, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF12mLPFEnd)				//12MHz to 24MHz
+				{
+					Hdw.BPFRelay = BPFBand.B12;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x07, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x30, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
+				else if(freq < SetupForm.BPF10mLPFEnd)				//24MHz to 36MHz
+				{
 					Hdw.BPFRelay = BPFBand.B10;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x07, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x30, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
 				else								//36MHz to 65Mhz
+				{
 					Hdw.BPFRelay = BPFBand.B6;
+					if (USB995xport.IsOpen && SetupForm.AD995xBPF)
+					{
+						byte[] outData = {0x03, 0x01, 0x00, 0x00, 0x7B};
+						USB995xport.Write(outData, 0, outData.Length);
+					}
+					if (USBtoI2CPresent && SetupForm.USBtoI2CBPF)
+					{
+						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x04, 0x30, 0, buf, 1, 1000);
+//						len = len;
+					}
+				}
 			}
 
 			if(current_xvtr_index >= 0)
@@ -15351,10 +15681,10 @@ namespace PowerSDR
 					break;
 			}
 
-			if(low < -9999)
-				low = -9999;
-			if(high > 9999) 
-				high = 9999;
+			if(low < -19999)
+				low = -19999;
+			if(high > 19999) 
+				high = 19999;
 
 			// send the settings to the DSP
 			radio.GetDSPRX(0, 0).SetRXFilter(low, high);
@@ -18959,7 +19289,8 @@ namespace PowerSDR
 					if(j<2040 || j > 2055)
 						sum += a[j];
 				}				
-				Thread.Sleep(50);
+//				Thread.Sleep(50);
+				Thread.Sleep(10);
 			}
 			float noise_floor = (sum / 925.0f);
 			float worst_image = max_signal;
@@ -19001,7 +19332,8 @@ namespace PowerSDR
 				for(float i=global_min_gain; i >= -500.0 && i <= 500.0; i+=(gain_step*gain_dir))
 				{
 					SetupForm.ImageGainRX = i;				//set gain slider
-					Thread.Sleep(200);
+//					Thread.Sleep(200);
+					Thread.Sleep(20);
 					
 					sum = 0.0f;
 					int num_avg = 2;
@@ -19128,8 +19460,9 @@ namespace PowerSDR
 				for(float i=global_min_phase; i >= -400.0 && i <= 400.0; i+=(phase_step*phase_dir))
 				{
 					SetupForm.ImagePhaseRX = i;				// phase slider
-					Thread.Sleep(200);
-					
+//					Thread.Sleep(200);
+					Thread.Sleep(20);					
+
 					sum = 0.0f;
 					int num_avg = 2;
 					if(phase_step <= 0.01) num_avg = 4;
@@ -19301,6 +19634,694 @@ namespace PowerSDR
 			Debug.WriteLine("timer: "+t1.Duration);
 			return ret_val;
 		}
+
+		public bool CalibrateRXImageAIR(float freq, Progress progress, bool suppress_errors, int bin)
+		{
+			HiPerfTimer t1 = new HiPerfTimer();
+			t1.Start();
+			HiPerfTimer t2 = new HiPerfTimer();
+	
+			string gain_string = "";
+			string phase_string = "";
+			float tol = 10.0f;
+			float phase_step = 1.0f;
+			float gain_step = 10.0f;
+			float phase_index = 0;
+			float gain_index = 0;
+			float global_min_phase = 0;
+			float global_min_gain = 0;
+			float global_min_value = float.MaxValue;
+			bool progressing = true;
+			int gain_dir = -1;
+			int phase_dir = 1;
+			int gain_count = 1;
+			int phase_count = 1;
+			int wrong_direction_count;
+			int switch_direction_count;
+			string index_string;
+			string val_string;
+
+			// Setup Rig for Image Null Cal
+			bool ret_val = false;
+			calibration_running = true;
+
+			if(!chkPower.Checked)
+			{
+				if(!suppress_errors)
+				{
+					MessageBox.Show("Power must be on in order to calibrate RX Image.", "Power Is Off",
+						MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				}
+				calibration_running = false;
+				progress.Text = "";
+				return false;
+			}
+
+			bool spur_red = chkSR.Checked;					// save current spur reduction setting
+			chkSR.Checked = false;							// turn spur reduction off
+
+			//bool rx_only = SetupForm.RXOnly;				// save RX Only Setting
+			//SetupForm.RXOnly = true;
+
+			bool polyphase = SetupForm.Polyphase;			// save current polyphase setting
+			SetupForm.Polyphase = false;					// disable polyphase
+
+			int dsp_buf_size = SetupForm.DSPPhoneRXBuffer;		// save current DSP buffer size
+			SetupForm.DSPPhoneRXBuffer = 4096;					// set DSP Buffer Size to 4096
+
+			string display_mode = comboDisplayMode.Text;
+			comboDisplayMode.Text = "Spectrum";
+
+			bool avg = chkDisplayAVG.Checked;		// save current average state
+			chkDisplayAVG.Checked = true;
+
+			DSPMode dsp_mode = rx1_dsp_mode;			// save current dsp mode
+			RX1DSPMode = DSPMode.DSB;					// set dsp mode to DSB
+
+			int filt_low = RX1FilterLow;
+			int filt_high = RX1FilterHigh;
+			Filter filter = rx1_filter;					// save current filter
+			RX1Filter = Filter.F1;						// set filter to 6kHz
+
+			PreampMode preamp = rx1_preamp_mode;		// save current preamp setting
+			RX1PreampMode = PreampMode.HIGH;			// set preamp to high
+
+			bool duplex = full_duplex;
+			FullDuplex = true;
+
+			if(fwc_init && current_model == Model.FLEX5000)
+			{
+				VFOBFreq = freq;
+				Thread.Sleep(50);
+				FWC.SetTest(true);
+				Thread.Sleep(50);
+				FWC.SetGen(true);
+				Thread.Sleep(50);
+				FWC.SetSig(true);
+				Thread.Sleep(50);
+				FWC.SetQSE(false);
+				Thread.Sleep(50);
+			}
+
+			double vfo_freq = VFOAFreq;						// save current frequency
+			VFOAFreq = freq+2*(float)if_freq;				// set frequency to passed value + 2*IF
+
+			DisableAllFilters();
+			DisableAllModes();
+			VFOLock = true;
+			comboPreamp.Enabled = false;
+			comboDisplayMode.Enabled = false;
+
+			//int retval = 0;
+			progress.SetPercent(0.0f);
+
+			if (bin == 0)
+			{
+				SetupForm.ImagePhaseRX = -400.0f;
+				SetupForm.ImageGainRX = -500.0f;
+			}
+//			else
+//			{
+//				SetupForm.phase_test[bin] = -400.0f;
+//				SetupForm.gain_test[bin] = -400.0f;
+//				SetupForm.AIRStore();
+//			}
+
+			float[] a = new float[Display.BUFFER_SIZE];
+			float[] init_max = new float[4];			
+
+			Thread.Sleep(200);
+			float sum = 0.0f;
+			int peak_bin = -1;
+			float max_signal = float.MinValue;
+
+			for(int i=0; i<5; i++)
+			{
+				calibration_mutex.WaitOne();
+				fixed(float* ptr = &a[0])
+					DttSP.GetSpectrum(0, ptr);// get the spectrum values
+				calibration_mutex.ReleaseMutex();
+				Thread.Sleep(50);
+			}
+
+			for(int i=0; i<5; i++)
+			{
+				calibration_mutex.WaitOne();
+				fixed(float* ptr = &a[0])
+					DttSP.GetSpectrum(0, ptr);// get the spectrum values
+				calibration_mutex.ReleaseMutex();
+
+				for(int j=0; i==4 && j<Display.BUFFER_SIZE; j++)
+				{
+					if(a[j] > max_signal)
+					{
+						max_signal = a[j];
+						peak_bin = j;
+					}
+				}
+
+				for(int j=1948; j<2148; j++) // TODO: Fix limits for 48/96kHz
+				{
+					if(j<2040 || j > 2055)
+						sum += a[j];
+				}				
+				//				Thread.Sleep(50);
+				Thread.Sleep(10);
+			}
+			float noise_floor = (sum / 925.0f);
+			float worst_image = max_signal;
+			Debug.WriteLine("noise_floor: "+noise_floor.ToString("f6")+" peak_bin: "+peak_bin);
+
+			if(max_signal < noise_floor + 30.0)
+			{
+				if(!suppress_errors)
+				{
+					MessageBox.Show("Image not found (max signal < noise floor + 30dB).  Please try again.\n"+
+						DateTime.Now.ToShortTimeString(),
+						"Image Not Found",
+						MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				}
+				calibration_running = false;
+				//progress.Text = "";
+				goto end;
+			}
+
+			if (bin == 0)
+			{
+				SetupForm.ImagePhaseRX = 0.0f;
+				SetupForm.ImageGainRX = 0.0f;
+			}
+			else
+			{
+//				SetupForm.phase_test[bin] = 0.0f;
+//				SetupForm.gain_test[bin] = 0.0f;
+//				SetupForm.AIRStore();
+				global_min_phase = SetupForm.phase_test[bin];
+				global_min_gain = SetupForm.gain_test[bin];
+			}
+
+			while(progressing)
+			{
+				// find minimum of the peak signal over 
+				// the range of Gain settings
+
+				float start = 0.0f;
+				float min_signal = float.MaxValue;
+				max_signal = float.MinValue;
+				wrong_direction_count = switch_direction_count = 0;
+				bool first_time = true;
+
+				t2.Start();
+				index_string = "";
+				val_string = "";
+				gain_string += (gain_count+","+gain_dir+","+gain_step.ToString("f6")+"\n");
+				// start at the global min and try to walk in one direction -- if wrong, turn around
+				for(float i=global_min_gain; i >= -500.0 && i <= 500.0; i+=(gain_step*gain_dir))
+				{
+					if (bin == 0)
+					{
+						SetupForm.ImageGainRX = i;				//set gain slider
+					}
+					else
+					{
+						SetupForm.gain_test[bin] = i;
+						SetupForm.AIRStore();
+					}
+					//					Thread.Sleep(200);
+					Thread.Sleep(20);
+					
+					sum = 0.0f;
+					int num_avg = 2;
+					if(gain_step <= 0.01) num_avg = 4;
+					for(int j=0; j<num_avg; j++)
+					{
+						calibration_mutex.WaitOne();
+						fixed(float* ptr = &a[0])
+							DttSP.GetSpectrum(0, ptr);// get the spectrum values
+						sum += a[peak_bin];
+						calibration_mutex.ReleaseMutex();
+						if(j<num_avg-1) Thread.Sleep(50);
+					}
+					sum /= num_avg;
+					a[peak_bin] = sum;
+
+					index_string += i.ToString("f4")+",";
+					val_string += a[peak_bin].ToString("f4")+",";
+
+					if(a[peak_bin] < min_signal)			// if image is less than minimum
+					{
+						min_signal = a[peak_bin];			// save new minimum
+						gain_index = i;						// save phase index
+						if(min_signal < global_min_value)
+						{
+							global_min_value = min_signal;
+							global_min_gain = gain_index;
+						}
+					}
+
+					// cal complete condition
+					if(min_signal < noise_floor+6.0f)
+					{
+						progressing = false;
+						break;
+					}
+
+					if(first_time)
+					{
+						first_time = false;
+						start = a[peak_bin];
+						max_signal = a[peak_bin];
+					}
+					else
+					{
+						if(a[peak_bin] > max_signal && a[peak_bin] > start+1.0)
+						{
+							max_signal = a[peak_bin];
+							wrong_direction_count++; Debug.Write("W");
+							if(wrong_direction_count > 1)
+							{
+								wrong_direction_count = 0;
+								if(++switch_direction_count > 1)
+								{
+									// handle switched direction twice
+									if(gain_step >= 0.1) gain_step /= 6.0f; 
+									else gain_step /= 2.0f;
+									gain_dir *= -1;	
+									Debug.WriteLine("gain exit dir - gain_step:"+gain_step.ToString("f4")+"  distance:"+(global_min_value-noise_floor).ToString("f1"));
+									break;
+								}
+
+								min_signal = start;
+								max_signal = start;
+								gain_dir *= -1;
+								i = global_min_gain;
+							}
+						}
+						else
+						{
+							if(min_signal > noise_floor + 20.0) tol = 3.0f;
+							else tol = 5.0f;
+							if (min_signal < start-3.0 && a[peak_bin] > min_signal + tol) 
+							{
+								if(gain_step > 0.1) gain_step /= 8.0f;
+								else gain_step /= 2.0f;
+								gain_dir *= -1;	
+								Debug.WriteLine("gain thresh - gain_step:"+gain_step.ToString("f4")+"  distance:"+(global_min_value-noise_floor).ToString("f1"));
+								break;
+							}
+						}
+					}
+
+					if(!progress.Visible) goto end;
+					else
+					{
+						t1.Stop();
+						if(t1.Duration > 90.0)
+						{
+							/*MessageBox.Show("RX Image Reject Calibration Failed.  Values have been returned to previous settings.\n"+
+								DateTime.Now.ToShortTimeString(),
+								"RX Image Failed",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Error);*/
+							goto end;
+						}
+						else progress.SetPercent((float)(t1.Duration/90.0));
+					}
+				}
+
+				t2.Stop();
+				Debug.WriteLine("t2 gain("+gain_count+++"): "+t2.Duration);
+				if(gain_count < 6)
+				{
+					gain_string += (index_string+"\n");
+					gain_string += (val_string+"\n\n");
+				}
+
+				if (bin == 0)
+				{
+					SetupForm.ImageGainRX = global_min_gain;			//set gain slider to min found
+				}
+				else
+				{
+					SetupForm.gain_test[bin] = global_min_gain;
+					SetupForm.AIRStore();
+				}
+	
+				if(!progressing) break;
+
+				// find minimum of the peak signal over 
+				// the range of Phase settings
+				min_signal = float.MaxValue;
+				max_signal = float.MinValue;
+				wrong_direction_count = switch_direction_count = 0;
+				first_time = true;
+
+				t2.Start();
+				index_string = "";
+				val_string = "";
+				phase_string += (phase_count+","+phase_dir+","+phase_step.ToString("f3")+"\n");
+				for(float i=global_min_phase; i >= -400.0 && i <= 400.0; i+=(phase_step*phase_dir))
+				{
+					if (bin == 0)
+					{
+						SetupForm.ImagePhaseRX = i;				// phase slider
+					}
+					else
+					{
+						SetupForm.phase_test[bin] = i;
+						SetupForm.AIRStore();
+					}
+	
+					//					Thread.Sleep(200);
+					Thread.Sleep(20);					
+
+					sum = 0.0f;
+					int num_avg = 2;
+					if(phase_step <= 0.01) num_avg = 4;
+					for(int j=0; j<num_avg; j++)
+					{
+						calibration_mutex.WaitOne();
+						fixed(float* ptr = &a[0])
+							DttSP.GetSpectrum(0, ptr);// get the spectrum values
+						sum += a[peak_bin];
+						calibration_mutex.ReleaseMutex();
+						if(j<num_avg-1) Thread.Sleep(50);
+					}
+					sum /= num_avg;
+					a[peak_bin] = sum;
+					
+					index_string += i.ToString("f4")+",";
+					val_string += a[peak_bin].ToString("f4")+",";
+
+					if(a[peak_bin] < min_signal)			// if image is less than minimum
+					{
+						min_signal = a[peak_bin];			// save new minimum
+						phase_index = i;					// save phase index
+						if(min_signal < global_min_value)
+						{
+							global_min_value = min_signal;
+							global_min_phase = phase_index;
+						}
+					}
+					
+					// cal complete condition
+					if(min_signal < noise_floor+6.0f)
+					{
+						progressing = false;
+						break;
+					}
+
+					if(first_time)
+					{
+						first_time = false;
+						start = a[peak_bin];
+						max_signal = a[peak_bin];
+					}
+					else
+					{
+						if(a[peak_bin] > max_signal && a[peak_bin] > start+1.0)
+						{
+							max_signal = a[peak_bin];
+							wrong_direction_count++;Debug.Write("W");
+							if(wrong_direction_count > 1)
+							{
+								wrong_direction_count = 0;
+								if(++switch_direction_count > 1)
+								{
+									// handle switched direction twice
+									if(phase_step >= 0.1) phase_step /= 6.0f; 
+									else phase_step /= 2.0f;
+									phase_dir *= -1;
+									Debug.WriteLine("phase exit dir - phase_step:"+phase_step.ToString("f4")+"  distance:"+(global_min_value-noise_floor).ToString("f1"));
+									break;
+								}
+
+								min_signal = start;
+								max_signal = start;
+								phase_dir *= -1;
+								i = global_min_phase;
+							}
+						}
+						else
+						{					
+							if(min_signal > noise_floor + 20.0) tol = 3.0f;
+							else tol = 5.0f;
+							if (min_signal < start-3.0 && a[peak_bin] > min_signal + tol)
+							{			
+								if(phase_step >= 0.1) phase_step /= 6.0f;
+								else phase_step /= 2.0f;
+								phase_dir *= -1;
+								Debug.WriteLine("phase exit thresh - phase_step:"+phase_step.ToString("f4")+"  distance:"+(global_min_value-noise_floor).ToString("f1"));
+								break;
+							}	
+						}
+					}
+
+					if(!progress.Visible) goto end;
+					else
+					{
+						t1.Stop();
+						if(t1.Duration > 90.0)
+						{
+							/*MessageBox.Show("RX Image Reject Calibration Failed.  Values have been returned to previous settings.\n"+
+								DateTime.Now.ToShortTimeString(),
+								"RX Image Failed",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Error);*/
+							goto end;
+						}
+						else progress.SetPercent((float)(t1.Duration/90.0));
+					}
+				}
+
+				t2.Stop();
+				Debug.WriteLine("t2 phase("+phase_count+++"): "+t2.Duration);
+
+				if(phase_count < 6)
+				{
+					phase_string += (index_string+"\n");
+					phase_string += (val_string+"\n\n");
+				}
+
+				if (bin == 0)
+				{
+					SetupForm.ImagePhaseRX = global_min_phase;			//set phase slider to min found
+				}
+				else
+				{
+					SetupForm.phase_test[bin] = global_min_phase;
+					SetupForm.AIRStore();
+				}
+	
+
+				if(!progressing) break;
+			}
+		
+			// Finish the algorithm and reset the values
+			ret_val = true;			
+			end:
+			if(!progress.Visible) progress.Text = "";
+			else
+			{
+				rx1_image_gain_table[(int)rx1_band] = SetupForm.ImageGainRX;
+				rx1_image_phase_table[(int)rx1_band] = SetupForm.ImagePhaseRX;
+			}
+			progress.Hide();
+			calibration_running = false;	
+		
+			rx_image_rejection[(int)rx1_band] = worst_image - global_min_value;
+			rx_image_from_floor[(int)rx1_band] = global_min_value - noise_floor;
+
+			if(fwc_init && current_model == Model.FLEX5000)
+			{
+				VFOBFreq = vfo_freq;
+				Thread.Sleep(50);
+				FWC.SetTest(false);
+				Thread.Sleep(50);
+				FWC.SetGen(false);
+				Thread.Sleep(50);
+				FWC.SetSig(false);
+				Thread.Sleep(50);
+			}
+
+			EnableAllFilters();
+			EnableAllModes();
+			VFOLock = false;
+			FullDuplex = duplex;
+			comboPreamp.Enabled = true;
+			comboDisplayMode.Enabled = true;
+
+			chkSR.Checked = spur_red;							// restore spur reduction setting
+			RX1PreampMode = preamp;							// restore preamp mode
+			comboDisplayMode.Text = display_mode;				// restore display mode
+			//SetupForm.RXOnly = rx_only;						// restore RX Only setting
+			RX1DSPMode = dsp_mode;							// restore dsp mode
+			RX1Filter = filter;								// restore filter
+			if(filter == Filter.VAR1 || filter == Filter.VAR2)
+				UpdateRX1Filters(filt_low, filt_high);
+
+			VFOAFreq = vfo_freq;								// restore frequency
+			txtVFOAFreq_LostFocus(this, EventArgs.Empty);
+			chkDisplayAVG.Checked = avg;						// restore average state
+			SetupForm.DSPPhoneRXBuffer = dsp_buf_size;				// restore DSP Buffer Size
+			SetupForm.Polyphase = polyphase;					// restore polyphase
+
+			comboDisplayMode.Text = "Spectrum";
+			comboDisplayMode.Text = display_mode;
+
+			t1.Stop();
+			//MessageBox.Show(t1.Duration.ToString());
+			Debug.WriteLine("timer: "+t1.Duration);
+			return ret_val;
+		}
+
+
+		public bool CalibrateRXImageManual(float freq, Progress progress, bool suppress_errors) // SV1EIA AIR
+		{
+			HiPerfTimer t1 = new HiPerfTimer();
+			t1.Start();
+			HiPerfTimer t2 = new HiPerfTimer();
+	
+			bool progressing = true;
+
+			// Setup Rig for Image Null Cal
+			bool ret_val = false;
+			calibration_running = true;
+
+			if(!chkPower.Checked)
+			{
+				if(!suppress_errors)
+				{
+					MessageBox.Show("Power must be on in order to calibrate RX Image.", "Power Is Off",
+						MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				}
+				calibration_running = false;
+				progress.Text = "";
+				return false;
+			}
+
+			bool spur_red = chkSR.Checked;					// save current spur reduction setting
+			chkSR.Checked = false;							// turn spur reduction off
+
+			//bool rx_only = SetupForm.RXOnly;				// save RX Only Setting
+			//SetupForm.RXOnly = true;
+
+			bool polyphase = SetupForm.Polyphase;			// save current polyphase setting
+			SetupForm.Polyphase = false;					// disable polyphase
+
+			int dsp_buf_size = SetupForm.DSPPhoneRXBuffer;		// save current DSP buffer size
+			SetupForm.DSPPhoneRXBuffer = 4096;					// set DSP Buffer Size to 4096
+
+			string display_mode = comboDisplayMode.Text;
+			comboDisplayMode.Text = "Spectrum";
+
+			bool avg = chkDisplayAVG.Checked;		// save current average state
+			chkDisplayAVG.Checked = true;
+
+			DSPMode dsp_mode = rx1_dsp_mode;			// save current dsp mode
+			RX1DSPMode = DSPMode.DSB;					// set dsp mode to DSB
+
+			int filt_low = RX1FilterLow;
+			int filt_high = RX1FilterHigh;
+			Filter filter = rx1_filter;					// save current filter
+			RX1Filter = Filter.F1;						// set filter to 6kHz
+
+			PreampMode preamp = rx1_preamp_mode;		// save current preamp setting
+			RX1PreampMode = PreampMode.HIGH;			// set preamp to high
+
+			bool duplex = full_duplex;
+			FullDuplex = true;
+
+			if(fwc_init && current_model == Model.FLEX5000)
+			{
+				VFOBFreq = freq;
+				Thread.Sleep(50);
+				FWC.SetTest(true);
+				Thread.Sleep(50);
+				FWC.SetGen(true);
+				Thread.Sleep(50);
+				FWC.SetSig(true);
+				Thread.Sleep(50);
+				FWC.SetQSE(false);
+				Thread.Sleep(50);
+			}
+
+			double vfo_freq = VFOAFreq;						// save current frequency
+			VFOAFreq = freq+2*(float)if_freq;				// set frequency to passed value + 2*IF
+
+			DisableAllFilters();
+			DisableAllModes();
+			VFOLock = true;
+			comboPreamp.Enabled = false;
+			comboDisplayMode.Enabled = false;
+
+			//int retval = 0;
+			progress.SetPercent(0.0f);
+
+			Thread.Sleep(200);
+
+			while(progressing)
+			{
+				if(!progress.Visible) goto end;
+				else
+				{
+					t1.Stop();
+					if(t1.Duration > 200.0)
+					{
+						goto end;
+					}
+					else progress.SetPercent((float)(t1.Duration/200.0));
+				}
+				if(!progressing) break;
+			}
+		
+			// Finish the algorithm and reset the values
+			ret_val = true;			
+			end:
+			progress.Hide();
+			calibration_running = false;	
+
+			if(fwc_init && current_model == Model.FLEX5000)
+			{
+				VFOBFreq = vfo_freq;
+				Thread.Sleep(50);
+				FWC.SetTest(false);
+				Thread.Sleep(50);
+				FWC.SetGen(false);
+				Thread.Sleep(50);
+				FWC.SetSig(false);
+				Thread.Sleep(50);
+			}
+
+			EnableAllFilters();
+			EnableAllModes();
+			VFOLock = false;
+			FullDuplex = duplex;
+			comboPreamp.Enabled = true;
+			comboDisplayMode.Enabled = true;
+
+			chkSR.Checked = spur_red;							// restore spur reduction setting
+			RX1PreampMode = preamp;							// restore preamp mode
+			comboDisplayMode.Text = display_mode;				// restore display mode
+			//SetupForm.RXOnly = rx_only;						// restore RX Only setting
+			RX1DSPMode = dsp_mode;							// restore dsp mode
+			RX1Filter = filter;								// restore filter
+			if(filter == Filter.VAR1 || filter == Filter.VAR2)
+				UpdateRX1Filters(filt_low, filt_high);
+
+			VFOAFreq = vfo_freq;								// restore frequency
+			txtVFOAFreq_LostFocus(this, EventArgs.Empty);
+			chkDisplayAVG.Checked = avg;						// restore average state
+			SetupForm.DSPPhoneRXBuffer = dsp_buf_size;				// restore DSP Buffer Size
+			SetupForm.Polyphase = polyphase;					// restore polyphase
+
+			t1.Stop();
+			//MessageBox.Show(t1.Duration.ToString());
+			Debug.WriteLine("timer: "+t1.Duration);
+			return ret_val;
+		}
+
+
 
 		public bool CalibrateRX2Image(float freq, Progress progress, bool suppress_errors)
 		{
@@ -22701,7 +23722,7 @@ namespace PowerSDR
 			}
 		}
 
-		private Model current_model = Model.FLEX5000;
+		private Model current_model = Model.SDR1000;
 		public Model CurrentModel
 		{
 			get { return current_model; }
@@ -22715,7 +23736,7 @@ namespace PowerSDR
 				{
 					case Model.FLEX5000:
 						MinFreq = Math.Max(if_freq, 0.000001);
-						MaxFreq = 65.0;
+						MaxFreq = Maximum_Frequency;
 						if(!fwc_init)
 						{
 							fwc_init = FWCMidi.Open();
@@ -22787,7 +23808,7 @@ namespace PowerSDR
 						MinFreq = Math.Max(if_freq, 0.000001);
 						if(XVTRPresent)
 							MaxFreq = 146.0;
-						else MaxFreq = 65.0;
+						else MaxFreq = Maximum_Frequency;
 						string pre = comboPreamp.Text;
 						/*if(pre == "On") pre = "High";
 						comboPreamp.Items.Clear();
@@ -22826,7 +23847,7 @@ namespace PowerSDR
 						MinFreq = Math.Max(if_freq, 0.000001);
 						if(XVTRPresent)
 							MaxFreq = 146.0;
-						else MaxFreq = 65.0;
+						else MaxFreq = Maximum_Frequency;
 						//mnuFWC.Visible = false;
 						mnuMixer.Visible = false;
 						mnuAntenna.Visible = false;
@@ -23377,6 +24398,18 @@ namespace PowerSDR
 			}
 		}
 
+		public double si570_fxtal_init = 114285000;
+		public double Si570_FXtal_Init
+		{
+			get	{ return si570_fxtal_init; }
+			set
+			{
+				si570_fxtal_init = value;
+				DDSFreq = dds_freq;
+			}
+		}
+		
+		
 		private double fwc_dds_step_size = 500.0 / 0xFFFFFFFF;
 		private double fwc_corrected_dds_clock = 500.0;
 		private double fwc_dds_clock_correction = 0.0;
@@ -23626,7 +24659,7 @@ namespace PowerSDR
 
 
 				Hdw.DDSTuningWord = tuning_word;		
-				SetHWFilters(dds_freq);
+				if (chkPower.Checked) SetHWFilters(dds_freq);
 				if(!mox) radio.GetDSPRX(0, 0).RXOsc = dsp_osc_freq;
 				if(spur_reduction && !mox)
 				{
@@ -23657,14 +24690,15 @@ namespace PowerSDR
 			}
 		}
 
-		private double max_freq = 65.0;
+		public double Maximum_Frequency = 108.0;
+		private double max_freq = 108.0;
 		public double MaxFreq
 		{
 			get { return max_freq; }
 			set
 			{
 				max_freq = value;
-				
+				if (max_freq>Maximum_Frequency) max_freq = Maximum_Frequency;
 				if(SetupForm == null) return;
 				if(VFOAFreq > max_freq && current_xvtr_index < 0)
 					VFOAFreq = max_freq;
@@ -23691,7 +24725,7 @@ namespace PowerSDR
 			get { return if_freq; }
 			set
 			{
-				if_freq = value;
+				if_freq = value ;
 				if(SetupForm != null) 
 					txtVFOAFreq_LostFocus(this, EventArgs.Empty);
 			}
@@ -25752,6 +26786,19 @@ namespace PowerSDR
 			}
 		}
 
+		private bool loop_enabled = false;
+		public bool LoopAudioEnabled
+		{
+			get { return loop_enabled; }
+			set 
+			{
+				loop_enabled = value;
+				if(chkLoopAudio != null) chkLoopAudio.Checked = value;
+				if(chkCWLoopAudio != null) chkCWLoopAudio.Checked = value;
+				if(chkDIGLoopAudio != null) chkDIGLoopAudio.Checked = value;
+			}
+		}
+
 		private int audio_driver_index1 = 0;
 		public int AudioDriverIndex1
 		{
@@ -26427,7 +27474,7 @@ namespace PowerSDR
 				if(value)
 					MaxFreq = 146.0;
 				else
-					MaxFreq = 65.0;
+					MaxFreq = Maximum_Frequency;
 			}
 		}
 
@@ -26488,6 +27535,33 @@ namespace PowerSDR
 				Hdw.USBPresent = value;
 				if(SetupForm != null)
 					SetupForm.USBPresent = value;
+			}
+		}
+
+		private bool usbtoi2c_present = false;
+		public bool USBtoI2CPresent
+		{
+			get { return usbtoi2c_present; }
+			set
+			{
+				usbtoi2c_present = value;
+				Hdw.USBtoI2CPresent = value;
+				if(SetupForm != null)
+					SetupForm.USBtoI2CPresent = value;
+			}
+		}
+
+
+		private bool ad995x_present = false;
+		public bool AD995xPresent
+		{
+			get { return ad995x_present; }
+			set
+			{
+				ad995x_present = value;
+				Hdw.AD995xPresent = value;
+				if(SetupForm != null)
+					SetupForm.AD995xPresent = value;
 			}
 		}
 
@@ -28943,6 +30017,10 @@ namespace PowerSDR
 						byte b = Hdw.StatusPort();
 						cw_ptt = (cw_semi_break_in_enabled && keyer_playing) || Keyer.KeyerPTT || Keyer.MemoryPTT;
 						mic_ptt = (b & (byte)StatusPin.Dot) != 0;
+
+						bool loop_ptt = (DttSP.GetLoopPTT() != 0);
+						mic_ptt = loop_ptt | mic_ptt;
+
 						if ( !mic_ptt )  // check aux sources for ptt if not already set 
 						{
 							if ( (JanusAudio.GetDotDash() & 0x1) != 0 )
@@ -28962,8 +30040,8 @@ namespace PowerSDR
 							}
 						}
 
-						x2_ptt = (b & (byte)StatusPin.PIN_11) != 0;
-						if(usb_present) x2_ptt = !x2_ptt;
+//						x2_ptt = (b & (byte)StatusPin.PIN_11) != 0;
+						if(usb_present) x2_ptt = !((b & (byte)StatusPin.PIN_11) != 0);
 						vox_ptt = Audio.VOXActive;
 						cat_ptt_local = (ptt_bit_bang_enabled && serialPTT != null && serialPTT.isPTT()) | cat_ptt; 
 
@@ -31002,6 +32080,8 @@ namespace PowerSDR
 			if(flex5000DebugForm != null) flex5000DebugForm.Close();
 			if(fwcAntForm != null) fwcAntForm.Close();
 			if(fwcAtuForm != null) fwcAtuForm.Close();
+			if(USBPresent) USB.Exit();
+			if(ExtIO_Enable) ExtIO.Exit();
 		}
 
 		private void comboPreamp_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -31946,6 +33026,36 @@ namespace PowerSDR
 			}
 
 			HdwMOXChanged(tx, freq);
+
+
+
+			// [patch_16
+			// If a USB-connected AVR processor with DG8SAQ firmware is connected, then
+			// also indicate MOX status through that device
+			if (DG8SAQ_usbVFO != IntPtr.Zero)
+			{
+				byte[] buf = {0, 0, 0};
+				// I2C commands and data are sent to the control endpoint
+				int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, CMD_SET_RXTX, tx ? 1 : 0, 0, buf, 3, 1000);
+			} // patch_16]
+
+
+			if (USB995xport.IsOpen && chkPower.Checked)
+			{
+				if (tx)
+				{
+					byte[] outData = {0xAA, 0x55, 0x00, 0x00, 0x7C};		// PTT in Tx
+					USB995xport.Write(outData, 0, outData.Length);
+				}
+				else
+				{
+					byte[] outData = {0x00, 0x00, 0x00, 0x00, 0x7C};		// PTT in Rx
+					USB995xport.Write(outData, 0, outData.Length);
+				}
+			}
+
+
+
 
 			if(tx)
 			{
@@ -39744,6 +40854,16 @@ namespace PowerSDR
 			}
 		}
 
+		private bool extio_enable = false;
+		public bool ExtIO_Enable
+		{
+			get	{ return extio_enable; }
+			set
+			{
+				extio_enable = value;
+			}
+		}
+
 
 
 
@@ -39798,16 +40918,24 @@ namespace PowerSDR
 			}
 			if (retune)
 			{
-				byte[] msg_freeze_dco = {
+				byte[] msg_freeze_dco = {	
 											(byte)((si570_i2c_address<<1)&0xfe),
 											137,
 											0x10
 										};
 				i2c_bytes = msg_freeze_dco;
 			}
-			byte[] msg_hs_div_n1_rfreq = {
+			byte[] msg_hs_div_n1_rfreq = {	
 											 (byte)((si570_i2c_address<<1)&0xfe),
 											 7,
+											 (byte) ((byte)((hs_div<<5) & 0xe0) | (byte)((n1>>2) & 0x1f)),
+											 (byte) ((byte)((rfreq_word>>(4*8)) & 0x3f) | (byte)((n1<<6) & 0xc0)),
+											 (byte) ((rfreq_word>>(3*8)) & 0xff),
+											 (byte) ((rfreq_word>>(2*8)) & 0xff),
+											 (byte) ((rfreq_word>>(1*8)) & 0xff),
+											 (byte) ((rfreq_word>>(0*8)) & 0xff)
+										 };
+			byte[] usbtoi2c_msg_hs_div_n1_rfreq = {	
 											 (byte) ((byte)((hs_div<<5) & 0xe0) | (byte)((n1>>2) & 0x1f)),
 											 (byte) ((byte)((rfreq_word>>(4*8)) & 0x3f) | (byte)((n1<<6) & 0xc0)),
 											 (byte) ((rfreq_word>>(3*8)) & 0xff),
@@ -39818,14 +40946,14 @@ namespace PowerSDR
 			i2c_bytes = msg_hs_div_n1_rfreq;
 			if (retune)
 			{
-				byte[] msg_unfreeze_dco = {
+				byte[] msg_unfreeze_dco = {	
 											  (byte)((si570_i2c_address<<1)&0xfe),
 											  137,
 											  0x00
 										  };
 				i2c_bytes = msg_unfreeze_dco;
 
-				byte[] msg_newfreq = {
+				byte[] msg_newfreq = {	
 										 (byte)((si570_i2c_address<<1)&0xfe),
 										 135,
 										 0x40
@@ -39836,6 +40964,90 @@ namespace PowerSDR
 			old_HS_DIV = hs_div;
 			old_N1 = n1;
 			i2c_close();
+
+
+
+
+			if ( USBtoI2CPresent ) //softrock_vfo == Si570VFO.OnUSB)  // [patch_16
+			{
+				// If QRP2008 USB port isn't already open, then open it now
+				if (DG8SAQ_usbVFO == IntPtr.Zero)
+				{
+					IntPtr open_dev = IntPtr.Zero;
+
+					libusb.usb_init();					// initialise module for comms with USB VFO, if fitted
+
+					libusb.usb_find_busses();
+					libusb.usb_find_devices();
+
+					for (libusb.usb_bus bus = libusb.usb_get_busses(); bus != null; bus = bus.NextBus)
+					{
+						for (libusb.usb_device dev = bus.GetDevices(); dev != null; dev = dev.NextDevice)
+						{
+							if (dev.descriptor.idVendor == DG8SAQ_VENDOR_ID 
+								&& dev.descriptor.idProduct == DG8SAQ_PRODUCT_ID)
+							{
+								open_dev = libusb.usb_open(dev);
+								break;
+							}
+						}
+					}
+
+					if(open_dev != IntPtr.Zero)
+					{
+						// If we can't set the configuration, or claim the
+						// interface, just give up and try again later
+						if (libusb.usb_set_configuration(open_dev, 1) != 0 ||
+							libusb.usb_claim_interface(open_dev, 0) != 0) 
+						{
+							libusb.usb_close(open_dev);
+						} 
+						else 
+						{
+							DG8SAQ_usbVFO = open_dev;
+						}
+
+						// USB connection to DG8SAQ VFO has been established.
+						// Force usbVFO transmit output inactive - normally done by AVR firmware
+						// but early firmware doesn't do this reliably
+						if (!chkMOX.Checked)
+						{
+							byte[] buf = {0, 0, 0};
+							int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, CMD_SET_RXTX, 0, 0, buf, 3, 1000);
+						}
+					}
+
+					// report if USB interface is still not open
+					if(DG8SAQ_usbVFO == IntPtr.Zero)
+					{
+						MessageBox.Show("Could not initialize DG8SAQ USB interface.", "Error Initializing DG8SAQ USB interface", 
+							MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+				}
+
+				if (DG8SAQ_usbVFO != IntPtr.Zero)
+				{
+//					byte[] msg_hs_div_n1_rfreq = {
+//													 (byte) ((byte)((hs_div<<5) & 0xe0) | (byte)((n1>>2) & 0x1f)),
+//													 (byte) ((byte)((rfreq_word>>(4*8)) & 0x3f) | (byte)((n1<<6) & 0xc0)),
+//													 (byte) ((rfreq_word>>(3*8)) & 0xff),
+//													 (byte) ((rfreq_word>>(2*8)) & 0xff),
+//													 (byte) ((rfreq_word>>(1*8)) & 0xff),
+//													 (byte) ((rfreq_word>>(0*8)) & 0xff)
+//												 };
+
+					// I2C commands and data are sent to the control endpoint
+					int Len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_OUT, CMD_SI570_SET_FREQ, 0x700 + si570_i2c_address, 0, usbtoi2c_msg_hs_div_n1_rfreq, usbtoi2c_msg_hs_div_n1_rfreq.Length, 1000);
+					// Any errors are treated as fatal: if (Len != msg_hs_div_n1_rfreq.Length){}
+				}
+			}
+			// patch_16]
+
+
+
+
+
+
 		}
 
 
@@ -39870,34 +41082,32 @@ namespace PowerSDR
 public double si570_freq
 {
 	set
-{
-		si570_fxtal = si570_fxtal_init;
-		if (dds_clock_correction != 0.0)
 	{
-		si570_fxtal = si570_fxtal_init + (dds_clock_correction * 1e6);
-	};
-	double fo = ((value *1e6) * si570_multiplier);
-	rfreq = 0;
-	hs_div = 11;
-	n1 = 0;
-	new_frequency = fo;
-	double fres = si570_match(fo); //, rfreq, hs_div, n1);
-	si570_program(rfreq, hs_div, n1);
+//		si570_fxtal = si570_fxtal_init;
+//		if (dds_clock_correction != 0.0)
+//		{
+			si570_fxtal = si570_fxtal_init + (dds_clock_correction);
+//		};
+		serial_freq = (double)value*1e6;
+		ad995x_freq = (double)value*1e6;
+		double fo = ((value *1e6) * si570_multiplier);
+		rfreq = 0;
+		hs_div = 11;
+		n1 = 0;
+		new_frequency = fo;
+		double fres = si570_match(fo); //, rfreq, hs_div, n1);
+		si570_program(rfreq, hs_div, n1);
+		if (ExtIO_Enable)
+		{
+			double ExtIO_FreqD;
+			long ExtIO_FreqL;
+			ExtIO_FreqD = value*1e6;
+			ExtIO_FreqL = (long)ExtIO_FreqD;
+			int b;
+			b = ExtIO.SetHWLO(ExtIO_FreqL);
+		}
+	}
 }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -39917,14 +41127,21 @@ public double si570_freq
 
 		private void i2c_write(bool sda, bool scl)
 		{
-			if(Hdw.LPTAddr == 0)
+			if((Hdw.LPTAddr == 0)) //&& !usb_present)
 				return;
 
 			byte ioval = ((sda) ? (byte)0x02 : (byte)0x01);
-			ioval |= ((scl) ? (byte)0x0C : (byte)0x00);
 			ushort lptaddr = (ushort) (Hdw.LPTAddr + 2);
-			PortTalk.Parallel.outport(lptaddr, ioval);
-
+//			if (usb_present)
+//			{
+//				ioval |= ((scl) ? (byte)0x08 : (byte)0x04);
+//				USB.Sdr1kLatch(0x00, ioval);
+//			}
+//			else
+//			{
+				ioval |= ((scl) ? (byte)0x0C : (byte)0x00);
+				PortTalk.Parallel.outport(lptaddr, ioval);
+//			}
 		}
 
 		private void i2c_start()
@@ -39961,6 +41178,27 @@ public double si570_freq
 			i2c_bit = false;
 		}
 
+		private void chkLoopAudio_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if(SetupForm != null) SetupForm.LoopAudioEnable = chkLoopAudio.Checked;
+			if(chkLoopAudio.Checked) chkLoopAudio.BackColor = button_selected_color;
+			else chkLoopAudio.BackColor = SystemColors.Control;
+		}
+
+		private void chkDIGLoopAudio_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if(SetupForm != null) SetupForm.LoopAudioEnable = chkDIGLoopAudio.Checked;
+			if(chkDIGLoopAudio.Checked) chkDIGLoopAudio.BackColor = button_selected_color;
+			else chkDIGLoopAudio.BackColor = SystemColors.Control;
+		}
+
+		private void chkCWLoopAudio_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if(SetupForm != null) SetupForm.LoopAudioEnable = chkCWLoopAudio.Checked;
+			if(chkCWLoopAudio.Checked) chkCWLoopAudio.BackColor = button_selected_color;
+			else chkCWLoopAudio.BackColor = SystemColors.Control;
+		}
+
 		private byte i2c_byte
 		{
 			set
@@ -39978,27 +41216,226 @@ public double si570_freq
 		{
 			set
 			{
-				i2c_start();
-				for(int i=0; i!=value.Length; i++)
+				if (usb_present)
 				{
-					i2c_byte = value[i];
+					i2c_data_bytes = new byte[10];
+//					i2c_data_bytes[1] = (byte)si570_i2c_address;
+					i2c_data_bytes[1] = value[0];
+					byte tmpbyte = (byte)(((byte) value.Length) - 2);
+					i2c_data_bytes[2] = tmpbyte;
+					for (int i=1; i<(int)value.Length; i++)
+					{
+						i2c_data_bytes[2+i] = value[i];
+					};
+					FX2LP.WriteI2C(i2c_data_bytes);
+	
 				}
-				i2c_stop();
+				else
+				{
+					i2c_start();
+					for(int i=0; i!=value.Length; i++)
+					{
+						i2c_byte = value[i];
+					}
+					i2c_stop();
+					if (chkPower.Checked)
+					{
+						if(Keyer.sp_Si570.IsOpen && SetupForm.SerialRgstrs)
+						{
+							byte[] length = {SetupForm.SerialRgstrsChar, (byte)value.Length};
+							Keyer.sp_Si570.Write(length, 0, 1);
+							Keyer.sp_Si570.Write(value, 0, value.Length);
+							Thread.Sleep(SetupForm.SerialDelay);
+						}
+					}
+				}
 
 			}
 		}
 
 
+		// [patch_16
+		// start of code to support a "DG8SAQ_usbVFO" board - a USB-connected
+		// Atmel AVR processor which controls a Si570 VFO chip
+
+		private static IntPtr DG8SAQ_usbVFO = IntPtr.Zero;
+
+		const int DG8SAQ_VENDOR_ID = 0x16C0;
+		const int DG8SAQ_PRODUCT_ID = 0x05DC;
+        
+		const int USB_CTRL_IN = 0xC0;   // USB i/f functions to read
+		const int USB_CTRL_OUT = 0x40;  // ...and write Control messages
+
+		const int CMD_ECHO = 0;		// Commands supported by
+		const int CMD_GET_FINC = 1;	// DG8SAQ's AVR firmware
+		const int CMD_SET_DELAY = 2;	// (partial list)
+		const int CMD_GET_STATUS = 3;
+		const int CMD_I2C_IO = 4;
+		const int CMD_I2C_BEGIN = 1;	// Flag for CMD_I2C_IO
+		const int CMD_I2C_END = 2;	// Flag for CMD_I2C_IO
+		const int CMD_SI570_SET_FREQ = 0x30;    // SI570-specific command to write all frequency-control regs.
+		const int CMD_SET_RXTX = 0x50;  // Set RXTX output from AVR high or low
+		const int CMD_GET_KEYER = 0x51; // Read Keyer status - active or inactive
+
+		const byte STATUS_ADDRESS_ACK = 1;
 
 
+		// Reads the status of the keyer input from USB-connected AVR processor running DG8SAQ firmware.
+		// Assumes that the USB connection has already been established
+		public static byte GetDG8SAQkeyStatus()
+		{
+			if (DG8SAQ_usbVFO != IntPtr.Zero)
+			{
+				byte[] buf = { 0xFF, 0xFF, 0xFF };
+
+				// I2C commands and data are sent to the control endpoint
+				int Len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, CMD_GET_KEYER, 0, 0, buf, 3, 1000);
+
+				return buf[0]; //((buf[0] == 0) ? (byte)1 : (byte)0 );
+			}
+			return (byte)0xFF;
+		} // patch_16]
 
 
+		public static byte ExitUSBtoI2C()
+		{
+			// [patch_16
+			if (DG8SAQ_usbVFO != IntPtr.Zero)	// shut down interface to DG8SAQ USB VFO
+			{
+				libusb.usb_release_interface(DG8SAQ_usbVFO, 0);
+				libusb.usb_close(DG8SAQ_usbVFO);
+				DG8SAQ_usbVFO = IntPtr.Zero;
+			} // patch_16]
+			return (byte)0;
+		} // patch_16]
 
 
+		public static bool OpenUSBtoI2C()
+		{
+			bool USBtoI2C_Opened = false;
+			// If QRP2008 USB port isn't already open, then open it now
+			if (DG8SAQ_usbVFO == IntPtr.Zero)
+			{
+				IntPtr open_dev = IntPtr.Zero;
+
+				libusb.usb_init();					// initialise module for comms with USB VFO, if fitted
+
+				int i_ok = libusb.usb_find_busses();
+				i_ok = libusb.usb_find_devices();
+
+				if (i_ok > 0)
+				for (libusb.usb_bus bus = libusb.usb_get_busses(); bus != null; bus = bus.NextBus)
+				{
+					for (libusb.usb_device dev = bus.GetDevices(); dev != null; dev = dev.NextDevice)
+					{
+						if (dev.descriptor.idVendor == DG8SAQ_VENDOR_ID 
+							&& dev.descriptor.idProduct == DG8SAQ_PRODUCT_ID)
+						{
+							open_dev = libusb.usb_open(dev);
+							break;
+						}
+					}
+				}
+
+				if(open_dev != IntPtr.Zero)
+				{
+					// If we can't set the configuration, or claim the
+					// interface, just give up and try again later
+					if (libusb.usb_set_configuration(open_dev, 1) != 0 ||
+						libusb.usb_claim_interface(open_dev, 0) != 0) 
+					{
+						libusb.usb_close(open_dev);
+					} 
+					else 
+					{
+						DG8SAQ_usbVFO = open_dev;
+						USBtoI2C_Opened = true;
+					}
+
+					// USB connection to DG8SAQ VFO has been established.
+					// Force usbVFO transmit output inactive - normally done by AVR firmware
+					// but early firmware doesn't do this reliably
+//					if (!chkMOX.Checked)
+//					{
+//						byte[] buf = {0, 0, 0};
+//						int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, CMD_SET_RXTX, 0, 0, buf, 3, 1000);
+//					}
+				}
+
+				// report if USB interface is still not open
+				if(DG8SAQ_usbVFO == IntPtr.Zero)
+				{
+					MessageBox.Show("Could not initialize USB to I2C interface.", "Error Initializing USB to I2C interface", 
+						MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+			else
+			{
+				USBtoI2C_Opened = true;
+			}
+			if (USBtoI2C_Opened)
+			{
+				byte[] buf = {0, 0, 0};
+//				int len = libusb.usb_control_msg(DG8SAQ_usbVFO, USB_CTRL_IN, 0x01, 0x30, 0, buf, 1, 1000);
+			}
+
+			return USBtoI2C_Opened;
+		}
 
 
+		public double serial_freq
+		{
+			set
+			{
+				if(Keyer.sp_Si570.IsOpen && chkPower.Checked)
+				{	// send frequency over serial port
+					if(SetupForm.SerialVFO)
+					{
+						string fstr = ((long) (dds_freq*1e6)).ToString().PadLeft(9, '0');
+//						byte Initiator = SetupForm.
+						byte[] i2c_gen_call_freq = { SetupForm.SerialVFOChar, (byte)fstr[0], (byte)fstr[1], (byte)fstr[2], (byte)fstr[3], (byte)fstr[4], (byte)fstr[5], (byte)fstr[6], (byte)fstr[7], (byte)fstr[8]};
+						byte[] length = {(byte)i2c_gen_call_freq.Length};
+						Keyer.sp_Si570.Write(length, 0, 1);
+						Keyer.sp_Si570.Write(i2c_gen_call_freq, 0, i2c_gen_call_freq.Length);
+						Thread.Sleep(SetupForm.SerialDelay);
+					}
+					if(SetupForm.SerialLO)
+					{
+						string fstr2 = ((long) value).ToString().PadLeft(9, '0');
+						byte[] i2c_gen_call_freq2 = { SetupForm.SerialLOChar, (byte)fstr2[0], (byte)fstr2[1], (byte)fstr2[2], (byte)fstr2[3], (byte)fstr2[4], (byte)fstr2[5], (byte)fstr2[6], (byte)fstr2[7], (byte)fstr2[8]};
+						byte[] length2 = {(byte)i2c_gen_call_freq2.Length};
+						Keyer.sp_Si570.Write(length2, 0, 1);
+						Keyer.sp_Si570.Write(i2c_gen_call_freq2, 0, i2c_gen_call_freq2.Length);
+						Thread.Sleep(SetupForm.SerialDelay);
+					}
+				}
+			}
+		}
 
 
+		// [patch_995x
+		// start of code to support a "995x" board - a USB-connected
+		// PIC processor which controls a DDS AD995* chip
+
+		public double ad995x_freq
+		{
+			set
+			{
+				if(USB995xport.IsOpen && chkPower.Checked)
+				{	// send frequency over serial 995x usb port
+					ulong ftw;
+					double register = 4294967296;
+					ftw = (ulong)(((register * value) * SetupForm.AD995xSDRMult) / (((SetupForm.AD995xClock * 1e6) + SetupForm.AD995xCalibration) * 
+						SetupForm.AD995xClockPLL));
+					byte[] outData = {	(byte) ((ftw>>(3*8)) & 0xff),
+										(byte) ((ftw>>(2*8)) & 0xff),
+										(byte) ((ftw>>(1*8)) & 0xff),
+										(byte) ((ftw>>(0*8)) & 0xff),
+										0x04 };
+					USB995xport.Write(outData, 0, outData.Length);
+				}
+			}
+		}
 
 
 

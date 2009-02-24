@@ -50,7 +50,7 @@ namespace PowerSDR
 		#region Variable Declaration
 
 		public static ushort lpt_addr = 0x378;
-		private static int delay_value = 0;	// Value that sets the delay in Deelay()		   
+//		private static int delay_value = 0;	// Value that sets the delay in Deelay()		   
 
 		#endregion
 

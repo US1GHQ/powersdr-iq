@@ -169,6 +169,19 @@ namespace PowerSDR
 		public Register8 rfe_ic7;
 		public Register8 rfe_ic11;
 
+		public byte Band160m = 1;
+		public byte Band80m = 4;
+		public byte Band60m = 4;
+		public byte Band40m = 4;
+		public byte Band30m = 8;
+		public byte Band20m = 8;
+		public byte Band17m = 8;
+		public byte Band15m = 16;
+		public byte Band12m = 16;
+		public byte Band10m = 16;
+		public byte Band6m = 32;
+
+
 		#endregion
 
 		#region Constructor
@@ -268,6 +281,21 @@ namespace PowerSDR
 			set { usb_present = value; }
 		}
 
+		private bool usbtoi2c_present = false;
+		public bool USBtoI2CPresent 
+		{
+			//get { return usb_present; }
+			set { usbtoi2c_present = value; }
+		}
+
+
+		private bool ad995x_present = false;
+		public bool AD995xPresent 
+		{
+			//get { return usb_present; }
+			set { ad995x_present = value; }
+		}
+
 
 		private bool ozy_control = false;
 		public bool OzyControl 
@@ -363,22 +391,40 @@ namespace PowerSDR
 							pio_ic1.SetData((byte)(pio_ic1.GetData() & 0xc0));
 							break;
 						case BPFBand.B160:
-							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF0)));
+//							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF0)));
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band160m));
+							break;
+						case BPFBand.B80:
+//							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF1)));
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band80m));
 							break;
 						case BPFBand.B60:
-							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF1)));
-							break;
-						case BPFBand.B20:
-							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF3)));
+//							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF1)));
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band60m));
 							break;
 						case BPFBand.B40:
-							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF2)));
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band40m));
+							break;
+						case BPFBand.B30:
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band30m));
+							break;
+						case BPFBand.B20:
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band20m));
+							break;
+						case BPFBand.B17:
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band17m));
+							break;
+						case BPFBand.B15:
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band15m));
+							break;
+						case BPFBand.B12:
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band12m));
 							break;
 						case BPFBand.B10:
-							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF4)));
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band10m));
 							break;
 						case BPFBand.B6:
-							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | (1 << BPF5)));
+							pio_ic1.SetData((byte)((pio_ic1.GetData() & 0xc0) | Band6m));
 							break;
 						default:
 #if(DEBUG_VERBOSE)
@@ -1135,10 +1181,10 @@ namespace PowerSDR
 			byte pio_ic3_temp = pio_ic3.GetData();
 //			pio_ic3.SetData(0);
 
-			byte rfe_ic7_temp = 0;
-			byte rfe_ic9_temp = 0;
-			byte rfe_ic10_temp = 0;
-			byte rfe_ic11_temp = 0;
+//			byte rfe_ic7_temp = 0;
+//			byte rfe_ic9_temp = 0;
+//			byte rfe_ic10_temp = 0;
+//			byte rfe_ic11_temp = 0;
 
 //			if(rfe_present)
 //			{
@@ -1208,8 +1254,10 @@ namespace PowerSDR
 				}
 				else 
 				{
-				return Parallel.inport((ushort)(lpt_addr+1));
-		}
+					if (lpt_addr != 0x0)
+						return Parallel.inport((ushort)(lpt_addr+1));
+					else return 0;
+				}
 			}
 		}
 

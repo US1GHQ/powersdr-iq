@@ -123,6 +123,9 @@ compute_spectrum (SpecBlock * sb)
 
 	fftwf_execute (sb->plan);
 
+	sb->freqbuf->have = sb->buflen;
+	correctIQspec(sb->freqbuf, sb->iqfix);									// SV1EIA AIR
+
 	if (sb->scale == SPEC_MAG)
 	{
 		for (i = 0, j = half; i < half; i++, j++)
@@ -148,6 +151,8 @@ compute_spectrum (SpecBlock * sb)
 void
 init_spectrum (SpecBlock * sb)
 {
+	REAL phase_tmp = 0.0;
+	REAL gain_tmp = 1.0;
 	COMPLEX *p;
 	sb->fill = 0;
 
@@ -168,6 +173,17 @@ init_spectrum (SpecBlock * sb)
 		fftwf_plan_dft_1d (sb->size, (fftwf_complex *) CXBbase (sb->timebuf),
 		(fftwf_complex *) CXBbase (sb->freqbuf),
 		FFTW_FORWARD, sb->planbits);
+	sb->iqfix = newCorrectIQspec2();													// SV1EIA AIR
+	sb->iqfix->buffer_counter = 0;														// SV1EIA AIR
+	sb->iqfix->im_max_actual = 0;														// SV1EIA AIR
+	sb->iqfix->im_max_test = 0;															// SV1EIA AIR
+	sb->iqfix->im_min_actual = 0;														// SV1EIA AIR
+	sb->iqfix->im_min_test = 0;															// SV1EIA AIR
+	sb->iqfix->re_max_actual = 0;														// SV1EIA AIR
+	sb->iqfix->re_max_test = 0;															// SV1EIA AIR
+	sb->iqfix->re_min_actual = 0;														// SV1EIA AIR
+	sb->iqfix->re_min_test = 0;															// SV1EIA AIR
+
 }
 
 void

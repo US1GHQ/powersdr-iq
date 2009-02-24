@@ -44,6 +44,10 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Deployment", "Setup\PowerSD
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FX2LP", "FX2LP\FX2LP.vcproj", "{C65BFE8F-09A2-44BE-B622-E3606B6241C2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -86,6 +90,12 @@ Global
 		{414604F7-8872-482B-A9F8-1AAAE679690B}.Debug.Build.0 = Debug
 		{414604F7-8872-482B-A9F8-1AAAE679690B}.Release.ActiveCfg = Release
 		{414604F7-8872-482B-A9F8-1AAAE679690B}.Release.Build.0 = Release
+		{C65BFE8F-09A2-44BE-B622-E3606B6241C2}.Debug.ActiveCfg = Debug|Win32
+		{C65BFE8F-09A2-44BE-B622-E3606B6241C2}.Debug.Build.0 = Debug|Win32
+		{C65BFE8F-09A2-44BE-B622-E3606B6241C2}.Release.ActiveCfg = Release|Win32
+		{C65BFE8F-09A2-44BE-B622-E3606B6241C2}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionItems) = postSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
