@@ -211,6 +211,9 @@
 				RelativePath=".\lmadf.c">
 			</File>
 			<File
+				RelativePath=".\loop.c">
+			</File>
+			<File
 				RelativePath=".\meter.c">
 			</File>
 			<File
@@ -340,6 +343,9 @@
 			</File>
 			<File
 				RelativePath=".\local.h">
+			</File>
+			<File
+				RelativePath=".\loop.h">
 			</File>
 			<File
 				RelativePath=".\meter.h">

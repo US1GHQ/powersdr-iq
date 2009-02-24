@@ -34,6 +34,7 @@ Bridgewater, NJ 08807
 */
 
 #include <common.h>
+#include "loop.h"
 
 ////////////////////////////////////////////////////////////////////////////
 // for commands affecting RX, which RX is Listening
@@ -703,54 +704,204 @@ SetRXAGCTop (unsigned int thread, unsigned int subrx, double max_agc)
 DttSP_EXP void
 SetCorrectIQ (unsigned int thread, unsigned int subrx, double phase, double gain)
 {
+    int i;																// SV1EIA AIR
 	sem_wait(&top[thread].sync.upd.sem);
-	rx[thread][subrx].iqfix->phase = (REAL) (0.001 * phase);
-	rx[thread][subrx].iqfix->gain = (REAL) (1.0 + 0.001 * gain);
+	for (i = 0; i < DEFSPEC; i++)											// SV1EIA AIR
+	{																	// SV1EIA AIR
+		rx[thread][subrx].iqfix->phase[i] = (REAL) (0.001 * phase);		// SV1EIA AIR
+		rx[thread][subrx].iqfix->gain[i] = (REAL) (1.0 + 0.001 * gain);	// SV1EIA AIR
+	}																	// SV1EIA AIR
+	rx[thread][subrx].iqfix->spec = 0;									// SV1EIA AIR
 	sem_post(&top[thread].sync.upd.sem);
 }
 
 DttSP_EXP void
 SetCorrectIQPhase (unsigned int thread, unsigned int subrx, double phase)
 {
+	int i;																// SV1EIA AIR
 	sem_wait(&top[thread].sync.upd.sem);
-	rx[thread][subrx].iqfix->phase = (REAL) (0.001 * phase);
-	sem_post(&top[thread].sync.upd.sem);
+	for (i = 0; i < DEFSPEC; i++)											// SV1EIA AIR
+	{																	// SV1EIA AIR
+		rx[thread][subrx].iqfix->phase[i] = (REAL) (0.001 * phase);		// SV1EIA AIR
+	}																	// SV1EIA AIR
+	rx[thread][subrx].iqfix->spec = 0;									// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);								// SV1EIA AIR
 }
 
 DttSP_EXP void
 SetCorrectIQGain (unsigned int thread, unsigned int subrx, double gain)
 {
+	int i;																// SV1EIA AIR
 	sem_wait(&top[thread].sync.upd.sem);
-	rx[thread][subrx].iqfix->gain = (REAL) (1.0 + 0.001 * gain);
+	for (i = 0; i < DEFSPEC; i++)											// SV1EIA AIR
+	{																	// SV1EIA AIR
+		rx[thread][subrx].iqfix->gain[i] = (REAL) (1.0 + 0.001 * gain);	// SV1EIA AIR
+	}																	// SV1EIA AIR
+	rx[thread][subrx].iqfix->spec = 0;									// SV1EIA AIR
 	sem_post(&top[thread].sync.upd.sem);
 }
 
 DttSP_EXP void
 SetCorrectTXIQ (unsigned int thread, double phase, double gain)
 {
+	int i;																// SV1EIA AIR
 	sem_wait(&top[thread].sync.upd.sem);
-	tx[thread].iqfix->phase = (REAL) (0.001 * phase);
-	tx[thread].iqfix->gain = (REAL) (1.0 + 0.001 * gain);
+	for (i = 0; i < DEFSPEC; i++)											// SV1EIA AIR
+	{																	// SV1EIA AIR
+		tx[thread].iqfix->phase[i] = (REAL) (0.001 * phase);			// SV1EIA AIR
+		tx[thread].iqfix->gain[i] = (REAL) (1.0 + 0.001 * gain);		// SV1EIA AIR
+	}																	// SV1EIA AIR
+	tx[thread].iqfix->spec = 0;											// SV1EIA AIR
 	sem_post(&top[thread].sync.upd.sem);
 }
 
 DttSP_EXP void
 SetCorrectTXIQPhase (unsigned int thread, double phase)
 {
+	int i;																// SV1EIA AIR
 	sem_wait(&top[thread].sync.upd.sem);
-	tx[thread].iqfix->phase = (REAL) (0.001 * phase);
+	for (i = 0; i < DEFSPEC; i++)											// SV1EIA AIR
+	{																	// SV1EIA AIR
+		tx[thread].iqfix->phase[i] = (REAL) (0.001 * phase);			// SV1EIA AIR
+	}																	// SV1EIA AIR
+	tx[thread].iqfix->spec = 0;											// SV1EIA AIR
 	sem_post(&top[thread].sync.upd.sem);
 }
 
 DttSP_EXP void
 SetCorrectTXIQGain (unsigned int thread, double gain)
 {
+	int i;																// SV1EIA AIR
 	sem_wait(&top[thread].sync.upd.sem);
-	tx[thread].iqfix->gain = (REAL) (1.0 + 0.001 * gain);
+	for (i = 0; i < DEFSPEC; i++)											// SV1EIA AIR
+	{																	// SV1EIA AIR
+		tx[thread].iqfix->gain[i] = (REAL) (1.0 + 0.001 * gain);		// SV1EIA AIR
+	}																	// SV1EIA AIR
+	tx[thread].iqfix->spec = 0;											// SV1EIA AIR
 	sem_post(&top[thread].sync.upd.sem);
 }
 
+// SV1EIA AIR ADDITIONAL FUNCTIONS
+DttSP_EXP void															// SV1EIA AIR
+SetCorrectIQBinEnable (unsigned int thread, unsigned int subrx)			// SV1EIA AIR
+{																		// SV1EIA AIR
+	int i;
+	int IFoffset = 
+		(int)((DEFSPEC * rx[thread][subrx].osc.gen->Frequency)
+		/ uni[thread].samplerate);
 
+	sem_wait(&top[thread].sync.upd.sem);								// SV1EIA AIR
+	for (i = 0; i < ((DEFSPEC /2) + IFoffset); i++)
+	{
+		uni[thread].spec.iqfix->phase[(int)(DEFSPEC/2)-IFoffset+i] =	// SV1EIA AIR
+			uni[thread].spec.iqfix->phase_test[i];						// SV1EIA AIR
+		uni[thread].spec.iqfix->gain[(int)(DEFSPEC/2)-IFoffset+i] =		// SV1EIA AIR
+			uni[thread].spec.iqfix->gain_test[i];						// SV1EIA AIR
+	}
+	for (i = 0; i < ((DEFSPEC /2) - IFoffset); i++)
+	{
+		uni[thread].spec.iqfix->phase[i] =								// SV1EIA AIR
+			uni[thread].spec.iqfix->phase_test[(int)(DEFSPEC/2)+IFoffset+i];// SV1EIA AIR
+		uni[thread].spec.iqfix->gain[i] =								// SV1EIA AIR
+			uni[thread].spec.iqfix->gain_test[(int)(DEFSPEC/2)+IFoffset+i];	// SV1EIA AIR
+	}
+//	for (i = 0; i < (DEFSPEC/2); i++)									// SV1EIA AIR
+//	{																	// SV1EIA AIR
+//		uni[thread].spec.iqfix->phase[i+(DEFSPEC/2)] =					// SV1EIA AIR
+//			uni[thread].spec.iqfix->phase_test[i];						// SV1EIA AIR
+//		uni[thread].spec.iqfix->gain[i+(DEFSPEC/2)] =					// SV1EIA AIR
+//			uni[thread].spec.iqfix->gain_test[i];						// SV1EIA AIR
+//		uni[thread].spec.iqfix->phase[i] =								// SV1EIA AIR
+//			uni[thread].spec.iqfix->phase_test[i+(DEFSPEC/2)];			// SV1EIA AIR
+//		uni[thread].spec.iqfix->gain[i] =								// SV1EIA AIR
+//			uni[thread].spec.iqfix->gain_test[i+(DEFSPEC/2)];			// SV1EIA AIR
+//	}																	// SV1EIA AIR
+//	uni[thread].spec.iqfix->spec = 1;									// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);								// SV1EIA AIR
+}																		// SV1EIA AIR
+
+DttSP_EXP void															// SV1EIA AIR
+SetCorrectIQBin (unsigned int thread, unsigned int subrx, double phase, double gain, int bin)	// SV1EIA AIR
+{																		// SV1EIA AIR
+	sem_wait(&top[thread].sync.upd.sem);								// SV1EIA AIR
+	uni[thread].spec.iqfix->phase_test[bin] = (REAL) (0.001 * phase);		// SV1EIA AIR
+	uni[thread].spec.iqfix->gain_test[bin] = (REAL) (1.0 + 0.001 * gain);	// SV1EIA AIR
+//	uni[thread].spec.iqfix->spec = 1;									// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);								// SV1EIA AIR
+}																		// SV1EIA AIR
+
+/*
+DttSP_EXP void															// SV1EIA AIR
+SetCorrectIQBinEnable (unsigned int thread, unsigned int subrx)	// SV1EIA AIR
+{																		// SV1EIA AIR
+	int i;
+	sem_wait(&top[thread].sync.upd.sem);								// SV1EIA AIR
+	for (i = 0; i < (DEFSPEC/2); i++)									// SV1EIA AIR
+	{																	// SV1EIA AIR
+		rx[thread][subrx].iqfix->phase[i+(DEFSPEC/2)] =					// SV1EIA AIR
+			rx[thread][subrx].iqfix->phase_test[i];						// SV1EIA AIR
+		rx[thread][subrx].iqfix->gain[i+(DEFSPEC/2)] =					// SV1EIA AIR
+			rx[thread][subrx].iqfix->gain_test[i];						// SV1EIA AIR
+		rx[thread][subrx].iqfix->phase[i] =								// SV1EIA AIR
+			rx[thread][subrx].iqfix->phase_test[i+(DEFSPEC/2)];			// SV1EIA AIR
+		rx[thread][subrx].iqfix->gain[i] =								// SV1EIA AIR
+			rx[thread][subrx].iqfix->gain_test[i+(DEFSPEC/2)];			// SV1EIA AIR
+	}																	// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);								// SV1EIA AIR
+}																		// SV1EIA AIR
+
+DttSP_EXP void															// SV1EIA AIR
+SetCorrectIQBin (unsigned int thread, unsigned int subrx, double phase, double gain, int bin)	// SV1EIA AIR
+{																		// SV1EIA AIR
+	sem_wait(&top[thread].sync.upd.sem);								// SV1EIA AIR
+	rx[thread][subrx].iqfix->phase_test[bin] = (REAL) (0.001 * phase);		// SV1EIA AIR
+	rx[thread][subrx].iqfix->gain_test[bin] = (REAL) (1.0 + 0.001 * gain);	// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);								// SV1EIA AIR
+}																		// SV1EIA AIR
+
+DttSP_EXP void
+SetCorrectIQPhaseBin (unsigned int thread, unsigned int subrx, double phase, int bin)
+{
+	sem_wait(&top[thread].sync.upd.sem);
+	rx[thread][subrx].iqfix->phase[bin] = (REAL) (0.001 * phase);		// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);								// SV1EIA AIR
+}
+
+DttSP_EXP void
+SetCorrectIQGainBin (unsigned int thread, unsigned int subrx, double gain, int bin)
+{
+	sem_wait(&top[thread].sync.upd.sem);
+	rx[thread][subrx].iqfix->gain[bin] = (REAL) (1.0 + 0.001 * gain);	// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);
+}
+
+DttSP_EXP void
+SetCorrectTXIQBin (unsigned int thread, double phase, double gain, int bin)
+{
+	sem_wait(&top[thread].sync.upd.sem);
+	tx[thread].iqfix->phase[bin] = (REAL) (0.001 * phase);			// SV1EIA AIR
+	tx[thread].iqfix->gain[bin] = (REAL) (1.0 + 0.001 * gain);		// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);
+}
+
+DttSP_EXP void
+SetCorrectTXIQPhaseBin (unsigned int thread, double phase, int bin)
+{
+	sem_wait(&top[thread].sync.upd.sem);
+	tx[thread].iqfix->phase[bin] = (REAL) (0.001 * phase);			// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);
+}
+
+DttSP_EXP void
+SetCorrectTXIQGainBin (unsigned int thread, double gain, int bin)
+{
+	sem_wait(&top[thread].sync.upd.sem);
+	tx[thread].iqfix->gain[bin] = (REAL) (1.0 + 0.001 * gain);		// SV1EIA AIR
+	sem_post(&top[thread].sync.upd.sem);
+}
+*/
+
+// SV1EIA AIR ADDITIONAL FUNCTIONS
 DttSP_EXP void
 SetPWSmode (unsigned thread, unsigned subrx, int setit)
 {
@@ -1521,4 +1672,32 @@ int EerXmit = 0;
 DttSP_EXP void SetEerXmit(int on_off)
 {
     EerXmit = on_off;
+}
+
+DttSP_EXP BOOLEAN
+GetLoopPTT(void)
+{
+	if (loopenabled)
+		return GetPTT();
+	else
+		return FALSE;
+}
+
+DttSP_EXP BOOLEAN
+GetLoopPresent(void)
+{
+	if (looppresent)
+		return TRUE;
+	else
+		return FALSE;
+}
+
+DttSP_EXP BOOLEAN
+SetLoopEnabled(int Enabled)
+{
+	if (Enabled != 0)
+		loopenabled = loopinit();
+	else
+		loopenabled = FALSE;
+	return loopenabled;
 }

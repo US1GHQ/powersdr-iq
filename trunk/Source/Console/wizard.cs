@@ -113,7 +113,6 @@ namespace PowerSDR
 		private System.Windows.Forms.RadioButtonTS radGenModelSoftRock40;
 		private System.Windows.Forms.RadioButtonTS radGenModelSDR1000;
 		private System.Windows.Forms.GroupBox grpModel;
-		private System.Windows.Forms.RadioButtonTS radGenModelFLEX5000;
 		private System.ComponentModel.Container components = null;
 
 		#endregion
@@ -228,7 +227,6 @@ namespace PowerSDR
 			this.lblPAGainByBand160 = new System.Windows.Forms.LabelTS();
 			this.udPAGainByBand160 = new System.Windows.Forms.NumericUpDownTS();
 			this.grpModel = new System.Windows.Forms.GroupBox();
-			this.radGenModelFLEX5000 = new System.Windows.Forms.RadioButtonTS();
 			this.radGenModelDemoNone = new System.Windows.Forms.RadioButtonTS();
 			this.radGenModelSoftRock40 = new System.Windows.Forms.RadioButtonTS();
 			this.radGenModelSDR1000 = new System.Windows.Forms.RadioButtonTS();
@@ -249,8 +247,9 @@ namespace PowerSDR
 			// btnPrevious
 			// 
 			this.btnPrevious.Image = null;
-			this.btnPrevious.Location = new System.Drawing.Point(224, 248);
+			this.btnPrevious.Location = new System.Drawing.Point(269, 286);
 			this.btnPrevious.Name = "btnPrevious";
+			this.btnPrevious.Size = new System.Drawing.Size(90, 27);
 			this.btnPrevious.TabIndex = 0;
 			this.btnPrevious.Text = "Previous";
 			this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
@@ -258,8 +257,9 @@ namespace PowerSDR
 			// btnNext
 			// 
 			this.btnNext.Image = null;
-			this.btnNext.Location = new System.Drawing.Point(312, 248);
+			this.btnNext.Location = new System.Drawing.Point(374, 286);
 			this.btnNext.Name = "btnNext";
+			this.btnNext.Size = new System.Drawing.Size(90, 27);
 			this.btnNext.TabIndex = 1;
 			this.btnNext.Text = "Next";
 			this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
@@ -268,17 +268,18 @@ namespace PowerSDR
 			// 
 			this.btnFinished.Enabled = false;
 			this.btnFinished.Image = null;
-			this.btnFinished.Location = new System.Drawing.Point(400, 248);
+			this.btnFinished.Location = new System.Drawing.Point(480, 286);
 			this.btnFinished.Name = "btnFinished";
+			this.btnFinished.Size = new System.Drawing.Size(90, 27);
 			this.btnFinished.TabIndex = 2;
 			this.btnFinished.Text = "Finish";
 			this.btnFinished.Click += new System.EventHandler(this.btnFinished_Click);
 			// 
 			// pictureBox1
 			// 
-			this.pictureBox1.Location = new System.Drawing.Point(42, 56);
+			this.pictureBox1.Location = new System.Drawing.Point(50, 65);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(171, 128);
+			this.pictureBox1.Size = new System.Drawing.Size(206, 147);
 			this.pictureBox1.TabIndex = 3;
 			this.pictureBox1.TabStop = false;
 			this.pictureBox1.Visible = false;
@@ -287,18 +288,18 @@ namespace PowerSDR
 			// 
 			this.lblMessage1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.lblMessage1.Image = null;
-			this.lblMessage1.Location = new System.Drawing.Point(16, 8);
+			this.lblMessage1.Location = new System.Drawing.Point(19, 9);
 			this.lblMessage1.Name = "lblMessage1";
-			this.lblMessage1.Size = new System.Drawing.Size(456, 136);
+			this.lblMessage1.Size = new System.Drawing.Size(547, 157);
 			this.lblMessage1.TabIndex = 4;
 			this.lblMessage1.Text = "lblMessage1";
 			// 
 			// radYes
 			// 
 			this.radYes.Image = null;
-			this.radYes.Location = new System.Drawing.Point(272, 32);
+			this.radYes.Location = new System.Drawing.Point(326, 37);
 			this.radYes.Name = "radYes";
-			this.radYes.Size = new System.Drawing.Size(48, 16);
+			this.radYes.Size = new System.Drawing.Size(58, 18);
 			this.radYes.TabIndex = 5;
 			this.radYes.Text = "Yes";
 			this.radYes.Visible = false;
@@ -307,9 +308,9 @@ namespace PowerSDR
 			// radNo
 			// 
 			this.radNo.Image = null;
-			this.radNo.Location = new System.Drawing.Point(328, 32);
+			this.radNo.Location = new System.Drawing.Point(394, 37);
 			this.radNo.Name = "radNo";
-			this.radNo.Size = new System.Drawing.Size(48, 16);
+			this.radNo.Size = new System.Drawing.Size(57, 18);
 			this.radNo.TabIndex = 6;
 			this.radNo.Text = "No";
 			this.radNo.Visible = false;
@@ -318,9 +319,9 @@ namespace PowerSDR
 			// lblMessage2
 			// 
 			this.lblMessage2.Image = null;
-			this.lblMessage2.Location = new System.Drawing.Point(8, 192);
+			this.lblMessage2.Location = new System.Drawing.Point(10, 222);
 			this.lblMessage2.Name = "lblMessage2";
-			this.lblMessage2.Size = new System.Drawing.Size(464, 48);
+			this.lblMessage2.Size = new System.Drawing.Size(556, 55);
 			this.lblMessage2.TabIndex = 7;
 			this.lblMessage2.Text = "lblMessage2";
 			// 
@@ -331,18 +332,18 @@ namespace PowerSDR
 			this.comboBox1.Items.AddRange(new object[] {
 														   "DEMI144-28FRS",
 														   "DEMI144-28 (25w)"});
-			this.comboBox1.Location = new System.Drawing.Point(336, 112);
+			this.comboBox1.Location = new System.Drawing.Point(403, 129);
 			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(136, 21);
+			this.comboBox1.Size = new System.Drawing.Size(163, 24);
 			this.comboBox1.TabIndex = 8;
 			this.comboBox1.Visible = false;
 			// 
 			// lblCombo
 			// 
 			this.lblCombo.Image = null;
-			this.lblCombo.Location = new System.Drawing.Point(272, 112);
+			this.lblCombo.Location = new System.Drawing.Point(326, 129);
 			this.lblCombo.Name = "lblCombo";
-			this.lblCombo.Size = new System.Drawing.Size(192, 72);
+			this.lblCombo.Size = new System.Drawing.Size(231, 83);
 			this.lblCombo.TabIndex = 9;
 			this.lblCombo.Text = "lblCombo";
 			// 
@@ -353,17 +354,17 @@ namespace PowerSDR
 			this.comboBox2.Items.AddRange(new object[] {
 														   "10",
 														   "20"});
-			this.comboBox2.Location = new System.Drawing.Point(384, 112);
+			this.comboBox2.Location = new System.Drawing.Point(461, 129);
 			this.comboBox2.Name = "comboBox2";
-			this.comboBox2.Size = new System.Drawing.Size(56, 21);
+			this.comboBox2.Size = new System.Drawing.Size(67, 24);
 			this.comboBox2.TabIndex = 10;
 			// 
 			// button1
 			// 
 			this.button1.Image = null;
-			this.button1.Location = new System.Drawing.Point(312, 128);
+			this.button1.Location = new System.Drawing.Point(374, 148);
 			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(88, 23);
+			this.button1.Size = new System.Drawing.Size(106, 26);
 			this.button1.TabIndex = 11;
 			this.button1.Text = "Select File ...";
 			this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -388,10 +389,10 @@ namespace PowerSDR
 														   "Sound Blaster MP3+ (USB)",
 														   "Turtle Beach Santa Cruz (PCI)",
 														   "Unsupported Card"});
-			this.comboBox3.Location = new System.Drawing.Point(264, 104);
+			this.comboBox3.Location = new System.Drawing.Point(317, 120);
 			this.comboBox3.MaxDropDownItems = 10;
 			this.comboBox3.Name = "comboBox3";
-			this.comboBox3.Size = new System.Drawing.Size(184, 21);
+			this.comboBox3.Size = new System.Drawing.Size(221, 24);
 			this.comboBox3.TabIndex = 12;
 			this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
 			// 
@@ -417,9 +418,9 @@ namespace PowerSDR
 			this.groupBox2.Controls.Add(this.udPAGainByBand80);
 			this.groupBox2.Controls.Add(this.lblPAGainByBand160);
 			this.groupBox2.Controls.Add(this.udPAGainByBand160);
-			this.groupBox2.Location = new System.Drawing.Point(240, 48);
+			this.groupBox2.Location = new System.Drawing.Point(288, 55);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(216, 136);
+			this.groupBox2.Size = new System.Drawing.Size(259, 157);
 			this.groupBox2.TabIndex = 13;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Gain By Band (dB)";
@@ -428,9 +429,9 @@ namespace PowerSDR
 			// lblPAGainByBand10
 			// 
 			this.lblPAGainByBand10.Image = null;
-			this.lblPAGainByBand10.Location = new System.Drawing.Point(112, 112);
+			this.lblPAGainByBand10.Location = new System.Drawing.Point(134, 129);
 			this.lblPAGainByBand10.Name = "lblPAGainByBand10";
-			this.lblPAGainByBand10.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand10.Size = new System.Drawing.Size(48, 19);
 			this.lblPAGainByBand10.TabIndex = 19;
 			this.lblPAGainByBand10.Text = "10m:";
 			// 
@@ -442,7 +443,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand10.Location = new System.Drawing.Point(152, 112);
+			this.udPAGainByBand10.Location = new System.Drawing.Point(182, 129);
 			this.udPAGainByBand10.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -454,7 +455,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand10.Name = "udPAGainByBand10";
-			this.udPAGainByBand10.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand10.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand10.TabIndex = 18;
 			this.udPAGainByBand10.Value = new System.Decimal(new int[] {
 																		   430,
@@ -465,9 +466,9 @@ namespace PowerSDR
 			// lblPAGainByBand12
 			// 
 			this.lblPAGainByBand12.Image = null;
-			this.lblPAGainByBand12.Location = new System.Drawing.Point(112, 88);
+			this.lblPAGainByBand12.Location = new System.Drawing.Point(134, 102);
 			this.lblPAGainByBand12.Name = "lblPAGainByBand12";
-			this.lblPAGainByBand12.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand12.Size = new System.Drawing.Size(48, 18);
 			this.lblPAGainByBand12.TabIndex = 17;
 			this.lblPAGainByBand12.Text = "12m:";
 			// 
@@ -479,7 +480,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand12.Location = new System.Drawing.Point(152, 88);
+			this.udPAGainByBand12.Location = new System.Drawing.Point(182, 102);
 			this.udPAGainByBand12.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -491,7 +492,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand12.Name = "udPAGainByBand12";
-			this.udPAGainByBand12.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand12.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand12.TabIndex = 16;
 			this.udPAGainByBand12.Value = new System.Decimal(new int[] {
 																		   474,
@@ -502,9 +503,9 @@ namespace PowerSDR
 			// lblPAGainByBand15
 			// 
 			this.lblPAGainByBand15.Image = null;
-			this.lblPAGainByBand15.Location = new System.Drawing.Point(112, 64);
+			this.lblPAGainByBand15.Location = new System.Drawing.Point(134, 74);
 			this.lblPAGainByBand15.Name = "lblPAGainByBand15";
-			this.lblPAGainByBand15.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand15.Size = new System.Drawing.Size(48, 18);
 			this.lblPAGainByBand15.TabIndex = 15;
 			this.lblPAGainByBand15.Text = "15m:";
 			// 
@@ -516,7 +517,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand15.Location = new System.Drawing.Point(152, 64);
+			this.udPAGainByBand15.Location = new System.Drawing.Point(182, 74);
 			this.udPAGainByBand15.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -528,7 +529,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand15.Name = "udPAGainByBand15";
-			this.udPAGainByBand15.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand15.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand15.TabIndex = 14;
 			this.udPAGainByBand15.Value = new System.Decimal(new int[] {
 																		   481,
@@ -539,9 +540,9 @@ namespace PowerSDR
 			// lblPAGainByBand17
 			// 
 			this.lblPAGainByBand17.Image = null;
-			this.lblPAGainByBand17.Location = new System.Drawing.Point(112, 40);
+			this.lblPAGainByBand17.Location = new System.Drawing.Point(134, 46);
 			this.lblPAGainByBand17.Name = "lblPAGainByBand17";
-			this.lblPAGainByBand17.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand17.Size = new System.Drawing.Size(48, 19);
 			this.lblPAGainByBand17.TabIndex = 13;
 			this.lblPAGainByBand17.Text = "17m:";
 			// 
@@ -553,7 +554,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand17.Location = new System.Drawing.Point(152, 40);
+			this.udPAGainByBand17.Location = new System.Drawing.Point(182, 46);
 			this.udPAGainByBand17.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -565,7 +566,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand17.Name = "udPAGainByBand17";
-			this.udPAGainByBand17.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand17.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand17.TabIndex = 12;
 			this.udPAGainByBand17.Value = new System.Decimal(new int[] {
 																		   493,
@@ -576,9 +577,9 @@ namespace PowerSDR
 			// lblPAGainByBand20
 			// 
 			this.lblPAGainByBand20.Image = null;
-			this.lblPAGainByBand20.Location = new System.Drawing.Point(112, 16);
+			this.lblPAGainByBand20.Location = new System.Drawing.Point(134, 18);
 			this.lblPAGainByBand20.Name = "lblPAGainByBand20";
-			this.lblPAGainByBand20.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand20.Size = new System.Drawing.Size(48, 19);
 			this.lblPAGainByBand20.TabIndex = 11;
 			this.lblPAGainByBand20.Text = "20m:";
 			// 
@@ -590,7 +591,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand20.Location = new System.Drawing.Point(152, 16);
+			this.udPAGainByBand20.Location = new System.Drawing.Point(182, 18);
 			this.udPAGainByBand20.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -602,7 +603,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand20.Name = "udPAGainByBand20";
-			this.udPAGainByBand20.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand20.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand20.TabIndex = 10;
 			this.udPAGainByBand20.Value = new System.Decimal(new int[] {
 																		   483,
@@ -613,9 +614,9 @@ namespace PowerSDR
 			// lblPAGainByBand30
 			// 
 			this.lblPAGainByBand30.Image = null;
-			this.lblPAGainByBand30.Location = new System.Drawing.Point(16, 112);
+			this.lblPAGainByBand30.Location = new System.Drawing.Point(19, 129);
 			this.lblPAGainByBand30.Name = "lblPAGainByBand30";
-			this.lblPAGainByBand30.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand30.Size = new System.Drawing.Size(48, 19);
 			this.lblPAGainByBand30.TabIndex = 9;
 			this.lblPAGainByBand30.Text = "30m:";
 			// 
@@ -627,7 +628,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand30.Location = new System.Drawing.Point(56, 112);
+			this.udPAGainByBand30.Location = new System.Drawing.Point(67, 129);
 			this.udPAGainByBand30.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -639,7 +640,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand30.Name = "udPAGainByBand30";
-			this.udPAGainByBand30.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand30.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand30.TabIndex = 8;
 			this.udPAGainByBand30.Value = new System.Decimal(new int[] {
 																		   489,
@@ -650,9 +651,9 @@ namespace PowerSDR
 			// lblPAGainByBand40
 			// 
 			this.lblPAGainByBand40.Image = null;
-			this.lblPAGainByBand40.Location = new System.Drawing.Point(16, 88);
+			this.lblPAGainByBand40.Location = new System.Drawing.Point(19, 102);
 			this.lblPAGainByBand40.Name = "lblPAGainByBand40";
-			this.lblPAGainByBand40.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand40.Size = new System.Drawing.Size(48, 18);
 			this.lblPAGainByBand40.TabIndex = 7;
 			this.lblPAGainByBand40.Text = "40m:";
 			// 
@@ -664,7 +665,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand40.Location = new System.Drawing.Point(56, 88);
+			this.udPAGainByBand40.Location = new System.Drawing.Point(67, 102);
 			this.udPAGainByBand40.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -676,7 +677,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand40.Name = "udPAGainByBand40";
-			this.udPAGainByBand40.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand40.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand40.TabIndex = 6;
 			this.udPAGainByBand40.Value = new System.Decimal(new int[] {
 																		   469,
@@ -687,9 +688,9 @@ namespace PowerSDR
 			// lblPAGainByBand60
 			// 
 			this.lblPAGainByBand60.Image = null;
-			this.lblPAGainByBand60.Location = new System.Drawing.Point(16, 64);
+			this.lblPAGainByBand60.Location = new System.Drawing.Point(19, 74);
 			this.lblPAGainByBand60.Name = "lblPAGainByBand60";
-			this.lblPAGainByBand60.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand60.Size = new System.Drawing.Size(48, 18);
 			this.lblPAGainByBand60.TabIndex = 5;
 			this.lblPAGainByBand60.Text = "60m:";
 			// 
@@ -701,7 +702,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand60.Location = new System.Drawing.Point(56, 64);
+			this.udPAGainByBand60.Location = new System.Drawing.Point(67, 74);
 			this.udPAGainByBand60.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -713,7 +714,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand60.Name = "udPAGainByBand60";
-			this.udPAGainByBand60.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand60.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand60.TabIndex = 4;
 			this.udPAGainByBand60.Value = new System.Decimal(new int[] {
 																		   474,
@@ -724,9 +725,9 @@ namespace PowerSDR
 			// lblPAGainByBand80
 			// 
 			this.lblPAGainByBand80.Image = null;
-			this.lblPAGainByBand80.Location = new System.Drawing.Point(16, 40);
+			this.lblPAGainByBand80.Location = new System.Drawing.Point(19, 46);
 			this.lblPAGainByBand80.Name = "lblPAGainByBand80";
-			this.lblPAGainByBand80.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand80.Size = new System.Drawing.Size(48, 19);
 			this.lblPAGainByBand80.TabIndex = 3;
 			this.lblPAGainByBand80.Text = "80m:";
 			// 
@@ -738,7 +739,7 @@ namespace PowerSDR
 																			   0,
 																			   0,
 																			   65536});
-			this.udPAGainByBand80.Location = new System.Drawing.Point(56, 40);
+			this.udPAGainByBand80.Location = new System.Drawing.Point(67, 46);
 			this.udPAGainByBand80.Maximum = new System.Decimal(new int[] {
 																			 100,
 																			 0,
@@ -750,7 +751,7 @@ namespace PowerSDR
 																			 0,
 																			 65536});
 			this.udPAGainByBand80.Name = "udPAGainByBand80";
-			this.udPAGainByBand80.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand80.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand80.TabIndex = 2;
 			this.udPAGainByBand80.Value = new System.Decimal(new int[] {
 																		   480,
@@ -761,9 +762,9 @@ namespace PowerSDR
 			// lblPAGainByBand160
 			// 
 			this.lblPAGainByBand160.Image = null;
-			this.lblPAGainByBand160.Location = new System.Drawing.Point(16, 16);
+			this.lblPAGainByBand160.Location = new System.Drawing.Point(19, 18);
 			this.lblPAGainByBand160.Name = "lblPAGainByBand160";
-			this.lblPAGainByBand160.Size = new System.Drawing.Size(40, 16);
+			this.lblPAGainByBand160.Size = new System.Drawing.Size(48, 19);
 			this.lblPAGainByBand160.TabIndex = 1;
 			this.lblPAGainByBand160.Text = "160m:";
 			// 
@@ -775,7 +776,7 @@ namespace PowerSDR
 																				0,
 																				0,
 																				65536});
-			this.udPAGainByBand160.Location = new System.Drawing.Point(56, 16);
+			this.udPAGainByBand160.Location = new System.Drawing.Point(67, 18);
 			this.udPAGainByBand160.Maximum = new System.Decimal(new int[] {
 																			  100,
 																			  0,
@@ -787,7 +788,7 @@ namespace PowerSDR
 																			  0,
 																			  65536});
 			this.udPAGainByBand160.Name = "udPAGainByBand160";
-			this.udPAGainByBand160.Size = new System.Drawing.Size(48, 20);
+			this.udPAGainByBand160.Size = new System.Drawing.Size(58, 22);
 			this.udPAGainByBand160.TabIndex = 0;
 			this.udPAGainByBand160.Value = new System.Decimal(new int[] {
 																			490,
@@ -797,34 +798,23 @@ namespace PowerSDR
 			// 
 			// grpModel
 			// 
-			this.grpModel.Controls.Add(this.radGenModelFLEX5000);
 			this.grpModel.Controls.Add(this.radGenModelDemoNone);
 			this.grpModel.Controls.Add(this.radGenModelSoftRock40);
 			this.grpModel.Controls.Add(this.radGenModelSDR1000);
-			this.grpModel.Location = new System.Drawing.Point(272, 56);
+			this.grpModel.Location = new System.Drawing.Point(326, 65);
 			this.grpModel.Name = "grpModel";
-			this.grpModel.Size = new System.Drawing.Size(120, 128);
+			this.grpModel.Size = new System.Drawing.Size(144, 147);
 			this.grpModel.TabIndex = 20;
 			this.grpModel.TabStop = false;
 			this.grpModel.Text = "Model";
 			this.grpModel.Visible = false;
 			// 
-			// radGenModelFLEX5000
-			// 
-			this.radGenModelFLEX5000.Image = null;
-			this.radGenModelFLEX5000.Location = new System.Drawing.Point(16, 24);
-			this.radGenModelFLEX5000.Name = "radGenModelFLEX5000";
-			this.radGenModelFLEX5000.Size = new System.Drawing.Size(88, 24);
-			this.radGenModelFLEX5000.TabIndex = 6;
-			this.radGenModelFLEX5000.Text = "FLEX-5000";
-			this.radGenModelFLEX5000.CheckedChanged += new System.EventHandler(this.radGenModelFLEX5000_CheckedChanged);
-			// 
 			// radGenModelDemoNone
 			// 
 			this.radGenModelDemoNone.Image = null;
-			this.radGenModelDemoNone.Location = new System.Drawing.Point(16, 96);
+			this.radGenModelDemoNone.Location = new System.Drawing.Point(19, 111);
 			this.radGenModelDemoNone.Name = "radGenModelDemoNone";
-			this.radGenModelDemoNone.Size = new System.Drawing.Size(88, 24);
+			this.radGenModelDemoNone.Size = new System.Drawing.Size(106, 27);
 			this.radGenModelDemoNone.TabIndex = 5;
 			this.radGenModelDemoNone.Text = "Demo/None";
 			this.radGenModelDemoNone.CheckedChanged += new System.EventHandler(this.radGenModelDemoNone_CheckedChanged);
@@ -832,29 +822,29 @@ namespace PowerSDR
 			// radGenModelSoftRock40
 			// 
 			this.radGenModelSoftRock40.Image = null;
-			this.radGenModelSoftRock40.Location = new System.Drawing.Point(16, 72);
+			this.radGenModelSoftRock40.Location = new System.Drawing.Point(19, 83);
 			this.radGenModelSoftRock40.Name = "radGenModelSoftRock40";
-			this.radGenModelSoftRock40.Size = new System.Drawing.Size(88, 24);
+			this.radGenModelSoftRock40.Size = new System.Drawing.Size(106, 28);
 			this.radGenModelSoftRock40.TabIndex = 4;
-			this.radGenModelSoftRock40.Text = "Soft Rock 40";
+			this.radGenModelSoftRock40.Text = "SDR Rx Fix.Freq.";
 			this.radGenModelSoftRock40.CheckedChanged += new System.EventHandler(this.radGenModelSoftRock40_CheckedChanged);
 			// 
 			// radGenModelSDR1000
 			// 
 			this.radGenModelSDR1000.Checked = true;
 			this.radGenModelSDR1000.Image = null;
-			this.radGenModelSDR1000.Location = new System.Drawing.Point(16, 48);
+			this.radGenModelSDR1000.Location = new System.Drawing.Point(19, 55);
 			this.radGenModelSDR1000.Name = "radGenModelSDR1000";
-			this.radGenModelSDR1000.Size = new System.Drawing.Size(88, 24);
+			this.radGenModelSDR1000.Size = new System.Drawing.Size(106, 28);
 			this.radGenModelSDR1000.TabIndex = 3;
 			this.radGenModelSDR1000.TabStop = true;
-			this.radGenModelSDR1000.Text = "SoftRock RxTx Si570";
+			this.radGenModelSDR1000.Text = "SDR (Si570)";
 			this.radGenModelSDR1000.CheckedChanged += new System.EventHandler(this.radGenModelSDR1000_CheckedChanged);
 			// 
 			// SetupWizard
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(488, 286);
+			this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+			this.ClientSize = new System.Drawing.Size(585, 329);
 			this.Controls.Add(this.grpModel);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.comboBox3);
@@ -1592,12 +1582,12 @@ namespace PowerSDR
 
 		private void radGenModelFLEX5000_CheckedChanged(object sender, System.EventArgs e)
 		{
-			if(radGenModelFLEX5000.Checked)
-			{
-				model = Model.FLEX5000;
-				if(grpModel.Visible)
-					pictureBox1.Image = new Bitmap(GetResource("PowerSDR.images.flex-5000.jpg"));
-			}
+//			if(radGenModelFLEX5000.Checked)
+//			{
+//				model = Model.FLEX5000;
+//				if(grpModel.Visible)
+//					pictureBox1.Image = new Bitmap(GetResource("PowerSDR.images.flex-5000.jpg"));
+//			}
 		}
 
 		private void radGenModelSDR1000_CheckedChanged(object sender, System.EventArgs e)

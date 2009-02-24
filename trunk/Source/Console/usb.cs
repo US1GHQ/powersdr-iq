@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+// using FX2LP;
 
 // TODO: Get all form references out of this driver.
 // Just error numbers and have a function to look up errors.
@@ -46,130 +47,174 @@ namespace PowerSDR
 		}
 
 		private static int deviceID = -1;
+		//		private static int deviceID = 2;
 		public static int DeviceID
 		{
 			get { return deviceID; }
 		}
 
-		[DllImport("Sdr1kUsb.dll")]
-		private static extern int Sdr1kOpen(string appName, uint config);
+//		[DllImport("Sdr1kUsb.dll")]
+//		private static extern int Sdr1kOpen(string appName, uint config);
+		public static int Sdr1kOpen(string appName, uint config)
+		{
+			int devicenum = -1;
+			byte openflag = 0xFF;
+//			HSUSB.OpenHSUSB(&openflag);
+			FX2LP.OpenFX2LP(&openflag);
+			if (openflag != 0xFF) devicenum = 0;
+			return devicenum;
+		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kClose")]
-		private static extern int Sdr1kCloseDll(int deviceID);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kClose")]
+//		private static extern int Sdr1kCloseDll(int deviceID);
 		public static int Sdr1kClose()
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kCloseDll(deviceID);
+//			int status = Sdr1kCloseDll(deviceID);
+			//byte closeflag = 0xFF;
+			//HSUSB.CloseHSUSB(&closeflag);
+//			HSUSB.CloseHSUSB();
+			FX2LP.CloseFX2LP();
+			int status = 0;
 			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
 			{
-				console.PowerOn = false;
+//				console.PowerOn = false;
 				console.USBPresent = false;
-				DisplayError(status);
+				deviceID = -1;
+//				DisplayError(status);
 			}
 			return status;
 		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kSetNotify")]
-		private static extern int Sdr1kSetNotifyDll(int deviceID, void *hEvent);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kSetNotify")]
+//		private static extern int Sdr1kSetNotifyDll(int deviceID, void *hEvent);
 		public static int Sdr1kSetNotify(void *hEvent)
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kSetNotifyDll(deviceID, hEvent);
+//			int status = Sdr1kSetNotifyDll(deviceID, hEvent);
+			int status = 0;
 			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
 			{
-				console.PowerOn = false;
-				console.USBPresent = false;
-				DisplayError(status);
+//				console.PowerOn = false;
+//				console.USBPresent = false;
+//				DisplayError(status);
 			}
 			return status;
 		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kGetStatusPort")]
-		private static extern int Sdr1kGetStatusPortDll(int deviceID);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kGetStatusPort")]
+//		private static extern int Sdr1kGetStatusPortDll(int deviceID);
 		public static int Sdr1kGetStatusPort()
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kGetStatusPortDll(deviceID);
+//			int status = Sdr1kGetStatusPortDll(deviceID);
+			int status = 0x20;
 			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
 			{
-				console.PowerOn = false;
-				console.USBPresent = false;
-				DisplayError(status);
+//				console.PowerOn = false;
+//				console.USBPresent = false;
+//				DisplayError(status);
 			}
+			byte HSUSBstatus;
+			HSUSBstatus = 0x00;
+//			HSUSB.GetRDY(&HSUSBstatus);
+			FX2LP.GetRDY(&HSUSBstatus);
+			if ((HSUSBstatus & (byte)0x01)==0) status = (int)((byte)status | (byte)0x10);
+			if ((HSUSBstatus & (byte)0x02)==0) status = (int)((byte)status | (byte)0x80);
 			return status;
 		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kLatch")]
-		private static extern int Sdr1kLatchDll(int deviceID, byte latch, byte data);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kLatch")]
+//		private static extern int Sdr1kLatchDll(int deviceID, byte latch, byte data);
 		public static int Sdr1kLatch(byte latch, byte data)
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kLatchDll(deviceID, latch, data);
-			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
+			switch (latch)
 			{
-				console.PowerOn = false;
-				console.USBPresent = false;
-				DisplayError(status);
+				case 0x00:
+//					HSUSB.SetPortA(&data);
+					FX2LP.SetPortA(&data);
+					break;
+				case 0x01:
+//					HSUSB.SetPortB(&data);
+					FX2LP.SetPortB(&data);
+					break;
+				case 0x02:
+//					HSUSB.SetPortD(&data);
+					FX2LP.SetPortD(&data);
+					break;
 			}
+//			int status = Sdr1kLatchDll(deviceID, latch, data);
+			int status = 0;
+//			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
+//			{
+//				console.PowerOn = false;
+//				console.USBPresent = false;
+//				DisplayError(status);
+//			}
 			return status;
 		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kDDSReset")]
-		private static extern int Sdr1kDDSResetDll(int deviceID);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kDDSReset")]
+//		private static extern int Sdr1kDDSResetDll(int deviceID);
 		public static int Sdr1kDDSReset()
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kDDSResetDll(deviceID);
+//			int status = Sdr1kDDSResetDll(deviceID);
+			int status = 0;
 			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
 			{
-				console.PowerOn = false;
-				console.USBPresent = false;
-				DisplayError(status);
+//				console.PowerOn = false;
+//				console.USBPresent = false;
+//				DisplayError(status);
 			}
 			return status;
 		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kDDSWrite")]
-		private static extern int Sdr1kDDSWriteDll(int deviceID, byte addr, byte data);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kDDSWrite")]
+//		private static extern int Sdr1kDDSWriteDll(int deviceID, byte addr, byte data);
 		public static int Sdr1kDDSWrite(byte addr, byte data)
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kDDSWriteDll(deviceID, addr, data);
+//			int status = Sdr1kDDSWriteDll(deviceID, addr, data);
+			int status = 0;
 			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
 			{
-				console.PowerOn = false;
-				console.USBPresent = false;
-				DisplayError(status);
+//				console.PowerOn = false;
+//				console.USBPresent = false;
+//				DisplayError(status);
 			}
 			return status;
 		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kSRLoad")]
-		private static extern int Sdr1kSRLoadDll(int deviceID, byte reg, byte data);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kSRLoad")]
+//		private static extern int Sdr1kSRLoadDll(int deviceID, byte reg, byte data);
 		public static int Sdr1kSRLoad(byte reg, byte data)
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kSRLoadDll(deviceID, reg, data);
+//			int status = Sdr1kSRLoadDll(deviceID, reg, data);
+			int status = 0;
 			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
 			{
-				console.PowerOn = false;
-				console.USBPresent = false;
-				DisplayError(status);
+//				console.PowerOn = false;
+//				console.USBPresent = false;
+//				DisplayError(status);
 			}
 			return status;
 		}
 
-		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kGetADC")]
-		private static extern int Sdr1kGetADCDll(int deviceID);
+//		[DllImport("Sdr1kUsb.dll", EntryPoint="Sdr1kGetADC")]
+//		private static extern int Sdr1kGetADCDll(int deviceID);
 		public static int Sdr1kGetADC()
 		{
 			if(deviceID < 0) return SDR1K_ERR_DEVICENOTFOUND;
-			int status = Sdr1kGetADCDll(deviceID);
+//			int status = Sdr1kGetADCDll(deviceID);
+			int status = 0;
 			if(status < 0 && status != SDR1K_ERR_ADCREADINGLOST)
 			{
-				console.PowerOn = false;
-				console.USBPresent = false;
-				DisplayError(status);
+//				console.PowerOn = false;
+//				console.USBPresent = false;
+//				DisplayError(status);
 			}
 			return status;
 		}

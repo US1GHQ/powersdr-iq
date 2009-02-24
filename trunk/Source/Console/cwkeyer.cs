@@ -299,6 +299,7 @@ namespace PowerSDR
 
 		public SerialPorts.SerialPort sp = new SerialPorts.SerialPort(); 
 		public SerialPorts.SerialPort sp2 = new SerialPorts.SerialPort();
+		public SerialPorts.SerialPort sp_Si570 = new SerialPorts.SerialPort();
 
 		#endregion
 
@@ -401,6 +402,11 @@ namespace PowerSDR
 					}
 
 					// handle CWX
+					if(!extkey_dash && !extkey_dot && console.USBtoI2CPresent)
+					{
+						extkey_dot = ((Console.GetDG8SAQkeyStatus() & 2) == 0);
+						extkey_dash = ((Console.GetDG8SAQkeyStatus() & 32) == 0);
+					}
 					if(!extkey_dash && !extkey_dot)
 					{
 						if (memoryptt) 
