@@ -1,0 +1,13 @@
+#summary One-sentence summary of this page.
+
+= Donate =
+
+Donate via PayPal to support this project
+
+If you are using PowerSDR-IQ and appreciate the effort and work that went into it, please consider making a donation to support the project. Donations promote adding features and provide a proper software to the Radio Amateur community.
+
+[https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7918562 https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif]
+
+
+Thank you for your support! 
+
