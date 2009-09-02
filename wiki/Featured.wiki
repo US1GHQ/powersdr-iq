@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#Featured.
 
 = Donate =
 
@@ -10,4 +10,3 @@ If you are using PowerSDR-IQ and appreciate the effort and work that went into i
 
 
 Thank you for your support! 
-
