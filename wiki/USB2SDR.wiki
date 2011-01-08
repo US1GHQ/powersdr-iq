@@ -10,6 +10,7 @@ For submitting payment in Euro
 
 ---- 
 
+
 For submitting payment in USD
 
 [https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LDRNAGLKUY9GA https://www.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif]
