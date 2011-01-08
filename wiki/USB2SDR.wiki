@@ -1,9 +1,18 @@
 = USB2SDR Group Buy =
 
 
-If you would like to participate in the USB2SDR group buy please use the button below to submit your payment.
+If you would like to participate in the USB2SDR group buy please use the buttons below to submit your payment.
+---- 
+
+For submitting payment in Euro
 
 [https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2YS47SUUJE9JS https://www.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif]
 
+---- 
 
+For submitting payment in USD
+
+[https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LDRNAGLKUY9GA https://www.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif]
+
+---- 
 Thank you for your support! 
